@@ -1,8 +1,8 @@
 version: '3.7'
 
 services:
-  main:
-    container_name: main
+  api:
+    container_name: api
     build:
       context: .
       target: development
@@ -13,5 +13,21 @@ services:
       - ${SERVER_PORT}:${SERVER_PORT}
       - ${DEBUG_PORT}:${DEBUG_PORT}
     command: npm run start:${MODE}
+    depends_on:
+      - postgres
     env_file:
       - .env
+  postgres:
+    container_name: postgres
+    image: postgres:13
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_DATABASE_NAME}
+      PG_DATA: /var/lib/postgresql/data
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:${DB_PORT}
+volumes:
+  pgdata:

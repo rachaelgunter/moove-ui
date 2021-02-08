@@ -59,3 +59,21 @@ $ npm run docker:start:debug
 ```
 
 After that API should become available on `localhost` on the port specified in `.env` file
+
+### Execute DB migrations in Docker container
+
+```bash
+# create migrations (without immediate execution)
+$ npm run docker:migrate:create
+
+# create and execute (apply this on first local run)
+$ npm run docker:migrate
+```
+
+### Installing packages while developing with Docker
+
+Run this command to make changes in node_modules available in docker container:
+
+```bash
+$ npm run docker:rebuild-volumes
+```
