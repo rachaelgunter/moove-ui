@@ -7,7 +7,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(): Promise<User[]> {
-    return this.appService.getHello();
+  getUsers(): Promise<User[]> {
+    return this.appService.getUsers();
   }
 }
