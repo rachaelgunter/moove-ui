@@ -88,8 +88,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && npm run lint:fix",
-      "pre-push": "npm run lint"
+      "pre-commit": "cd ../frontend && lint-staged && npm run lint:fix && cd ../backend && lint-staged && npm run lint:fix",
+      "pre-push": "cd ../frontend && npm run lint && cd ../backend && npm run lint"
     }
   },
   "lint-staged": {
