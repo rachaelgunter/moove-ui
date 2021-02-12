@@ -1,0 +1,11 @@
+FROM node:14.15-alpine As builder
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN npm ci && npm run build
+
+FROM nginx:1.18.0-alpine
+
+COPY --from=builder /usr/src/app/build/ /usr/share/nginx/html
