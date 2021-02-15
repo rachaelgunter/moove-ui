@@ -18,10 +18,11 @@ RUN adduser --disabled-password moove
 
 # copy package*.json, build result and prisma
 COPY --chown=moove package*.json ./
-COPY --chown=moove --from=builder /usr/src/app/dist /usr/src/app/prisma ./
+COPY --chown=moove --from=builder /usr/src/app/dist ./dist
+COPY --chown=moove --from=builder /usr/src/app/prisma ./prisma
 
 # install only prod dependencies and generate prisma client
-RUN npm install --only=prod && npx prisma generate
+RUN npm install --only=prod && npx prisma generate && chown -R moove: /usr/src/app
 
 USER moove
 
