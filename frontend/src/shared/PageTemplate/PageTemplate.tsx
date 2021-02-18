@@ -25,7 +25,7 @@ const PageTemplate: React.FC<PageTemplateProps> = ({
 
   return (
     <div className={classes.root}>
-      <PageTitle title={title} />
+      <PageTitle>{title}</PageTitle>
       <PageContent>{children}</PageContent>
     </div>
   );

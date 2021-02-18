@@ -35,6 +35,9 @@ const App: React.FC = () => {
             <Route exact path={routes.signIn}>
               Sign In
             </Route>
+            <Route exact path={routes.roadIQ}>
+              <RoadIQ />
+            </Route>
             <Route>
               <div className={classes.root}>
                 <NavSidebarProvider>
@@ -47,9 +50,6 @@ const App: React.FC = () => {
                   </Route>
                   <Route exact path={routes.dataAnalysis}>
                     <DataAnalysis />
-                  </Route>
-                  <Route exact path={routes.roadIQ}>
-                    <RoadIQ />
                   </Route>
                   <Route exact path={routes.users}>
                     <Users />

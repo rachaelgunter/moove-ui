@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Divider, Drawer, List, makeStyles, Theme } from '@material-ui/core';
 import {
   DashboardOutlined as DashboardIcon,
@@ -50,6 +51,7 @@ const useStyles = makeStyles<Theme, SidebarStyleProps, string>(
 );
 
 const NavSidebar: React.FC = () => {
+  const history = useHistory();
   const { width } = useContext(NavSidebarContext);
   const classes = useStyles({ width });
 
@@ -57,16 +59,19 @@ const NavSidebar: React.FC = () => {
     {
       label: 'Dashboard',
       path: routes.dashboard,
+      onClick: () => history.push(routes.dashboard),
       Icon: DashboardIcon,
     },
     {
       label: 'Data Analysis',
       path: routes.dataAnalysis,
+      onClick: () => history.push(routes.dataAnalysis),
       Icon: ViewAgendaIcon,
     },
     {
       label: 'RoadIQ',
-      path: routes.roadIQ,
+      // TODO use history instead
+      onClick: () => window.open('https://moove-prod-ui.moove.ai/', '_blank'),
       Icon: ViewWeekOutlinedIcon,
     },
   ];
@@ -75,11 +80,13 @@ const NavSidebar: React.FC = () => {
     {
       label: 'Users',
       path: routes.users,
+      onClick: () => history.push(routes.users),
       Icon: PersonOutlineOutlinedIcon,
     },
     {
       label: 'Settings',
       path: routes.settings,
+      onClick: () => history.push(routes.settings),
       Icon: MoreHorizIcon,
     },
   ];

@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles, Theme, Typography } from '@material-ui/core';
 
 interface PageTitleProps {
-  title: string;
+  children: React.ReactNode;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -13,12 +13,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const PageTitle: React.FC<PageTitleProps> = ({ title }: PageTitleProps) => {
+const PageTitle: React.FC<PageTitleProps> = ({ children }: PageTitleProps) => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Typography variant="body2">{title}</Typography>
+      <Typography variant="body2">{children}</Typography>
     </div>
   );
 };
