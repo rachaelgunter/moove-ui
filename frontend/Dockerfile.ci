@@ -4,6 +4,8 @@ WORKDIR /usr/src/app
 
 COPY . .
 
+ARG REACT_APP_GRAPHQL_API
+
 RUN npm ci && npm run build
 
 FROM nginx:1.18.0-alpine
