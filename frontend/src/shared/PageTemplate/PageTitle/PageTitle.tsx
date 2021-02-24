@@ -18,7 +18,7 @@ const PageTitle: React.FC<PageTitleProps> = ({ children }: PageTitleProps) => {
 
   return (
     <div className={classes.root}>
-      <Typography variant="body2">{children}</Typography>
+      <Typography variant="body1">{children}</Typography>
     </div>
   );
 };

@@ -18,12 +18,15 @@ const theme = createMuiTheme({
   spacing: 8,
   typography: {
     fontFamily: ['Poppins', 'serif'].join(','),
-    body2: {
+    body1: {
       fontFamily: 'Poppins',
       fontSize: 16,
       fontWeight: 'normal',
       letterSpacing: 'normal',
       lineHeight: 'normal',
+    },
+    body2: {
+      fontSize: 14,
     },
   },
   palette: {
@@ -33,8 +36,13 @@ const theme = createMuiTheme({
       main: '#182327',
       dark: '#222d33',
     },
+    primary: {
+      main: '#29707f',
+    },
     secondary: {
+      light: '#39a7be',
       main: '#00b5ad',
+      dark: '#29707f',
     },
     text: {
       primary: '#ffffff',
