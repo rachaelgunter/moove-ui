@@ -3,9 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { PrismaClient } from '@prisma/client';
 import { join } from 'path';
-import { AppController } from './app.controller';
-import { AppResolver } from './app.resolver';
-import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { EmailDirective } from './shared/directives/email-graphql.directive';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -14,9 +14,13 @@ import { AppService } from './app.service';
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      schemaDirectives: {
+        email: EmailDirective,
+      },
     }),
+    AuthModule,
+    UsersModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, AppResolver, PrismaClient],
+  providers: [PrismaClient],
 })
 export class AppModule {}
