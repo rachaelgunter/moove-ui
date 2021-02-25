@@ -1,5 +1,6 @@
 import React from 'react';
 import { Grid, makeStyles, Theme, Typography } from '@material-ui/core';
+
 import MapOutlinedIcon from '@material-ui/icons/MapOutlined';
 
 import PageTemplate from 'src/shared/PageTemplate';

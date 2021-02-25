@@ -1,19 +1,77 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { createContext } from 'react';
+import { render } from 'react-dom';
 
 import App from 'src/app';
+
+import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
 
 import '@fontsource/poppins/400.css';
 import '@fontsource/poppins/500.css';
 import '@fontsource/poppins/300.css';
-
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/300.css';
+import {
+  ApolloClient,
+  ApolloProvider,
+  from,
+  InMemoryCache,
+} from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { loginRedirectLink, authLink, httpLink } from './graphql-client/links';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root'),
-);
+const domain = process.env.REACT_APP_AUTH0_DOMAIN;
+const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
+const redirectUri = process.env.REACT_APP_AUTH0_REDIRECT_URI;
+const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
+
+if (!domain || !clientId || !redirectUri || !audience) {
+  throw new Error('Cannot retrieve auth0 configuration');
+}
+
+const AuthContext = createContext<Auth0Client | null>(null);
+
+createAuth0Client({
+  domain,
+  client_id: clientId,
+  redirect_uri: redirectUri,
+  responseType: 'token id_token',
+  audience,
+}).then(async (auth0) => {
+  let token = '';
+
+  // Check if the token is present on page reload
+  try {
+    token = await auth0.getTokenSilently({ audience });
+  } catch (_) {
+    return auth0.loginWithRedirect();
+  }
+
+  const withTokenLink = setContext(async () => {
+    if (token) {
+      return { token };
+    }
+    try {
+      token = await auth0.getTokenSilently({ audience });
+      return token;
+    } catch (_) {
+      return auth0.loginWithRedirect();
+    }
+  });
+
+  const client = new ApolloClient({
+    link: from([withTokenLink, loginRedirectLink(auth0), authLink, httpLink]),
+    cache: new InMemoryCache(),
+  });
+
+  return render(
+    <ApolloProvider client={client}>
+      <AuthContext.Provider value={auth0}>
+        <App />
+      </AuthContext.Provider>
+    </ApolloProvider>,
+    document.getElementById('root'),
+  );
+});
+
+export default AuthContext;

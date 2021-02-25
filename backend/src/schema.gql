@@ -2,7 +2,26 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type User {
+  sub: ID!
+  email: String!
+  picture: String
+  name: String
+  role: String!
+  organization: String
+}
+
 type Query {
-  helloWorld: String!
-  hello(name: String!): String!
+  getCurrentUser: User!
+}
+
+type Mutation {
+  syncUserData(signedInUser: UserInput!): User!
+}
+
+input UserInput {
+  sub: String!
+  email: String!
+  picture: String!
+  name: String!
 }

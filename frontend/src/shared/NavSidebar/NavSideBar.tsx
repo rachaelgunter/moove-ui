@@ -52,7 +52,7 @@ const useStyles = makeStyles<Theme, SidebarStyleProps, string>(
 
 const NavSidebar: React.FC = () => {
   const history = useHistory();
-  const { width } = useContext(NavSidebarContext);
+  const { width, isExpanded } = useContext(NavSidebarContext);
   const classes = useStyles({ width });
 
   const primaryLinks: NavLink[] = [
@@ -102,7 +102,7 @@ const NavSidebar: React.FC = () => {
       anchor="left"
     >
       <Logo />
-      <Profile />
+      <Profile isNavSidebarOpened={isExpanded} />
       <LinkList links={primaryLinks} />
       <Divider className={classes.divider} />
       <LinkList links={secondaryLinks} />

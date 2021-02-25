@@ -3,6 +3,7 @@ import { createMuiTheme } from '@material-ui/core';
 declare module '@material-ui/core/styles/createPalette' {
   interface ColorOptions {
     lighter?: string;
+    'dark-variant'?: string;
   }
 
   interface Palette {
@@ -35,6 +36,7 @@ const theme = createMuiTheme({
       light: '#303c43',
       main: '#182327',
       dark: '#222d33',
+      'dark-variant': '#2c3f52',
     },
     primary: {
       main: '#29707f',
