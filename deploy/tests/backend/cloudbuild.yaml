@@ -1,0 +1,14 @@
+substitutions:
+  _NODE_VERSION: "14.15"
+
+
+steps:
+  - name: node:$_NODE_VERSION
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        cd backend
+        npm run test
+        npm run test:e2e
+        npm run test:cov
