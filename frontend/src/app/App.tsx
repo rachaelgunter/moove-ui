@@ -15,7 +15,7 @@ import client from 'src/apollo-client';
 import theme from 'src/app/styles';
 import routes from 'src/shared/routes';
 import NavSidebarProvider from 'src/shared/NavSidebar/NavSidebarProvider';
-import SignIn from 'src/auth/SignIn';
+import { SignIn, SignUp } from 'src/auth';
 
 const useStyles = makeStyles({
   root: {
@@ -35,6 +35,9 @@ const App: React.FC = () => {
           <Switch>
             <Route exact path={routes.signIn}>
               <SignIn />
+            </Route>
+            <Route exact path={routes.signUp}>
+              <SignUp />
             </Route>
             <Route exact path={routes.roadIQ}>
               <RoadIQ />
