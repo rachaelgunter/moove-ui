@@ -9,6 +9,6 @@ steps:
       - '-c'
       - |
         cd backend
+        npm install jest
         npm run test
-        npm run test:e2e
         npm run test:cov
