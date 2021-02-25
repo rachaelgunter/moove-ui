@@ -1,0 +1,16 @@
+substitutions:
+  _NODE_VERSION: "14.15"
+
+
+steps:
+  - name: node:$_NODE_VERSION
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        cd backend
+        npm install jest
+        npm run test
+        npm run test:cov
+        npm run test:e2e
+
