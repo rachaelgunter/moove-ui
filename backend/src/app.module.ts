@@ -3,9 +3,11 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { PrismaClient } from '@prisma/client';
 import { join } from 'path';
+
 import { AuthModule } from './auth/auth.module';
 import { EmailDirective } from './shared/directives/email-graphql.directive';
 import { UsersModule } from './users/users.module';
+import { HealthController } from './health/health.controller';
 
 @Module({
   imports: [
@@ -22,5 +24,6 @@ import { UsersModule } from './users/users.module';
     UsersModule,
   ],
   providers: [PrismaClient],
+  controllers: [HealthController],
 })
 export class AppModule {}
