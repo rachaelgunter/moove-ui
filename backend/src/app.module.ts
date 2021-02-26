@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { PrismaClient } from '@prisma/client';
 import { join } from 'path';
@@ -14,11 +14,20 @@ import { HealthController } from './health/health.controller';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    GraphQLModule.forRoot({
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      schemaDirectives: {
-        email: EmailDirective,
-      },
+    GraphQLModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+        schemaDirectives: {
+          email: EmailDirective,
+        },
+        cors: {
+          origin: configService.get('ALLOWED_ORIGINS').split(' '),
+          methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+          preflightContinue: false,
+          optionsSuccessStatus: 204,
+        },
+      }),
+      inject: [ConfigService],
     }),
     AuthModule,
     UsersModule,
