@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { EmailDirective } from './shared/directives/email-graphql.directive';
 import { UsersModule } from './users/users.module';
 import { HealthController } from './health/health.controller';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { HealthController } from './health/health.controller';
     }),
     AuthModule,
     UsersModule,
+    HealthModule,
   ],
   providers: [PrismaClient],
   controllers: [HealthController],
