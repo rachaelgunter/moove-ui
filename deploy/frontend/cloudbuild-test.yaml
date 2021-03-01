@@ -8,7 +8,5 @@ steps:
     args:
       - '-c'
       - |
-        cd backend
-        npm install jest
+        cd frontend
         npm run test
-        npm run test:cov

@@ -1,9 +1,9 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build container (no cache)'
-    args: ['build', 'backend',
-           '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-backend:latest',
-           '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-backend:$COMMIT_SHA',
+    args: ['build', 'frontend',
+           '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-frontend:latest',
+           '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-frontend:$COMMIT_SHA',
            '-f', 'backend/Dockerfile.ci' ]
 
   - name: 'gcr.io/cloud-builders/gcloud'
@@ -12,7 +12,7 @@ steps:
     args:
       - '-c'
       - |
-        gcloud secrets versions access latest --secret github_ssh_key > /root/.ssh/id_github
+        gcloud secrets versions access latest --secret gke_github_ssh_key > /root/.ssh/id_github
     volumes:
       - name: ssh
         path: /root/.ssh
@@ -46,9 +46,9 @@ steps:
     id: 'Update chart'
     args:
       - 'e'
-      - '.spec.template.spec.containers[0].image = "gcr.io/moove-platform-lineate-dev/moove-unified-ui-backend:$COMMIT_SHA"'
+      - '.spec.template.tag = "$COMMIT_SHA"'
       - '-i'
-      - '/workspace/infrastructure/deploy/unified-ui/backend/cloudbuild.yaml'
+      - '/workspace/infrastructure/deploy/helm-charts/jupyter-hub/values.yaml'
 
   - name: 'gcr.io/cloud-builders/git'
     id: 'Commit and push changes to infrastructure repo'
@@ -60,7 +60,7 @@ steps:
         git config --global user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)') && \
         git config --global user.name moove-devopsbot && \
         cd /workspace/infrastructure
-        git add deploy/unified-ui/backend/cloudbuild.yaml
+        git add deploy/helm-charts/jupyter-hub/values.yaml
         git commit -m "CI: ${COMMIT_SHA} Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
         git push
     volumes:
