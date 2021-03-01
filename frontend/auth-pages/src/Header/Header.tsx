@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { ReactComponent as GalileoLogo } from 'src/assets/logo/galileo-logo.svg';
+import Image from '../assets/logo/galileo-logo.svg';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -22,7 +22,7 @@ const Header: FC = () => {
 
   return (
     <Grid classes={classes} container item justify="center" alignItems="center">
-      <GalileoLogo width="139px" height="24px" />
+      <Image width="139px" height="24px" />
     </Grid>
   );
 };

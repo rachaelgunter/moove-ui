@@ -2,10 +2,12 @@ import React, { ReactElement } from 'react';
 import { Card, CardContent, CardHeader, Grid } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
-import backgroundMap1x from 'src/assets/images/background-map.jpg';
-import backgroundMap2x from 'src/assets/images/background-map@2x.jpg';
-import backgroundMap3x from 'src/assets/images/background-map@3x.jpg';
 import Header from '../Header';
+import {
+  backgroundMap1x,
+  backgroundMap2x,
+  backgroundMap3x,
+} from '../constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

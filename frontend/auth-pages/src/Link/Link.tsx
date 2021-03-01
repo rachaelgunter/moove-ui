@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
-import { Link as MuiLink, LinkProps, Theme } from '@material-ui/core';
+import { LinkProps, Theme } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
+import { Link as RouterLink } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -14,13 +15,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Link = ({ children, ...props }: LinkProps): ReactElement => {
+const Link = ({ children, href, ...props }: LinkProps): ReactElement => {
   const classes = useStyles();
 
   return (
-    <MuiLink className={classes.root} underline="always" {...props}>
+    <RouterLink
+      to={href ?? ''}
+      className={classes.root}
+      underline="always"
+      {...props}
+    >
       {children}
-    </MuiLink>
+    </RouterLink>
   );
 };
 

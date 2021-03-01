@@ -2,7 +2,7 @@ import React from 'react';
 import { render, fireEvent, RenderResult } from '@testing-library/react';
 import { ThemeProvider } from '@material-ui/styles';
 
-import theme from 'src/app/styles';
+import theme from '../app/styles';
 import SignInForm, { submitButtonTitle } from './SignInForm';
 
 const createWrapper = () =>

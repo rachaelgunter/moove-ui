@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import { Typography, makeStyles, Theme } from '@material-ui/core';
 
-import routes from 'src/shared/routes';
 import AuthPage from './AuthPage';
 import Footer from './Footer';
 import SignUpForm from './SignUpForm';
@@ -22,7 +21,7 @@ const SignIn: FC = () => {
       <Footer>
         <Typography classes={classes} variant="body2" component="p">
           Already have an account?&nbsp;
-          <Link href={routes.signIn} variant="body2">
+          <Link href="/" variant="body2">
             Sign In
           </Link>
         </Typography>

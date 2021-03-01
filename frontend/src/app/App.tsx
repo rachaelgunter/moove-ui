@@ -13,7 +13,6 @@ import Settings from 'src/settings';
 import theme from 'src/app/styles';
 import routes from 'src/shared/routes';
 import NavSidebarProvider from 'src/shared/NavSidebar/NavSidebarProvider';
-import { SignIn, SignUp } from 'src/auth';
 import AuthCallBackHandler from 'src/auth/AuthCallbackHandler';
 
 const useStyles = makeStyles({
@@ -31,12 +30,6 @@ const App: React.FC = () => {
       <BrowserRouter>
         <CssBaseline />
         <Switch>
-          <Route exact path={routes.signIn}>
-            <SignIn />
-          </Route>
-          <Route path={routes.signUp}>
-            <SignUp />
-          </Route>
           <Route path={routes.callback}>
             <AuthCallBackHandler />
           </Route>
