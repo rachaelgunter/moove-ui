@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import Image from '../assets/logo/galileo-logo.svg';
+import Image from '../assets/logo/galileo-logo-medium.svg';
 
 const useStyles = makeStyles(() => ({
   root: {

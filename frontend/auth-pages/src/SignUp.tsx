@@ -5,6 +5,7 @@ import AuthPage from './AuthPage';
 import Footer from './Footer';
 import SignUpForm from './SignUpForm';
 import Link from './Link';
+import GoogleAuth from './GoogleAuth/GoogleAuth';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -12,11 +13,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+const SIGN_UP_HINT = 'SIGN UP WITH GALILEO';
+const SIGN_UP_BUTTON_TEXT = 'Sign Up with Google';
+
 const SignIn: FC = () => {
   const classes = useStyles();
 
   return (
     <AuthPage>
+      <GoogleAuth hint={SIGN_UP_HINT} buttonText={SIGN_UP_BUTTON_TEXT} />
       <SignUpForm />
       <Footer>
         <Typography classes={classes} variant="body2" component="p">

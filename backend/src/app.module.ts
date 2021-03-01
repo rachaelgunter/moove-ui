@@ -5,6 +5,7 @@ import { PrismaClient } from '@prisma/client';
 import { join } from 'path';
 
 import { AuthModule } from './auth/auth.module';
+import { Auth0ClientService } from './shared/auth0-client/auth0-client.service';
 import { EmailDirective } from './shared/directives/email-graphql.directive';
 import { UsersModule } from './users/users.module';
 import { HealthController } from './health/health.controller';
@@ -34,7 +35,7 @@ import { HealthModule } from './health/health.module';
     UsersModule,
     HealthModule,
   ],
-  providers: [PrismaClient],
+  providers: [PrismaClient, Auth0ClientService],
   controllers: [HealthController],
 })
 export class AppModule {}
