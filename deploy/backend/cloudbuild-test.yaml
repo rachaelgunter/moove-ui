@@ -10,5 +10,4 @@ steps:
       - |
         cd backend
         npm install jest
-        npm run test
         npm run test:cov
