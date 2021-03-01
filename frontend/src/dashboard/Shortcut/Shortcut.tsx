@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 120,
     padding: theme.spacing(1.5),
     backgroundColor: theme.palette.bg.light,
-    boxShadow: '0 2px 10px 0 rgba(0, 0, 0, 0.08)',
+    boxShadow: theme.shadows[2],
     cursor: 'pointer',
     '&:hover': {
       backgroundColor: darken(theme.palette.bg.light, 0.1),

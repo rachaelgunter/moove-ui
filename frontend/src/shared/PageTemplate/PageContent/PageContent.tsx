@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.bg.dark,
     padding: theme.spacing(5, 4),
     height: '100%',
+    position: 'relative',
   },
 }));
 
