@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Grid, TableCell, TableRow, Typography } from '@material-ui/core';
 
 import Table from 'src/shared/Table/Table';
@@ -10,7 +10,7 @@ interface ColumnsProps {
   columnModels: ColumnModel[];
 }
 
-const Columns = ({ columnModels }: ColumnsProps) => {
+const Columns: FC<ColumnsProps> = ({ columnModels }: ColumnsProps) => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>

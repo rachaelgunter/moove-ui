@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC, ReactElement } from 'react';
 import {
   TableContainer,
   Table as MuiTable,
@@ -9,7 +9,12 @@ import {
   Paper,
 } from '@material-ui/core';
 
-const Table = ({ rowNames, children }: any) => {
+interface TableProps {
+  rowNames: string[];
+  children: ReactElement[];
+}
+
+const Table: FC<TableProps> = ({ rowNames, children }: TableProps) => {
   return (
     <TableContainer component={Paper}>
       <MuiTable size="small" aria-label="a dense table">
