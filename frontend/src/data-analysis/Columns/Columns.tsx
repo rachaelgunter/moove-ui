@@ -1,36 +1,23 @@
 import React, { FC, useState } from 'react';
-import {
-  Grid,
-  TableRow,
-  Typography,
-  Theme,
-  makeStyles,
-} from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 
-import Table, { TableCell } from 'src/shared/Table/Table';
+import Table from 'src/shared/Table/Table';
 import { ColumnModel } from '../types';
+import ColumnsRow from './ColumnsRow';
 
-const rowNames = ['Name', 'Type', 'Populated %', 'Min', 'Max']; // TODO rename to rowTitle
-const minNumberOfRowsForDisplaying = 5;
-const step = 5;
-
-const useStyles = makeStyles((theme: Theme) => ({
-  firstCell: {
-    fontSize: 15,
-    fontWeight: theme.typography.fontWeightMedium,
-  },
-}));
+const COLUMNS = ['Name', 'Type', 'Populated %', 'Min', 'Max'];
+const MIN_NUMBER_OF_ROWS_FOR_DISPLAYING = 5;
+const STEP = 5;
 
 interface ColumnsProps {
   columnModels: ColumnModel[];
 }
 
 const Columns: FC<ColumnsProps> = ({ columnModels }: ColumnsProps) => {
-  const classes = useStyles();
+  const [quota, setQuota] = useState(MIN_NUMBER_OF_ROWS_FOR_DISPLAYING);
 
-  const [quota, setQuota] = useState(minNumberOfRowsForDisplaying);
-
-  const onShowMoreClick = () => setQuota(quota + step);
+  const onShowMoreClick = () => setQuota(quota + STEP);
+  const getColumnsByQuota = () => columnModels.slice(0, quota);
 
   return (
     <Grid container direction="column" spacing={2}>
@@ -39,18 +26,12 @@ const Columns: FC<ColumnsProps> = ({ columnModels }: ColumnsProps) => {
       </Grid>
       <Grid item>
         <Table
-          rowNames={rowNames}
+          columnNames={COLUMNS}
           onShowMoreClick={onShowMoreClick}
           hasShowMore
         >
-          {columnModels.slice(0, quota).map((column) => (
-            <TableRow key={column.name}>
-              <TableCell className={classes.firstCell}>{column.name}</TableCell>
-              <TableCell>{column.type}</TableCell>
-              <TableCell>{column.populated}</TableCell>
-              <TableCell>{column.min}</TableCell>
-              <TableCell>{column.max}</TableCell>
-            </TableRow>
+          {getColumnsByQuota().map((column) => (
+            <ColumnsRow columnModel={column} />
           ))}
         </Table>
       </Grid>

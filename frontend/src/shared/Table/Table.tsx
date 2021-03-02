@@ -38,7 +38,7 @@ export const TableCell = withStyles((theme: Theme) =>
   }),
 )(MuiTableCell);
 
-export const Button = withStyles((theme: Theme) =>
+export const Button = withStyles(() =>
   createStyles({
     root: {
       color: 'rgba(255, 255, 255, 0.5)',
@@ -49,14 +49,14 @@ export const Button = withStyles((theme: Theme) =>
 )(MuiButton);
 
 interface TableProps {
-  rowNames: string[];
+  columnNames: string[];
   children: ReactElement[];
   hasShowMore?: boolean;
   onShowMoreClick?: () => void;
 }
 
 const Table: FC<TableProps> = ({
-  rowNames,
+  columnNames,
   children,
   hasShowMore = false,
   ...props
@@ -77,7 +77,7 @@ const Table: FC<TableProps> = ({
         )}
         <TableHead>
           <TableRow>
-            {rowNames.map((name: string) => (
+            {columnNames.map((name: string) => (
               <TableCell align="left">{name}</TableCell>
             ))}
           </TableRow>
@@ -88,7 +88,6 @@ const Table: FC<TableProps> = ({
   );
 };
 
-// TODO ????
 Table.defaultProps = {
   hasShowMore: false,
   onShowMoreClick: undefined,

@@ -14,8 +14,8 @@ export type DatasetModel = {
   columns?: ColumnModel[];
 };
 
-// TODO rename?
 export type ColumnModel = {
+  [key: string]: string | number;
   name: string;
   type: string;
   populated: number;
