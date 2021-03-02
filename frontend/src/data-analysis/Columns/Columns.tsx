@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import { Grid, TableCell, TableRow, Typography } from '@material-ui/core';
+import { Grid, TableRow, Typography } from '@material-ui/core';
 
-import Table from 'src/shared/Table/Table';
+import Table, { TableCell } from 'src/shared/Table/Table';
 import { ColumnModel } from '../types';
 
 const rowNames = ['Name', 'Type', 'Populated %', 'Min', 'Max', '']; // TODO rename to rowTitle
@@ -12,8 +12,8 @@ interface ColumnsProps {
 
 const Columns: FC<ColumnsProps> = ({ columnModels }: ColumnsProps) => {
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
+    <Grid container direction="column" spacing={2}>
+      <Grid item>
         <Typography variant="subtitle1">Columns</Typography>
       </Grid>
       <Grid item>
