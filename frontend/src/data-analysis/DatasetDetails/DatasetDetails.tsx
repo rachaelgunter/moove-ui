@@ -4,7 +4,7 @@ import { Grid, makeStyles } from '@material-ui/core';
 import { DatasetModel, DatasetStatus } from 'src/data-analysis/types';
 import { IngestionInProgressHint } from 'src/data-analysis/hints';
 import DatasetDetailsHeader from './DatasetDetailsHeader';
-import Columns from '../Columns/Columns';
+import Columns from '../Columns';
 
 export interface DatasetDetailsProps {
   datasetModel: DatasetModel;

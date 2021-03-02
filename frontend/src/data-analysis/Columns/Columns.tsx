@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Grid, Typography } from '@material-ui/core';
 
-import Table from 'src/shared/Table/Table';
+import Table from 'src/shared/Table';
 import { ColumnModel } from '../types';
 import ColumnsRow from './ColumnsRow';
 

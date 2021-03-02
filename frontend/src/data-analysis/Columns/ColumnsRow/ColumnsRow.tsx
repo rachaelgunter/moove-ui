@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { TableRow, Theme, makeStyles } from '@material-ui/core';
 
 import { ColumnModel } from 'src/data-analysis/types';
-import { TableCell } from 'src/shared/Table/Table';
+import { TableCell } from 'src/shared/Table';
 
 const useStyles = makeStyles((theme: Theme) => ({
   firstCell: {
