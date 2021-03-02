@@ -18,6 +18,7 @@ export const TableCell = withStyles((theme: Theme) =>
     root: {
       borderColor: 'rgba(255, 255, 255, 0.2)',
       fontSize: 13,
+      width: '20%',
 
       '&:first-child': {
         paddingLeft: theme.spacing(3),
@@ -50,17 +51,30 @@ export const Button = withStyles((theme: Theme) =>
 interface TableProps {
   rowNames: string[];
   children: ReactElement[];
+  hasShowMore?: boolean;
+  onShowMoreClick?: () => void;
 }
 
-const Table: FC<TableProps> = ({ rowNames, children }: TableProps) => {
+const Table: FC<TableProps> = ({
+  rowNames,
+  children,
+  hasShowMore = false,
+  ...props
+}: TableProps) => {
+  const onShowMoreClick = () => {
+    props.onShowMoreClick && props.onShowMoreClick();
+  };
+
   return (
     <TableContainer component={Paper}>
       <MuiTable aria-label="columns table">
-        <caption>
-          <Grid justify="center" container item spacing={3}>
-            <Button onClick={() => {}}>Show More</Button>
-          </Grid>
-        </caption>
+        {hasShowMore && (
+          <caption>
+            <Grid justify="center" container item spacing={3}>
+              <Button onClick={onShowMoreClick}>Show More</Button>
+            </Grid>
+          </caption>
+        )}
         <TableHead>
           <TableRow>
             {rowNames.map((name: string) => (
@@ -72,6 +86,12 @@ const Table: FC<TableProps> = ({ rowNames, children }: TableProps) => {
       </MuiTable>
     </TableContainer>
   );
+};
+
+// TODO ????
+Table.defaultProps = {
+  hasShowMore: false,
+  onShowMoreClick: undefined,
 };
 
 export default Table;
