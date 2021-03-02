@@ -1,7 +1,3 @@
-images:
-  - "gcr.io/$PROJECT_ID/moove-unified-ui-backend:latest"
-  - "gcr.io/$PROJECT_ID/moove-unified-ui-backend:$COMMIT_SHA"
-
 substitutions:
   _DEPLOY_BRANCH: "master"
 
@@ -12,6 +8,10 @@ steps:
            '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-backend:latest',
            '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-backend:$COMMIT_SHA',
            '-f', 'backend/Dockerfile.ci' ]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push builded image to GCR'
+    args: ['push', 'gcr.io/$PROJECT_ID/moove-unified-ui-backend']
 
   - name: 'gcr.io/cloud-builders/gcloud'
     id: 'Decrypt git key'
