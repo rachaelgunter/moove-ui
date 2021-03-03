@@ -5,9 +5,11 @@ import { ColumnModel } from 'src/data-analysis/types';
 import { TableCell } from 'src/shared/Table';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  firstCell: {
-    fontSize: 15,
-    fontWeight: theme.typography.fontWeightMedium,
+  cell: {
+    '&:first-child': {
+      fontSize: 15,
+      fontWeight: theme.typography.fontWeightMedium,
+    },
   },
 }));
 
@@ -23,10 +25,7 @@ const ColumnsRow: FC<ColumnsRowsProps> = ({
   return (
     <TableRow key={columnModel.name} data-testid="columns-table-row">
       {Object.keys(columnModel).map((key, index) => (
-        <TableCell
-          className={!index ? classes.firstCell : undefined}
-          key={`${columnModel.name}-${key}`}
-        >
+        <TableCell className={classes.cell} key={`${columnModel.name}-${key}`}>
           {columnModel[key]}
         </TableCell>
       ))}
