@@ -1,9 +1,12 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, RenderResult } from '@testing-library/react';
 import { ThemeProvider } from '@material-ui/styles';
 
 import theme from 'src/app/styles';
-import { SHOW_MORE_BUTTON_TITLE } from 'src/shared/Table';
+import {
+  SHOW_MORE_BUTTON_TITLE,
+  SHOW_LESS_BUTTON_TITLE,
+} from 'src/shared/Table';
 import Columns, { INIT_NUMBER_OF_ROWS, STEP } from './Columns';
 import { ColumnModel } from '../types';
 
@@ -31,20 +34,39 @@ const createWrapper = () =>
   );
 
 describe('Columns', () => {
-  it('should have the correct number of rows', () => {
-    const wrapper = createWrapper();
-    const showMoreButton = wrapper
+  let wrapper: RenderResult;
+  let showMoreButton: HTMLButtonElement;
+  let showLessButton: HTMLButtonElement;
+
+  beforeEach(() => {
+    wrapper = createWrapper();
+    showMoreButton = wrapper
       .getByText(SHOW_MORE_BUTTON_TITLE)
-      .closest('button') as HTMLInputElement;
+      .closest('button') as HTMLButtonElement;
+    showLessButton = wrapper
+      .getByText(SHOW_LESS_BUTTON_TITLE)
+      .closest('button') as HTMLButtonElement;
+  });
 
-    let rows = wrapper.getAllByTestId('columns-table-row');
+  describe('should have the initial number of rows', () => {
+    it('when Columns has been loaded', () => {
+      const rows = wrapper.getAllByTestId('columns-table-row');
+      expect(rows.length).toBe(INIT_NUMBER_OF_ROWS);
+    });
 
-    expect(rows.length).toBe(INIT_NUMBER_OF_ROWS);
+    it('when ShowLessButton has been clicked', () => {
+      fireEvent.click(showMoreButton);
+      fireEvent.click(showLessButton);
+      const rows = wrapper.getAllByTestId('columns-table-row');
+      expect(rows.length).toBe(INIT_NUMBER_OF_ROWS);
+    });
+  });
 
-    fireEvent.click(showMoreButton);
-
-    rows = wrapper.getAllByTestId('columns-table-row');
-
-    expect(rows.length).toBe(INIT_NUMBER_OF_ROWS + STEP);
+  describe('should have the correct number of rows', () => {
+    it('when ShowMoreButton has been clicked', () => {
+      fireEvent.click(showMoreButton);
+      const rows = wrapper.getAllByTestId('columns-table-row');
+      expect(rows.length).toBe(INIT_NUMBER_OF_ROWS + STEP);
+    });
   });
 });
