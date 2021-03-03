@@ -1,6 +1,8 @@
 import React, { FC } from 'react';
-import { Grid, Button as MuiButton } from '@material-ui/core';
+import { Button as MuiButton, TableRow } from '@material-ui/core';
 import { withStyles, createStyles } from '@material-ui/styles';
+
+import TableCell from '../TableCell';
 
 export const SHOW_MORE_BUTTON_TITLE = 'Show More';
 
@@ -16,16 +18,18 @@ const Button = withStyles(() =>
 
 interface ShowMoreButtonProps {
   onClick: () => void;
+  colSpan: number;
 }
 
 const ShowMoreButton: FC<ShowMoreButtonProps> = ({
   onClick,
+  colSpan,
 }: ShowMoreButtonProps) => (
-  <caption>
-    <Grid justify="center" container item spacing={3}>
+  <TableRow key="table-control-row">
+    <TableCell align="center" colSpan={colSpan}>
       <Button onClick={onClick}>{SHOW_MORE_BUTTON_TITLE}</Button>
-    </Grid>
-  </caption>
+    </TableCell>
+  </TableRow>
 );
 
 export default ShowMoreButton;

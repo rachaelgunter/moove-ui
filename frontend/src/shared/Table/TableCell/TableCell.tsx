@@ -23,6 +23,10 @@ const TableCell = withStyles((theme: Theme) =>
     body: {
       padding: theme.spacing(1.25),
     },
+    footer: {
+      padding: theme.spacing(0.5),
+      borderBottom: 'none',
+    },
   }),
 )(MuiTableCell);
 

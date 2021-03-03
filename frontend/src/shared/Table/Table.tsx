@@ -6,6 +6,7 @@ import {
   TableRow,
   TableBody,
   Paper,
+  TableFooter,
 } from '@material-ui/core';
 
 import TableCell from './TableCell';
@@ -31,7 +32,6 @@ const Table: FC<TableProps> = ({
   return (
     <TableContainer component={Paper}>
       <MuiTable aria-label="columns table">
-        {hasShowMore && <ShowMoreButton onClick={onShowMoreClick} />}
         <TableHead>
           <TableRow key="table-head-row">
             {columnNames.map((name: string) => (
@@ -42,6 +42,14 @@ const Table: FC<TableProps> = ({
           </TableRow>
         </TableHead>
         <TableBody>{children}</TableBody>
+        {hasShowMore && (
+          <TableFooter>
+            <ShowMoreButton
+              onClick={onShowMoreClick}
+              colSpan={columnNames.length}
+            />
+          </TableFooter>
+        )}
       </MuiTable>
     </TableContainer>
   );
