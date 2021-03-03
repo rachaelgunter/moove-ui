@@ -15,7 +15,7 @@ import Typography from 'src/shared/Typography';
 import TablesTreeView from '../TablesTreeView/TablesTreeView';
 
 const MAX_DESCRIPTION_LENGTH = 16384;
-const DESCRIPTION_MAX_LENGTH_ERROR =
+export const DESCRIPTION_MAX_LENGTH_ERROR =
   'Maximum description length is limited to 16384 characters';
 interface CreateDatasetDialogProps {
   open: boolean;
@@ -86,11 +86,11 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
 
   const onDescriptionChange = (updatedDescription: string) => {
     setDescription(updatedDescription);
-    updateDescriptionErrorState();
+    updateDescriptionErrorState(updatedDescription);
   };
 
-  const updateDescriptionErrorState = () => {
-    if (description.length > MAX_DESCRIPTION_LENGTH) {
+  const updateDescriptionErrorState = (updatedDescription: string) => {
+    if (updatedDescription.length > MAX_DESCRIPTION_LENGTH) {
       setDescriptionError(DESCRIPTION_MAX_LENGTH_ERROR);
     } else {
       setDescriptionError('');
