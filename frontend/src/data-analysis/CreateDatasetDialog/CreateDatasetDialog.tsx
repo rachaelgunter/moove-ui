@@ -1,0 +1,134 @@
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  makeStyles,
+  Theme,
+} from '@material-ui/core';
+import React, { FC, useState } from 'react';
+import { FontFamily } from 'src/app/styles/fonts';
+import TextField from 'src/shared/TextField';
+import Typography from 'src/shared/Typography';
+import TablesTreeView from '../TablesTreeView/TablesTreeView';
+
+interface CreateDatasetDialogProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+const useStyles = makeStyles((theme: Theme) => {
+  return {
+    root: {
+      fontFamily: FontFamily.ROBOTO,
+    },
+    contentRoot: {
+      padding: theme.spacing(0, 3),
+    },
+    divider: {
+      backgroundColor: theme.palette.common.white,
+      opacity: 0.1,
+    },
+    tablesView: {
+      margin: '24px 0 59px 0',
+    },
+    tablesViewTitle: {
+      marginBottom: '16px',
+    },
+    dialogControls: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      height: theme.spacing(6),
+    },
+    dialogTitleRoot: {
+      padding: theme.spacing(3),
+    },
+    dialogTitle: {
+      fontWeight: 400,
+      fontSize: 20,
+    },
+    dialogButton: {
+      fontFamily: FontFamily.ROBOTO,
+      color: theme.palette.text.secondary,
+      height: '36px',
+      letterSpacing: '1.25px',
+      marginLeft: theme.spacing(1),
+
+      '&:disabled': {
+        color: '#455a64',
+      },
+    },
+  };
+});
+
+const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
+  open,
+  onClose,
+}: CreateDatasetDialogProps) => {
+  const [description, setDescription] = useState('');
+  const [name, setName] = useState('');
+
+  const classes = useStyles();
+
+  const handleClose = () => {
+    onClose();
+  };
+
+  const onNameChange = (updatedName: string) => {
+    setName(updatedName);
+  };
+  const onDescriptionChange = (updatedDescription: string) => {
+    setDescription(updatedDescription);
+  };
+
+  return (
+    <Dialog
+      maxWidth="lg"
+      className={classes.root}
+      open={open}
+      onClose={handleClose}
+    >
+      <DialogTitle className={classes.dialogTitleRoot}>
+        <Typography
+          color="textPrimary"
+          fontFamily={FontFamily.ROBOTO}
+          className={classes.dialogTitle}
+        >
+          New Dataset
+        </Typography>
+      </DialogTitle>
+      <DialogContent className={classes.contentRoot}>
+        <TextField label="Name" value={name} onChange={onNameChange} />
+        <TextField
+          label="Description"
+          value={description}
+          onChange={onDescriptionChange}
+        />
+        <Divider className={classes.divider} />
+        <Box className={classes.tablesView}>
+          <Typography
+            className={classes.tablesViewTitle}
+            fontFamily={FontFamily.ROBOTO}
+          >
+            Choose a BigQuery table
+          </Typography>
+          <TablesTreeView />
+        </Box>
+        <Divider className={classes.divider} />
+        <Box className={classes.dialogControls}>
+          <Button className={classes.dialogButton} onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button disabled className={classes.dialogButton}>
+            Create
+          </Button>
+        </Box>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default CreateDatasetDialog;

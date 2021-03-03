@@ -7,6 +7,7 @@ import { NoDatasetsHint } from './hints';
 import AddDatasetButton from './AddDatasetButton';
 import DatasetList from './DatasetList';
 import DatasetDetails from './DatasetDetails';
+import CreateDatasetDialog from './CreateDatasetDialog/CreateDatasetDialog';
 
 // TODO remove
 const initialData = [
@@ -50,7 +51,15 @@ const DataAnalysis: React.FC = () => {
     null,
   );
 
-  const onAddDatasetClick = () => {};
+  const [isCreationDialogOpen, setIsCreationDialogOpen] = useState(false);
+
+  const onAddDatasetClick = () => {
+    setIsCreationDialogOpen(true);
+  };
+
+  const handleCreationDialogClose = () => {
+    setIsCreationDialogOpen(false);
+  };
 
   const onDatasetSelect = (dataset: DatasetModel) => {
     setSelectedDataset(dataset);
@@ -84,6 +93,10 @@ const DataAnalysis: React.FC = () => {
           <NoDatasetsHint />
         )}
       </Grid>
+      <CreateDatasetDialog
+        open={isCreationDialogOpen}
+        onClose={handleCreationDialogClose}
+      />
     </PageTemplate>
   );
 };

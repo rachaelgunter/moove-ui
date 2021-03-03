@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.bg.lighter,
     color: fade('#fff', 0.5),
     borderColor: theme.palette.bg.dark,
-    height: 56,
+    minHeight: 56,
     fontSize: 16,
     fontFamily: 'Roboto',
     fontWeight: 300,
@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'Roboto',
     fontWeight: 400,
     letterSpacing: 0.15,
+  },
+  notchedOutline: {
+    border: 'none',
   },
 }));
 
@@ -68,7 +71,10 @@ const TextField = ({
       helperText={error ? 'Incorrect email' : ''}
       className={classes.root}
       InputProps={{
-        classes: { root: classes.input },
+        classes: {
+          root: classes.input,
+          notchedOutline: classes.notchedOutline,
+        },
         endAdornment: isPassword ? (
           <InputAdornment
             showPassword={showPassword}
