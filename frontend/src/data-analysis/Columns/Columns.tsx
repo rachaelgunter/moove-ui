@@ -17,6 +17,7 @@ const Columns: FC<ColumnsProps> = ({ columnModels }: ColumnsProps) => {
   const [quota, setQuota] = useState(INIT_NUMBER_OF_ROWS);
 
   const onShowMoreClick = () => setQuota(quota + STEP);
+  const onShowLessClick = () => setQuota(INIT_NUMBER_OF_ROWS);
   const getColumnsByQuota = () => columnModels.slice(0, quota);
 
   return (
@@ -28,7 +29,8 @@ const Columns: FC<ColumnsProps> = ({ columnModels }: ColumnsProps) => {
         <Table
           columnNames={COLUMNS}
           onShowMoreClick={onShowMoreClick}
-          hasShowMore
+          onShowLessClick={onShowLessClick}
+          hasControlTools
         >
           {getColumnsByQuota().map((column) => (
             <ColumnsRow

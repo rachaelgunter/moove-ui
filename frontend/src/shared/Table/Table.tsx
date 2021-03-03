@@ -10,23 +10,28 @@ import {
 } from '@material-ui/core';
 
 import TableCell from './TableCell';
-import ShowMoreButton from './ShowMoreButton';
+import ControlTools from './ControlTools';
 
 interface TableProps {
   columnNames: string[];
   children: ReactElement[];
-  hasShowMore?: boolean;
+  hasControlTools?: boolean;
   onShowMoreClick?: () => void;
+  onShowLessClick?: () => void;
 }
 
 const Table: FC<TableProps> = ({
   columnNames,
   children,
-  hasShowMore = false,
+  hasControlTools = false,
   ...props
 }: TableProps) => {
   const onShowMoreClick = () => {
     props.onShowMoreClick && props.onShowMoreClick();
+  };
+
+  const onShowLessClick = () => {
+    props.onShowLessClick && props.onShowLessClick();
   };
 
   return (
@@ -42,10 +47,11 @@ const Table: FC<TableProps> = ({
           </TableRow>
         </TableHead>
         <TableBody>{children}</TableBody>
-        {hasShowMore && (
+        {hasControlTools && (
           <TableFooter>
-            <ShowMoreButton
-              onClick={onShowMoreClick}
+            <ControlTools
+              onShowMoreClick={onShowMoreClick}
+              onShowLessClick={onShowLessClick}
               colSpan={columnNames.length}
             />
           </TableFooter>
@@ -56,8 +62,9 @@ const Table: FC<TableProps> = ({
 };
 
 Table.defaultProps = {
-  hasShowMore: false,
+  hasControlTools: false,
   onShowMoreClick: undefined,
+  onShowLessClick: undefined,
 };
 
 export default Table;
