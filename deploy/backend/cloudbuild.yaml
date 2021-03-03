@@ -1,3 +1,6 @@
+substitutions:
+  _DEPLOY_BRANCH: "master"
+
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build container (no cache)'
@@ -5,6 +8,10 @@ steps:
            '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-backend:latest',
            '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-backend:$COMMIT_SHA',
            '-f', 'backend/Dockerfile.ci' ]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push builded image to GCR'
+    args: ['push', 'gcr.io/$PROJECT_ID/moove-unified-ui-backend']
 
   - name: 'gcr.io/cloud-builders/gcloud'
     id: 'Decrypt git key'
@@ -37,6 +44,8 @@ steps:
     id: 'Clone infrastructure repo'
     args:
       - clone
+      - --branch
+      - $_DEPLOY_BRANCH
       - git@github.com:moove-ai/infrastructure.git
     volumes:
       - name: ssh
