@@ -5,8 +5,8 @@ import TreeView from '@material-ui/lab/TreeView';
 import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
 import Typography from '@material-ui/core/Typography';
 
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import StorageIcon from '@material-ui/icons/Storage';
 import GridOnIcon from '@material-ui/icons/GridOn';
 
@@ -49,15 +49,23 @@ const useTreeItemStyles = makeStyles((theme: Theme) =>
         paddingLeft: theme.spacing(2),
       },
     },
+    iconContainer: {
+      margin: theme.spacing(1),
+    },
     expanded: {},
-    selected: {},
+    selected: {
+      border: '1px solid',
+      borderColor: theme.palette.divider,
+      borderLeft: 'none',
+      borderRight: 'none',
+    },
     labelRoot: {
       display: 'flex',
       alignItems: 'center',
       padding: theme.spacing(0.5, 0),
     },
     labelIcon: {
-      marginRight: theme.spacing(1),
+      margin: theme.spacing(0, 2, 0, 0),
     },
     labelText: {
       flexGrow: 1,
@@ -85,6 +93,7 @@ const StyledTreeItem: FC<StyledTreeItemProps> = (
       classes={{
         root: classes.root,
         content: classes.content,
+        iconContainer: classes.iconContainer,
         expanded: classes.expanded,
         selected: classes.selected,
         group: classes.group,
@@ -107,11 +116,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 const TablesTreeView: FC = () => {
   const classes = useStyles();
 
+  // TODO: replace with user's BQ tables
   return (
     <TreeView
       className={classes.root}
-      defaultCollapseIcon={<ArrowDropDownIcon />}
-      defaultExpandIcon={<ArrowRightIcon />}
+      defaultCollapseIcon={<ExpandMoreIcon />}
+      defaultExpandIcon={<NavigateNextIcon />}
       defaultEndIcon={<div style={{ width: 24 }} />}
     >
       <StyledTreeItem nodeId="1" labelText="All Mail" labelIcon={StorageIcon} />

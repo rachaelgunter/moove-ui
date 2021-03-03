@@ -14,6 +14,9 @@ import TextField from 'src/shared/TextField';
 import Typography from 'src/shared/Typography';
 import TablesTreeView from '../TablesTreeView/TablesTreeView';
 
+const MAX_DESCRIPTION_LENGTH = 16384;
+const DESCRIPTION_MAX_LENGTH_ERROR =
+  'Maximum description length is limited to 16384 characters';
 interface CreateDatasetDialogProps {
   open: boolean;
   onClose: () => void;
@@ -25,11 +28,10 @@ const useStyles = makeStyles((theme: Theme) => {
       fontFamily: FontFamily.ROBOTO,
     },
     contentRoot: {
-      padding: theme.spacing(0, 3),
+      padding: theme.spacing(0.5, 3, 0, 3),
     },
     divider: {
-      backgroundColor: theme.palette.common.white,
-      opacity: 0.1,
+      backgroundColor: theme.palette.divider,
     },
     tablesView: {
       margin: '24px 0 59px 0',
@@ -69,6 +71,7 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   onClose,
 }: CreateDatasetDialogProps) => {
   const [description, setDescription] = useState('');
+  const [descriptionError, setDescriptionError] = useState('');
   const [name, setName] = useState('');
 
   const classes = useStyles();
@@ -80,8 +83,22 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   const onNameChange = (updatedName: string) => {
     setName(updatedName);
   };
+
   const onDescriptionChange = (updatedDescription: string) => {
     setDescription(updatedDescription);
+    updateDescriptionErrorState();
+  };
+
+  const updateDescriptionErrorState = () => {
+    if (description.length > MAX_DESCRIPTION_LENGTH) {
+      setDescriptionError(DESCRIPTION_MAX_LENGTH_ERROR);
+    } else {
+      setDescriptionError('');
+    }
+  };
+
+  const isCreateButtonEnabled = () => {
+    return name.length && description.length && !descriptionError.length;
   };
 
   return (
@@ -106,6 +123,9 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
           label="Description"
           value={description}
           onChange={onDescriptionChange}
+          error={!!descriptionError.length}
+          errorText={descriptionError}
+          multiline
         />
         <Divider className={classes.divider} />
         <Box className={classes.tablesView}>
@@ -122,7 +142,10 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
           <Button className={classes.dialogButton} onClick={handleClose}>
             Cancel
           </Button>
-          <Button disabled className={classes.dialogButton}>
+          <Button
+            disabled={!isCreateButtonEnabled()}
+            className={classes.dialogButton}
+          >
             Create
           </Button>
         </Box>

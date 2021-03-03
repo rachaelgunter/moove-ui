@@ -47,6 +47,8 @@ export interface TextFieldProps {
   value: string;
   type?: string;
   error?: boolean;
+  errorText?: string;
+  multiline?: boolean;
   onChange: (newValue: string) => void;
 }
 
@@ -55,6 +57,8 @@ const TextField = ({
   value,
   error = false,
   type = TextFieldType.TEXT,
+  errorText = '',
+  multiline = false,
   ...props
 }: TextFieldProps): JSX.Element => {
   const classes = useStyles();
@@ -68,7 +72,7 @@ const TextField = ({
     <MuiTextField
       id={`${label}-text-field`}
       error={error}
-      helperText={error ? 'Incorrect email' : ''}
+      helperText={error ? errorText : ''}
       className={classes.root}
       InputProps={{
         classes: {
@@ -95,6 +99,7 @@ const TextField = ({
       onChange={onChange}
       variant="outlined"
       fullWidth
+      multiline={multiline}
     />
   );
 };

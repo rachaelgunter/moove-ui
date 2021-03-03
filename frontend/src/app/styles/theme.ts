@@ -84,6 +84,7 @@ const theme = createMuiTheme({
     background: {
       paper: '#303c43',
     },
+    divider: 'rgba(255, 255, 255, 0.2)',
   },
   shadows: buildShadows(defaultTheme),
 });
