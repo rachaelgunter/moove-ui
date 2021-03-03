@@ -4,7 +4,7 @@ import { withStyles, createStyles } from '@material-ui/styles';
 const TableCell = withStyles((theme: Theme) =>
   createStyles({
     root: {
-      borderColor: 'rgba(255, 255, 255, 0.2)',
+      borderColor: theme.palette.divider,
       fontSize: 13,
       width: '20%',
 
@@ -17,7 +17,7 @@ const TableCell = withStyles((theme: Theme) =>
       },
     },
     head: {
-      color: 'rgba(255, 255, 255, 0.5)',
+      color: theme.palette.text.secondary,
       padding: theme.spacing(1.5),
     },
     body: {
