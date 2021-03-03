@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ChangeEvent, FC, useState } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { SvgIconProps } from '@material-ui/core/SvgIcon';
 import TreeView from '@material-ui/lab/TreeView';
@@ -27,10 +27,13 @@ const useTreeItemStyles = makeStyles((theme: Theme) =>
     root: {
       minHeight: '40px',
       color: theme.palette.text.secondary,
+      '&:hover': {
+        backgroundColor: theme.palette.action.hover,
+      },
       '&:hover > $content': {
         backgroundColor: theme.palette.action.hover,
       },
-      '&:focus > $content, &$selected > $content': {
+      '&$selected > $content': {
         backgroundColor: 'rgba(35, 94, 94, 0.76)',
       },
     },
@@ -115,6 +118,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const TablesTreeView: FC = () => {
   const classes = useStyles();
+  const [selected, setSelected] = useState('');
+
+  const handleNodeSelect = (
+    _: ChangeEvent<Record<string, unknown>>,
+    value: string,
+  ) => {
+    setSelected(value);
+  };
 
   // TODO: replace with user's BQ tables
   return (
@@ -123,6 +134,8 @@ const TablesTreeView: FC = () => {
       defaultCollapseIcon={<ExpandMoreIcon />}
       defaultExpandIcon={<NavigateNextIcon />}
       defaultEndIcon={<div style={{ width: 24 }} />}
+      selected={selected}
+      onNodeSelect={handleNodeSelect}
     >
       <StyledTreeItem nodeId="1" labelText="All Mail" labelIcon={StorageIcon} />
       <StyledTreeItem nodeId="2" labelText="Trash" labelIcon={StorageIcon} />
