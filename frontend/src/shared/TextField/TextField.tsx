@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.bg.lighter,
     color: fade('#fff', 0.5),
     borderColor: theme.palette.bg.dark,
-    height: 56,
+    minHeight: 56,
     fontSize: 16,
     fontFamily: 'Roboto',
     fontWeight: 300,
@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'Roboto',
     fontWeight: 400,
     letterSpacing: 0.15,
+  },
+  notchedOutline: {
+    border: 'none',
   },
 }));
 
@@ -44,6 +47,8 @@ export interface TextFieldProps {
   value: string;
   type?: string;
   error?: boolean;
+  errorText?: string;
+  multiline?: boolean;
   onChange: (newValue: string) => void;
 }
 
@@ -52,6 +57,8 @@ const TextField = ({
   value,
   error = false,
   type = TextFieldType.TEXT,
+  errorText = '',
+  multiline = false,
   ...props
 }: TextFieldProps): JSX.Element => {
   const classes = useStyles();
@@ -65,10 +72,13 @@ const TextField = ({
     <MuiTextField
       id={`${label}-text-field`}
       error={error}
-      helperText={error ? 'Incorrect email' : ''}
+      helperText={error ? errorText : ''}
       className={classes.root}
       InputProps={{
-        classes: { root: classes.input },
+        classes: {
+          root: classes.input,
+          notchedOutline: classes.notchedOutline,
+        },
         endAdornment: isPassword ? (
           <InputAdornment
             showPassword={showPassword}
@@ -89,6 +99,7 @@ const TextField = ({
       onChange={onChange}
       variant="outlined"
       fullWidth
+      multiline={multiline}
     />
   );
 };
