@@ -33,9 +33,11 @@ const Table: FC<TableProps> = ({
       <MuiTable aria-label="columns table">
         {hasShowMore && <ShowMoreButton onClick={onShowMoreClick} />}
         <TableHead>
-          <TableRow>
+          <TableRow key="table-head-row">
             {columnNames.map((name: string) => (
-              <TableCell align="left">{name}</TableCell>
+              <TableCell align="left" key={`table-head-row-${name}`}>
+                {name}
+              </TableCell>
             ))}
           </TableRow>
         </TableHead>

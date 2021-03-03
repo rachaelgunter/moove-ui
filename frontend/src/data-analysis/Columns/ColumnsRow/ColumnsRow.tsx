@@ -21,9 +21,12 @@ const ColumnsRow: FC<ColumnsRowsProps> = ({
   const classes = useStyles();
 
   return (
-    <TableRow key={columnModel.name}>
+    <TableRow key={columnModel.name} data-testid="columns-table-row">
       {Object.keys(columnModel).map((key, index) => (
-        <TableCell className={!index ? classes.firstCell : undefined}>
+        <TableCell
+          className={!index ? classes.firstCell : undefined}
+          key={`${columnModel.name}-${key}`}
+        >
           {columnModel[key]}
         </TableCell>
       ))}

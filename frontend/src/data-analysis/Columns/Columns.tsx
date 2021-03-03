@@ -6,15 +6,15 @@ import { ColumnModel } from '../types';
 import ColumnsRow from './ColumnsRow';
 
 const COLUMNS = ['Name', 'Type', 'Populated %', 'Min', 'Max'];
-const MIN_NUMBER_OF_ROWS_FOR_DISPLAYING = 5;
-const STEP = 5;
+export const INIT_NUMBER_OF_ROWS = 5;
+export const STEP = 5;
 
 interface ColumnsProps {
   columnModels: ColumnModel[];
 }
 
 const Columns: FC<ColumnsProps> = ({ columnModels }: ColumnsProps) => {
-  const [quota, setQuota] = useState(MIN_NUMBER_OF_ROWS_FOR_DISPLAYING);
+  const [quota, setQuota] = useState(INIT_NUMBER_OF_ROWS);
 
   const onShowMoreClick = () => setQuota(quota + STEP);
   const getColumnsByQuota = () => columnModels.slice(0, quota);
@@ -31,7 +31,10 @@ const Columns: FC<ColumnsProps> = ({ columnModels }: ColumnsProps) => {
           hasShowMore
         >
           {getColumnsByQuota().map((column) => (
-            <ColumnsRow columnModel={column} />
+            <ColumnsRow
+              columnModel={column}
+              key={`columns-row-${column.name}`}
+            />
           ))}
         </Table>
       </Grid>
