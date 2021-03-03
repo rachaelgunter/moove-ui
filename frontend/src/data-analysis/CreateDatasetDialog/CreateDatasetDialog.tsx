@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => {
       margin: '24px 0 59px 0',
     },
     tablesViewTitle: {
-      marginBottom: '16px',
+      marginBottom: theme.spacing(2),
     },
     dialogControls: {
       display: 'flex',
