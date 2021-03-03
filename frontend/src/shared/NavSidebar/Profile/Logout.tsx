@@ -26,7 +26,11 @@ const Logout: React.FC = () => {
       className={classes.root}
       container
       alignItems="center"
-      onClick={() => auth?.logout()}
+      onClick={() =>
+        auth?.logout({
+          returnTo: process.env.REACT_APP_AUTH0_LOGOUT_REDIRECT_URI,
+        })
+      }
     >
       <Grid className={classes.logoutIcon} item>
         <ExitToAppIcon />
