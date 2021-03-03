@@ -9,6 +9,34 @@ import DatasetList from './DatasetList';
 import DatasetDetails from './DatasetDetails';
 import CreateDatasetDialog from './CreateDatasetDialog/CreateDatasetDialog';
 
+function createData( // TODO remove
+  name: string,
+  type: string,
+  populated: number,
+  min: string | number,
+  max: string | number,
+) {
+  return { name, type, populated, min, max };
+}
+
+const columns = [
+  createData('ID', 'string', 100, 123, 99875),
+  createData('Friction', 'float', 98.5, 0.1, 9.8),
+  createData('Last', 'float', 99.5, 1000000, 2000000),
+  createData('Long', 'float', 99.5, 1200020, 3200020),
+  createData('Date', 'Timestamp', 100, 'June 1, 2019', 'June 30, 2020'),
+  createData('ID', 'string', 100, 123, 99875),
+  createData('Friction', 'float', 98.5, 0.1, 9.8),
+  createData('Last', 'float', 99.5, 1000000, 2000000),
+  createData('Long', 'float', 99.5, 1200020, 3200020),
+  createData('Date', 'Timestamp', 100, 'June 1, 2019', 'June 30, 2020'),
+  createData('ID', 'string', 100, 123, 99875),
+  createData('Friction', 'float', 98.5, 0.1, 9.8),
+  createData('Last', 'float', 99.5, 1000000, 2000000),
+  createData('Long', 'float', 99.5, 1200020, 3200020),
+  createData('Date', 'Timestamp', 100, 'June 1, 2019', 'June 30, 2020'),
+];
+
 // TODO remove
 const initialData = [
   {
@@ -34,6 +62,7 @@ const initialData = [
     status: DatasetStatus.ACTIVE,
     totalRows: 6726993,
     creationDate: '22/10/2019 8:00 PM',
+    columns,
   },
   {
     id: 3,
