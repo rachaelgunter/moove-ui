@@ -71,7 +71,7 @@ steps:
     id: 'Update chart'
     args:
       - 'e'
-      - '.spec.template.spec.containers[0].image = "gcr.io/moove-platform-lineate-dev/moove-unified-ui-frontend:$COMMIT_SHA"'
+      - '.spec.template.spec.containers[0].image = "gcr.io/$PROJECT_ID/moove-unified-ui-frontend:$COMMIT_SHA"'
       - '-i'
       - /workspace/infrastructure/deploy/kubernetes/unified-ui/frontend/environments/$_ENVIRONMENT/deployment-patch.yml
 
