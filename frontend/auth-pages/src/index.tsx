@@ -22,6 +22,9 @@ function getAuthOptions() {
     }
   }
 
+  // eslint-disable-next-line no-console
+  console.log(config);
+
   return {
     overrides: {
       __tenant: config.auth0Tenant,
@@ -31,6 +34,7 @@ function getAuthOptions() {
     clientID: config.clientID,
     redirectUri: config.callbackURL,
     responseType: 'code',
+    scope: 'openid profile email offline_access',
     ...config.internalOptions,
   };
 }
@@ -55,15 +59,11 @@ const options =
   process.env.NODE_ENV === 'development' ? devOptions : getAuthOptions();
 
 const webAuth = new auth0.WebAuth(options);
-const auth = new auth0.Authentication({
-  domain: options.auth0Domain,
-  clientID: options.clientID,
-});
 
 ReactDOM.render(
   <ThemeProvider theme={theme}>
     <CssBaseline />
-    <WebAuthProvider.Provider value={{ webAuth, options, auth }}>
+    <WebAuthProvider.Provider value={{ webAuth, options }}>
       <HashRouter>
         <Switch>
           <Route exact path="/">

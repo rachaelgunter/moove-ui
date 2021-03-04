@@ -58,9 +58,9 @@ const GoogleAuth: FC<GoogleAuthProps> = ({
     webAuth.authorize({
       connection: 'google-oauth2',
       accessType: 'offline',
-      scope: 'email profile',
       connection_scope: 'https://www.googleapis.com/auth/bigquery.readonly',
       approvalPrompt: 'force',
+      state: undefined,
     });
   };
 
