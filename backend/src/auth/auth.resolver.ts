@@ -27,6 +27,8 @@ export class AuthResolver {
   ): Promise<User> {
     try {
       const syncedUser = await this.usersService.syncUserInfo(signedInUser);
+      const auth0user = await this.usersService.getAuth0User(syncedUser.id);
+      this.logger.debug(JSON.stringify(auth0user));
       return this.usersTransformer.transformUserToGraphQLResponseObject(
         syncedUser,
       );

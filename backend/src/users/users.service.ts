@@ -84,4 +84,8 @@ export class UsersService {
 
     return user;
   }
+
+  async getAuth0User(userId: string) {
+    return this.auth0ClientService.getUser(userId);
+  }
 }

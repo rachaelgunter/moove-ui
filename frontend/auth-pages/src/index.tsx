@@ -55,11 +55,15 @@ const options =
   process.env.NODE_ENV === 'development' ? devOptions : getAuthOptions();
 
 const webAuth = new auth0.WebAuth(options);
+const auth = new auth0.Authentication({
+  domain: options.auth0Domain,
+  clientID: options.clientID,
+});
 
 ReactDOM.render(
   <ThemeProvider theme={theme}>
     <CssBaseline />
-    <WebAuthProvider.Provider value={{ webAuth, options }}>
+    <WebAuthProvider.Provider value={{ webAuth, options, auth }}>
       <HashRouter>
         <Switch>
           <Route exact path="/">
