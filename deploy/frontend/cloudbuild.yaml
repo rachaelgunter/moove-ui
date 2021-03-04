@@ -1,6 +1,7 @@
 substitutions:
   _DEPLOY_BRANCH: "master"
   _ENVIRONMENT: ""
+  _GITHUB_SSH_KEY_NAME: ""
   _REACT_APP_AUTH0_DOMAIN: ""
   _REACT_APP_AUTH0_CLIENT_ID: ""
   _REACT_APP_AUTH0_AUDIENCE: ""
@@ -34,7 +35,7 @@ steps:
     args:
       - '-c'
       - |
-        gcloud secrets versions access latest --secret github_ssh_key > /root/.ssh/id_github
+        gcloud secrets versions access latest --secret $_GITHUB_SSH_KEY_NAME > /root/.ssh/id_github
     volumes:
       - name: ssh
         path: /root/.ssh
