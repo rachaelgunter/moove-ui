@@ -1,5 +1,6 @@
 substitutions:
   _DEPLOY_BRANCH: "master"
+  _ENVIRONMENT: ""
 
 steps:
   - name: 'gcr.io/cloud-builders/docker'
@@ -57,8 +58,7 @@ steps:
       - 'e'
       - '.spec.template.spec.containers[0].image = "gcr.io/moove-platform-lineate-dev/moove-unified-ui-backend:$COMMIT_SHA"'
       - '-i'
-      - '/workspace/infrastructure/deploy/unified-ui/backend/manifests/deployment.yml'
-
+      - /workspace/infrastructure/deploy/kubernetes/unified-ui/backend/environments/$_ENVIRONMENT/deployment-patch.yml
 
   - name: 'gcr.io/cloud-builders/git'
     id: 'Commit and push changes to infrastructure repo'
@@ -70,7 +70,7 @@ steps:
         git config --global user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)') && \
         git config --global user.name moove-devopsbot && \
         cd /workspace/infrastructure
-        git add deploy/unified-ui/backend/manifests/deployment.yml
+        git add deploy/kubernetes/unified-ui/backend/environments/$_ENVIRONMENT/deployment-patch.yml
         git commit -m "CI: ${COMMIT_SHA} Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
         git push
     volumes:
