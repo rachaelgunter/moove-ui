@@ -11,10 +11,16 @@ type User {
   organization: String
 }
 
+type BigQueryDataset {
+  projectId: String!
+  datasetId: String!
+}
+
 type BigQueryProject {
   projectId: String!
   numericId: String!
   friendlyName: String!
+  datasets: [BigQueryDataset]
 }
 
 type Query {
