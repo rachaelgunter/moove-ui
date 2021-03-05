@@ -22,9 +22,6 @@ function getAuthOptions() {
     }
   }
 
-  // eslint-disable-next-line no-console
-  console.log(config);
-
   return {
     overrides: {
       __tenant: config.auth0Tenant,
@@ -34,7 +31,7 @@ function getAuthOptions() {
     clientID: config.clientID,
     redirectUri: config.callbackURL,
     responseType: 'code',
-    scope: 'openid profile email offline_access',
+    scope: 'openid profile email',
     ...config.internalOptions,
   };
 }

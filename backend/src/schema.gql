@@ -36,6 +36,7 @@ type Query {
 
 type Mutation {
   syncUserData(signedInUser: UserInput!): User!
+  createDataset(datasetParams: DatasetParamsInput!): String!
 }
 
 input UserInput {
@@ -43,4 +44,12 @@ input UserInput {
   email: String!
   picture: String!
   name: String!
+}
+
+input DatasetParamsInput {
+  name: String!
+  description: String!
+  projectId: String!
+  datasetId: String!
+  tableId: String!
 }

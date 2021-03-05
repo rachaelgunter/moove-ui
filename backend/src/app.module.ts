@@ -11,6 +11,7 @@ import { UsersModule } from './users/users.module';
 import { HealthController } from './health/health.controller';
 import { HealthModule } from './health/health.module';
 import { BigqueryModule } from './bigquery/bigquery.module';
+import { DatasetsModule } from './datasets/datasets.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { BigqueryModule } from './bigquery/bigquery.module';
     UsersModule,
     HealthModule,
     BigqueryModule,
+    DatasetsModule,
   ],
   providers: [PrismaClient, Auth0ClientService],
   controllers: [HealthController],
