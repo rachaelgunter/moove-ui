@@ -65,6 +65,8 @@ describe('UsersService', () => {
       expect(prisma.user.upsert).toHaveBeenCalledWith({
         create: {
           id: '1234',
+          accessToken: null,
+          refreshToken: null,
           email: 'email@test.com',
           name: 'name',
           picture: 'picture',
@@ -72,6 +74,8 @@ describe('UsersService', () => {
         update: {
           name: 'name',
           picture: 'picture',
+          accessToken: null,
+          refreshToken: null,
         },
         where: { id: '1234' },
         include: {
@@ -96,10 +100,14 @@ describe('UsersService', () => {
           email: 'email@test.com',
           name: null,
           picture: 'picture',
+          accessToken: null,
+          refreshToken: null,
         },
         update: {
           name: null,
           picture: 'picture',
+          accessToken: null,
+          refreshToken: null,
         },
         where: { id: '1234' },
         include: {
@@ -176,10 +184,14 @@ describe('UsersService', () => {
           email: 'email@test.com',
           name: null,
           picture: 'picture',
+          accessToken: null,
+          refreshToken: null,
         },
         update: {
           name: null,
           picture: 'picture',
+          accessToken: null,
+          refreshToken: null,
         },
         where: { id: '2' },
         include: {

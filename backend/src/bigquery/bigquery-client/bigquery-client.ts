@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import { OAuth2Client } from 'google-auth-library';
 import { bigquery_v2, google } from 'googleapis';
 import { TokenPair } from 'src/users/users.types';
@@ -10,7 +9,6 @@ import {
 
 export class BigQueryClient {
   private readonly oauthClient: OAuth2Client;
-  private readonly logger = new Logger(BigQueryClient.name);
   private readonly bigQuery: bigquery_v2.Bigquery;
 
   constructor({ accessToken, refreshToken }: TokenPair) {
