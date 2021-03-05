@@ -20,6 +20,8 @@ model User {
   role           Role          @default(FREEMIUM)
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId Int?
+  accessToken    String?
+  refreshToken   String?
 }
 
 model Organization {

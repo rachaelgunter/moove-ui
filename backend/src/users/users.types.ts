@@ -40,3 +40,8 @@ export class User {
 export interface UserTokenPayload {
   sub: string;
 }
+
+export interface TokenPair {
+  accessToken: string;
+  refreshToken: string;
+}

@@ -10,6 +10,7 @@ import { EmailDirective } from './shared/directives/email-graphql.directive';
 import { UsersModule } from './users/users.module';
 import { HealthController } from './health/health.controller';
 import { HealthModule } from './health/health.module';
+import { BigqueryModule } from './bigquery/bigquery.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { HealthModule } from './health/health.module';
     AuthModule,
     UsersModule,
     HealthModule,
+    BigqueryModule,
   ],
   providers: [PrismaClient, Auth0ClientService],
   controllers: [HealthController],

@@ -11,8 +11,15 @@ type User {
   organization: String
 }
 
+type BigQueryProject {
+  projectId: String!
+  numericId: String!
+  friendlyName: String!
+}
+
 type Query {
   getCurrentUser: User!
+  getUsersProjects: [BigQueryProject!]!
 }
 
 type Mutation {
