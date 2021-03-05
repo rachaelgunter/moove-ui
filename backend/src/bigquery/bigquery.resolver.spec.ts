@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BigqueryResolver } from './bigquery.resolver';
+import { BigQueryProjectsResolver } from './bigquery-projects.resolver';
 
 describe('BigqueryResolver', () => {
-  let resolver: BigqueryResolver;
+  let resolver: BigQueryProjectsResolver;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [BigqueryResolver],
+      providers: [BigQueryProjectsResolver],
     }).compile();
 
-    resolver = module.get<BigqueryResolver>(BigqueryResolver);
+    resolver = module.get<BigQueryProjectsResolver>(BigQueryProjectsResolver);
   });
 
   it('should be defined', () => {

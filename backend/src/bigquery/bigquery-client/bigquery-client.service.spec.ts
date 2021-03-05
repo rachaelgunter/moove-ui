@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BigQueryClient } from './bigquery-client';
 
-describe('BigqueryClient', () => {
+describe('BigQueryClient', () => {
   let service: BigQueryClient;
 
   beforeEach(async () => {

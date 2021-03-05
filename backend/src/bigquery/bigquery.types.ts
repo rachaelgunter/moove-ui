@@ -1,4 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { BigQueryClient } from './bigquery-client/bigquery-client';
+
+export interface BigQueryResolverContext {
+  bigQueryClient: BigQueryClient;
+}
 
 @ObjectType()
 export class BigQueryTable {

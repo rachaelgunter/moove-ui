@@ -1,4 +1,6 @@
-import { google } from 'googleapis';
+import { Logger } from '@nestjs/common';
+import { OAuth2Client } from 'google-auth-library';
+import { bigquery_v2, google } from 'googleapis';
 import { TokenPair } from 'src/users/users.types';
 import {
   BigQueryDataset,
@@ -7,64 +9,71 @@ import {
 } from '../bigquery.types';
 
 export class BigQueryClient {
-  oauthClient = new google.auth.OAuth2({
-    clientId: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  });
+  private readonly oauthClient: OAuth2Client;
+  private readonly logger = new Logger(BigQueryClient.name);
+  private readonly bigQuery: bigquery_v2.Bigquery;
 
   constructor({ accessToken, refreshToken }: TokenPair) {
+    this.oauthClient = new google.auth.OAuth2({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    });
     this.oauthClient.setCredentials({
       access_token: accessToken,
       refresh_token: refreshToken,
     });
+    this.bigQuery = google.bigquery('v2');
   }
 
   async getProjects(): Promise<BigQueryProject[]> {
-    return google
-      .bigquery('v2')
-      .projects.list({
+    return this.bigQuery.projects
+      .list({
         auth: this.oauthClient,
       })
-      .then(({ data }) => {
-        return data.projects?.map(({ numericId, id, friendlyName }) => ({
-          numericId,
-          projectId: id,
-          friendlyName,
-        }));
-      });
+      .then(({ data }) => this.mapProjects(data));
   }
 
   async getProjectDatasets(projectId: string): Promise<BigQueryDataset[]> {
-    return google
-      .bigquery('v2')
-      .datasets.list({
+    return this.bigQuery.datasets
+      .list({
         auth: this.oauthClient,
         projectId,
       })
-      .then(({ data }) => {
-        return data.datasets?.map(({ datasetReference }) => ({
-          datasetId: datasetReference.datasetId,
-          projectId: datasetReference.projectId,
-        }));
-      });
+      .then(({ data }) => this.mapDatasets(data));
   }
 
   async getDatasetTables(
     projectId: string,
     datasetId: string,
   ): Promise<BigQueryTable[]> {
-    return google
-      .bigquery('v2')
-      .tables.list({
+    return this.bigQuery.tables
+      .list({
         auth: this.oauthClient,
         datasetId,
         projectId,
       })
-      .then(({ data }) => {
-        return data.tables?.map(({ tableReference }) => ({
-          datasetId: tableReference.datasetId,
-          tableId: tableReference.tableId,
-        }));
-      });
+      .then(({ data }) => this.mapTables(data));
+  }
+
+  mapProjects({ projects }: bigquery_v2.Schema$ProjectList): BigQueryProject[] {
+    return projects?.map(({ numericId, id, friendlyName }) => ({
+      numericId,
+      projectId: id,
+      friendlyName,
+    }));
+  }
+
+  mapDatasets({ datasets }: bigquery_v2.Schema$DatasetList): BigQueryDataset[] {
+    return datasets?.map(({ datasetReference }) => ({
+      datasetId: datasetReference.datasetId,
+      projectId: datasetReference.projectId,
+    }));
+  }
+
+  mapTables({ tables }: bigquery_v2.Schema$TableList): BigQueryTable[] {
+    return tables?.map(({ tableReference }) => ({
+      datasetId: tableReference.datasetId,
+      tableId: tableReference.tableId,
+    }));
   }
 }
