@@ -6,10 +6,10 @@ import {
   BigQueryProject,
   BigQueryTable,
 } from '../bigquery.types';
-
 export class BigQueryClient {
   private readonly oauthClient: OAuth2Client;
   private readonly bigQuery: bigquery_v2.Bigquery;
+  private readonly cloudFunction = google.cloudfunctions('v1');
 
   constructor({ accessToken, refreshToken }: TokenPair) {
     this.oauthClient = new google.auth.OAuth2({

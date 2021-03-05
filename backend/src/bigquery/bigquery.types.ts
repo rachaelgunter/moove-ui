@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { BigQueryClient } from './bigquery-client/bigquery-client';
 
 export interface BigQueryResolverContext {
@@ -39,4 +39,13 @@ export class BigQueryProject {
 
   @Field(() => [BigQueryDataset], { nullable: 'itemsAndList' })
   datasets?: BigQueryDataset[];
+}
+
+@InputType()
+export class BigQueryTablesParams {
+  @Field()
+  projectId: string;
+
+  @Field()
+  datasetId: string;
 }
