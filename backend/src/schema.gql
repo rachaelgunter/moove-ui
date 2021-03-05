@@ -11,9 +11,15 @@ type User {
   organization: String
 }
 
+type BigQueryTable {
+  datasetId: String!
+  tableId: String!
+}
+
 type BigQueryDataset {
   projectId: String!
   datasetId: String!
+  tables(includedDatasetsIds: [String!]!): [BigQueryTable]
 }
 
 type BigQueryProject {

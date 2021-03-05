@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BigqueryClient } from './bigquery-client';
+import { BigQueryClient } from './bigquery-client';
 
 describe('BigqueryClient', () => {
-  let service: BigqueryClient;
+  let service: BigQueryClient;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [BigqueryClient],
+      providers: [BigQueryClient],
     }).compile();
 
-    service = module.get<BigqueryClient>(BigqueryClient);
+    service = module.get<BigQueryClient>(BigQueryClient);
   });
 
   it('should be defined', () => {

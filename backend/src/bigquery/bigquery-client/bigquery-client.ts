@@ -1,8 +1,12 @@
 import { google } from 'googleapis';
 import { TokenPair } from 'src/users/users.types';
-import { BigQueryDataset, BigQueryProject } from '../bigquery.types';
+import {
+  BigQueryDataset,
+  BigQueryProject,
+  BigQueryTable,
+} from '../bigquery.types';
 
-export class BigqueryClient {
+export class BigQueryClient {
   oauthClient = new google.auth.OAuth2({
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -41,6 +45,25 @@ export class BigqueryClient {
         return data.datasets?.map(({ datasetReference }) => ({
           datasetId: datasetReference.datasetId,
           projectId: datasetReference.projectId,
+        }));
+      });
+  }
+
+  async getDatasetTables(
+    projectId: string,
+    datasetId: string,
+  ): Promise<BigQueryTable[]> {
+    return google
+      .bigquery('v2')
+      .tables.list({
+        auth: this.oauthClient,
+        datasetId,
+        projectId,
+      })
+      .then(({ data }) => {
+        return data.tables?.map(({ tableReference }) => ({
+          datasetId: tableReference.datasetId,
+          tableId: tableReference.tableId,
         }));
       });
   }
