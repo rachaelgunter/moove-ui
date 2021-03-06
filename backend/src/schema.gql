@@ -32,7 +32,7 @@ type BigQueryProject {
 type Query {
   getCurrentUser: User!
   getUsersProjects: [BigQueryProject!]!
-  tables(tablesParams: BigQueryTablesParams!): [BigQueryTable!]!
+  tables(tablesParams: BigQueryTablesParams!): [BigQueryTable]
 }
 
 input BigQueryTablesParams {

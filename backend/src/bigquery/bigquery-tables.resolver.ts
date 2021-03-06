@@ -14,7 +14,7 @@ export class BigQueryTablesResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @UseGuards(new GqlAuthGuard())
-  @Query(() => [BigQueryTable])
+  @Query(() => [BigQueryTable], { nullable: 'itemsAndList' })
   async tables(
     @CurrentUser()
     user: UserTokenPayload,
