@@ -1,6 +1,8 @@
 import React from 'react';
 import { ThemeProvider } from '@material-ui/core';
 import { fireEvent, render, RenderResult } from '@testing-library/react';
+import { MockedProvider } from '@apollo/client/testing';
+
 import theme from 'src/app/styles';
 
 import CreateDatasetDialog, {
@@ -12,9 +14,11 @@ describe('CreateDatasetDialog', () => {
 
   beforeEach(() => {
     wrapper = render(
-      <ThemeProvider theme={theme}>
-        <CreateDatasetDialog open onClose={() => {}} />
-      </ThemeProvider>,
+      <MockedProvider>
+        <ThemeProvider theme={theme}>
+          <CreateDatasetDialog open onClose={() => {}} />
+        </ThemeProvider>
+      </MockedProvider>,
     );
   });
 
