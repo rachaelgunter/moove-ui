@@ -45,13 +45,13 @@ const DatasetSubtree: FC<DatasetSubtreeProps> = ({
         data.tables?.map((table: BigQueryTable) => (
           <StyledTreeItem
             key={getTableTreeItemId(
-              data.projectId,
-              data.datasetId,
+              project.projectId,
+              dataset.datasetId,
               table.tableId,
             )}
             nodeId={getTableTreeItemId(
-              data.projectId,
-              data.datasetId,
+              project.projectId,
+              dataset.datasetId,
               table.tableId,
             )}
             labelText={table.tableId}

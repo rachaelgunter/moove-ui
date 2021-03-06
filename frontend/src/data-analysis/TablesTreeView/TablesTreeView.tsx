@@ -7,11 +7,15 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import StorageIcon from '@material-ui/icons/Storage';
 import { useQuery } from '@apollo/client';
 import { CircularProgress } from '@material-ui/core';
-import { BigQueryProjectsResponse } from '../types';
+import { BigQueryProjectsResponse, TableIdentity } from '../types';
 import StyledTreeItem from './TreeItem';
 import GCPProjectIcon from '../icons/GCPProjectIcon';
 import { BIG_QUERY_PROJECTS_QUERY } from '../queries';
 import DatasetSubtree from './DatasetSubtree';
+
+interface TablesTreeViewProps {
+  onTableSelect: (params: TableIdentity) => void;
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -23,7 +27,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const TablesTreeView: FC = () => {
+const TablesTreeView: FC<TablesTreeViewProps> = ({
+  onTableSelect,
+}: TablesTreeViewProps) => {
   const classes = useStyles();
   const [selected, setSelected] = useState('');
   const [expanded, setExpanded] = useState<string[]>([]);
@@ -35,7 +41,9 @@ const TablesTreeView: FC = () => {
     value: string,
   ) => {
     if (value.includes('table')) {
+      const [projectId, datasetId, tableId] = value.split(':');
       setSelected(value);
+      onTableSelect({ projectId, datasetId, tableId });
     }
   };
 

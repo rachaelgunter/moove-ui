@@ -13,6 +13,8 @@ export class DatasetsResolver {
   async createDataset(
     @Args({ name: 'datasetParams' }) datasetParams: DatasetParamsInput,
   ): Promise<string> {
-    return this.datasetsService.createDataset(datasetParams);
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(JSON.stringify(datasetParams)), 5000);
+    });
   }
 }

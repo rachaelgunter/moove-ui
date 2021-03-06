@@ -1,6 +1,8 @@
+import { useMutation } from '@apollo/client';
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -12,7 +14,9 @@ import React, { FC, useState } from 'react';
 import { FontFamily } from 'src/app/styles/fonts';
 import TextField from 'src/shared/TextField';
 import Typography from 'src/shared/Typography';
+import { CREATE_DATASET_MUTATION } from '../mutations';
 import TablesTreeView from '../TablesTreeView/TablesTreeView';
+import { TableIdentity } from '../types';
 
 const MAX_DESCRIPTION_LENGTH = 16384;
 export const DESCRIPTION_MAX_LENGTH_ERROR =
@@ -73,10 +77,20 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   const [description, setDescription] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
   const [name, setName] = useState('');
+  const [selectedTable, setSelectedTable] = useState<TableIdentity | null>(
+    null,
+  );
+
+  const [createDataset, { loading }] = useMutation(CREATE_DATASET_MUTATION);
 
   const classes = useStyles();
 
   const handleClose = () => {
+    if (!loading) {
+      setName('');
+      setDescription('');
+      setSelectedTable(null);
+    }
     onClose();
   };
 
@@ -97,8 +111,29 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
     }
   };
 
+  const handleTableSelect = ({
+    projectId,
+    datasetId,
+    tableId,
+  }: TableIdentity) => {
+    setSelectedTable({ projectId, datasetId, tableId });
+  };
+
   const isCreateButtonEnabled = () => {
-    return name.length && description.length && !descriptionError.length;
+    return (
+      name.length &&
+      !descriptionError.length &&
+      selectedTable !== null &&
+      !loading
+    );
+  };
+
+  const handleDatasetCreation = () => {
+    createDataset({
+      variables: {
+        datasetParams: { name, description, ...selectedTable },
+      },
+    });
   };
 
   return (
@@ -135,18 +170,23 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
           >
             Choose a BigQuery table
           </Typography>
-          <TablesTreeView />
+          <TablesTreeView onTableSelect={handleTableSelect} />
         </Box>
         <Divider className={classes.divider} />
         <Box className={classes.dialogControls}>
-          <Button className={classes.dialogButton} onClick={handleClose}>
+          <Button
+            disabled={loading}
+            className={classes.dialogButton}
+            onClick={handleClose}
+          >
             Cancel
           </Button>
           <Button
             disabled={!isCreateButtonEnabled()}
             className={classes.dialogButton}
+            onClick={handleDatasetCreation}
           >
-            Create
+            {!loading ? 'Create' : <CircularProgress size="1em" />}
           </Button>
         </Box>
       </DialogContent>

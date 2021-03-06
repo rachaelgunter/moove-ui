@@ -40,3 +40,9 @@ export type BigQueryDataset = {
 export type BigQueryTable = {
   tableId: string;
 };
+
+export type TableIdentity = {
+  projectId: string;
+  datasetId: string;
+  tableId: string;
+};
