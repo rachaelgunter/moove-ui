@@ -5,82 +5,13 @@ import TreeView from '@material-ui/lab/TreeView';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import StorageIcon from '@material-ui/icons/Storage';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { CircularProgress } from '@material-ui/core';
-import ScheduleIcon from '@material-ui/icons/Schedule';
-import {
-  BigQueryDataset,
-  BigQueryProject,
-  BigQueryProjectsResponse,
-  BigQueryTable,
-} from '../types';
+import { BigQueryProjectsResponse } from '../types';
 import StyledTreeItem from './TreeItem';
-
-declare module 'csstype' {
-  interface Properties {
-    '--tree-view-color'?: string;
-    '--tree-view-bg-color'?: string;
-  }
-}
-
-const BIG_QUERY_PROJECTS_QUERY = gql`
-  query Projects {
-    getUsersProjects {
-      projectId
-      datasets {
-        datasetId
-      }
-    }
-  }
-`;
-
-interface DatasetSubtreeProps {
-  dataset: BigQueryDataset;
-  project: BigQueryProject;
-}
-
-const BIG_QUERY_TABLES_QUERY = gql`
-  query Tables($tablesParams: BigQueryTablesParams!) {
-    tables(tablesParams: $tablesParams) {
-      tableId
-      datasetId
-    }
-  }
-`;
-
-const DatasetSubtree: FC<DatasetSubtreeProps> = ({
-  dataset,
-  project,
-}: DatasetSubtreeProps) => {
-  const { data } = useQuery(BIG_QUERY_TABLES_QUERY, {
-    variables: {
-      tablesParams: {
-        projectId: project.projectId,
-        datasetId: dataset.datasetId,
-      },
-    },
-  });
-
-  return (
-    <>
-      {!data ? (
-        <StyledTreeItem
-          nodeId={`${dataset.datasetId}:loader`}
-          labelText="loading..."
-          labelIcon={ScheduleIcon}
-        />
-      ) : (
-        data.tables?.map((table: BigQueryTable) => (
-          <StyledTreeItem
-            nodeId={`${table.tableId}:table`}
-            labelText={table.tableId}
-            labelIcon={StorageIcon}
-          />
-        ))
-      )}
-    </>
-  );
-};
+import GCPProjectIcon from '../icons/GCPProjectIcon';
+import { BIG_QUERY_PROJECTS_QUERY } from '../queries';
+import DatasetSubtree from './DatasetSubtree';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -103,7 +34,9 @@ const TablesTreeView: FC = () => {
     _: ChangeEvent<Record<string, unknown>>,
     value: string,
   ) => {
-    setSelected(value);
+    if (value.includes('table')) {
+      setSelected(value);
+    }
   };
 
   const handleNodeToggle = (
@@ -117,26 +50,41 @@ const TablesTreeView: FC = () => {
     return expanded.includes(id);
   };
 
+  const getDatasetTreeItemId = (
+    projectId: string,
+    datasetId: string,
+  ): string => {
+    return `${projectId}:${datasetId}:${datasetId}:dataset`;
+  };
+
   const constructTree = ({ getUsersProjects }: BigQueryProjectsResponse) => {
     return getUsersProjects?.map((project) => (
       <StyledTreeItem
+        key={project.projectId}
         nodeId={project.projectId}
         labelText={project.projectId}
-        labelIcon={StorageIcon}
+        labelIcon={GCPProjectIcon}
       >
-        {project?.datasets?.map((dataset) => (
-          <StyledTreeItem
-            nodeId={`${dataset.datasetId}:dataset`}
-            labelText={dataset.datasetId}
-            labelIcon={StorageIcon}
-          >
-            {checkExpanded(`${dataset.datasetId}:dataset`) ? (
-              <DatasetSubtree project={project} dataset={dataset} />
-            ) : (
-              <div />
-            )}
-          </StyledTreeItem>
-        ))}
+        {project?.datasets?.map((dataset) => {
+          const datasetId = getDatasetTreeItemId(
+            project.projectId,
+            dataset.datasetId,
+          );
+          return (
+            <StyledTreeItem
+              key={datasetId}
+              nodeId={datasetId}
+              labelText={dataset.datasetId}
+              labelIcon={StorageIcon}
+            >
+              {checkExpanded(datasetId) ? (
+                <DatasetSubtree project={project} dataset={dataset} />
+              ) : (
+                <div />
+              )}
+            </StyledTreeItem>
+          );
+        })}
       </StyledTreeItem>
     ));
   };
