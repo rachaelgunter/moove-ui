@@ -25,6 +25,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 665,
     overflowY: 'auto',
   },
+  loaderContainer: {
+    display: 'flex',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 }));
 
 const TablesTreeView: FC<TablesTreeViewProps> = ({
@@ -108,7 +115,13 @@ const TablesTreeView: FC<TablesTreeViewProps> = ({
       onNodeSelect={handleNodeSelect}
       onNodeToggle={handleNodeToggle}
     >
-      {data ? constructTree(data) : <CircularProgress />}
+      {data ? (
+        constructTree(data)
+      ) : (
+        <div className={classes.loaderContainer}>
+          <CircularProgress />
+        </div>
+      )}
     </TreeView>
   );
 };
