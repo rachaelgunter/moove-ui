@@ -201,15 +201,17 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
             className={classes.dialogButton}
             onClick={handleClose}
           >
-            Cancel
+            {creationCompleted ? 'Close' : 'Cancel'}
           </Button>
-          <Button
-            disabled={!isCreateButtonEnabled()}
-            className={classes.dialogButton}
-            onClick={handleDatasetCreation}
-          >
-            {!loading ? 'Create' : <CircularProgress size="1em" />}
-          </Button>
+          {!creationCompleted && (
+            <Button
+              disabled={!isCreateButtonEnabled()}
+              className={classes.dialogButton}
+              onClick={handleDatasetCreation}
+            >
+              {!loading ? 'Create' : <CircularProgress size="1em" />}
+            </Button>
+          )}
         </Box>
       </DialogContent>
     </Dialog>
