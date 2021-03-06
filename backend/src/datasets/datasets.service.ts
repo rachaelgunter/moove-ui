@@ -10,7 +10,7 @@ export class DatasetsService {
    * and cloud function is going to be authorized in the future
    */
   createDataset(datasetParams: DatasetParamsInput): Promise<string> {
-    const { name, projectId, datasetId, tableId } = datasetParams;
+    const { name, projectId, datasetId, tableId, description } = datasetParams;
     return this.httpService
       .post<string>(
         'https://us-central1-moove-platform-testing-data.cloudfunctions.net/galileo-ingest',
@@ -19,6 +19,7 @@ export class DatasetsService {
           source_table: tableId,
           source_dataset: datasetId,
           source_project: projectId,
+          analysis_description: description,
           primary_id: 'uuid',
           primary_geography: 'geog',
           lat: 'latitude',
