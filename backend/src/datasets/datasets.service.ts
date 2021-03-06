@@ -1,8 +1,16 @@
 import { HttpService, Injectable } from '@nestjs/common';
 import { map } from 'rxjs/operators';
-import { DatasetParamsInput } from './datasets.types';
+import {
+  Dataset,
+  DatasetListingResponse,
+  DatasetParamsInput,
+} from './datasets.types';
+import { google } from 'googleapis';
+
 @Injectable()
 export class DatasetsService {
+  private readonly auth = new google.auth.GoogleAuth();
+
   constructor(private readonly httpService: HttpService) {}
 
   /**
@@ -83,5 +91,31 @@ export class DatasetsService {
       )
       .pipe(map((response) => response.data))
       .toPromise();
+  }
+
+  async getDatasets(): Promise<Dataset[]> {
+    const cloudFunctionUrl =
+      'https://us-central1-moove-platform-testing-data.cloudfunctions.net/get_analyses';
+
+    const client = await this.auth.getIdTokenClient(cloudFunctionUrl);
+    const headers = await client.getRequestHeaders(cloudFunctionUrl);
+
+    return this.httpService
+      .post(
+        cloudFunctionUrl,
+        { analysis_project: 'moove-platform-testing-data' },
+        {
+          headers,
+        },
+      )
+      .pipe(map(({ data }) => this.mapDatasets(data)))
+      .toPromise();
+  }
+
+  mapDatasets(datasetsResponse: DatasetListingResponse): Dataset[] {
+    return Object.keys(datasetsResponse).map((key) => ({
+      analysisName: key,
+      bigQueryDatasetName: datasetsResponse[key],
+    }));
   }
 }

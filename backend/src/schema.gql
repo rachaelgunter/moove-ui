@@ -29,10 +29,16 @@ type BigQueryProject {
   datasets: [BigQueryDataset]
 }
 
+type Dataset {
+  analysisName: String!
+  bigQueryDatasetName: String!
+}
+
 type Query {
   getCurrentUser: User!
   getUsersProjects: [BigQueryProject!]!
   tables(tablesParams: BigQueryTablesParams!): [BigQueryTable]
+  getDatasets: [Dataset]
 }
 
 input BigQueryTablesParams {
