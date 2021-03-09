@@ -18,6 +18,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(2),
   },
+  ellipsis: {
+    display: 'inline-block',
+    maxWidth: '100%',
+    width: 'auto',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden !important',
+    textOverflow: 'ellipsis',
+  },
   thinText: {
     wordBreak: 'break-word',
     fontFamily: FontFamily.ROBOTO,
@@ -77,6 +85,7 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
               variant="h5"
               color="textPrimary"
               fontFamily={FontFamily.ROBOTO}
+              className={classes.ellipsis}
             >
               {datasetModel.name}
             </Typography>
