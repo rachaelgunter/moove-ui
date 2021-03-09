@@ -5,7 +5,7 @@ import Table from 'src/shared/Table';
 import { ColumnModel } from '../types';
 import ColumnsRow from './ColumnsRow';
 
-const COLUMNS = ['Name', 'Type', 'Populated %', 'Min', 'Max'];
+const COLUMNS = ['Name', 'Type', 'Populated %', 'Min', 'Max', ''];
 export const INIT_NUMBER_OF_ROWS = 5;
 export const STEP = 5;
 
