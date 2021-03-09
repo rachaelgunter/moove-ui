@@ -4,6 +4,7 @@ import { FontFamily } from 'src/app/styles/fonts';
 import DialogWrapper from 'src/shared/DialogWrapper/DialogWrapper';
 import ColumnViewBreadcrumbs from './ColumnViewBreadcrumbs';
 import ColumnViewTabPanel from './ColumnViewTabPanel';
+import ColumnViewMap from './ColumnViewMap';
 
 interface DetailedColumnViewProps {
   open: boolean;
@@ -78,7 +79,7 @@ const DetailedColumnView: FC<DetailedColumnViewProps> = ({
         Analytics
       </ColumnViewTabPanel>
       <ColumnViewTabPanel value={value} index={1}>
-        Map
+        <ColumnViewMap />
       </ColumnViewTabPanel>
       <ColumnViewTabPanel value={value} index={2}>
         Relationships
