@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { Grid, makeStyles, Paper, Theme } from '@material-ui/core';
+import {
+  Grid,
+  Link,
+  makeStyles,
+  Menu,
+  MenuItem,
+  Paper,
+  Theme,
+} from '@material-ui/core';
 import { MoreVert as MoreVertIcon } from '@material-ui/icons';
 
 import { DatasetDetailsProps } from 'src/data-analysis/DatasetDetails/DatasetDetails';
@@ -28,6 +36,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   actions: {
     display: 'flex',
     alignItems: 'center',
+    minWidth: theme.spacing(6),
+  },
+  actionsMenuItem: {
+    fontFamily: FontFamily.ROBOTO,
+    '& > a': {
+      color: theme.palette.text.primary,
+      '&:hover': {
+        textDecoration: 'none',
+      },
+    },
   },
 }));
 
@@ -40,6 +58,8 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
   const [description, setDescription] = useState<string>(
     datasetModel.description,
   );
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const onDescriptionChanged = (value: string) => {
     setDescription(value);
@@ -64,6 +84,14 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
   const totalRows = isProcessing
     ? '—'
     : formatStringWithCommas(datasetModel.totalRows.toString());
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Paper className={classes.root} elevation={2}>
@@ -93,9 +121,34 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
             </SpecificationColumn>
           </Grid>
           <Grid item className={classes.actions}>
-            <IconButton>
-              <MoreVertIcon />
-            </IconButton>
+            {!isProcessing && (
+              <>
+                <Menu
+                  id="simple-menu"
+                  anchorEl={anchorEl}
+                  getContentAnchorEl={null}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem className={classes.actionsMenuItem}>
+                    <Link href={process.env.REACT_APP_JUPYTERHUB_URL}>
+                      View Notebook
+                    </Link>
+                  </MenuItem>
+                </Menu>
+                <IconButton onClick={handleMenuOpen}>
+                  <MoreVertIcon />
+                </IconButton>
+              </>
+            )}
           </Grid>
         </Grid>
         <Grid item>
