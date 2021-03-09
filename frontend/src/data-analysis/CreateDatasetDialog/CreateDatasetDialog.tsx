@@ -17,6 +17,7 @@ import Typography from 'src/shared/Typography';
 import { CREATE_DATASET_MUTATION } from '../mutations';
 import TablesTreeView from '../TablesTreeView/TablesTreeView';
 import { TableIdentity } from '../types';
+import CreateDatasetSuccessMessage from './CreateDatasetSuccessMessage';
 
 const MAX_DESCRIPTION_LENGTH = 16384;
 export const DESCRIPTION_MAX_LENGTH_ERROR =
@@ -28,11 +29,14 @@ interface CreateDatasetDialogProps {
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
-    root: {
+    paper: {
+      minHeight: '660px',
       fontFamily: FontFamily.ROBOTO,
     },
     contentRoot: {
       padding: theme.spacing(0.5, 3, 0, 3),
+      display: 'flex',
+      flexDirection: 'column',
     },
     divider: {
       backgroundColor: theme.palette.divider,
@@ -80,18 +84,28 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   const [selectedTable, setSelectedTable] = useState<TableIdentity | null>(
     null,
   );
+  const [creationCompleted, setCreationCompleted] = useState(false);
 
-  const [createDataset, { loading }] = useMutation(CREATE_DATASET_MUTATION);
+  const [createDataset, { loading }] = useMutation(CREATE_DATASET_MUTATION, {
+    onCompleted: () => {
+      setCreationCompleted(true);
+    },
+  });
 
   const classes = useStyles();
 
   const handleClose = () => {
-    if (!loading) {
-      setName('');
-      setDescription('');
-      setSelectedTable(null);
-    }
     onClose();
+
+    if (!loading) {
+      // timeout to avoid visible content changes during close transition
+      setTimeout(() => {
+        setName('');
+        setDescription('');
+        setSelectedTable(null);
+        setCreationCompleted(false);
+      }, 200);
+    }
   };
 
   const onNameChange = (updatedName: string) => {
@@ -139,7 +153,8 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   return (
     <Dialog
       maxWidth="lg"
-      className={classes.root}
+      className={classes.paper}
+      classes={{ paper: classes.paper }}
       open={open}
       onClose={handleClose}
     >
@@ -153,25 +168,32 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
         </Typography>
       </DialogTitle>
       <DialogContent className={classes.contentRoot}>
-        <TextField label="Name" value={name} onChange={onNameChange} />
-        <TextField
-          label="Description"
-          value={description}
-          onChange={onDescriptionChange}
-          error={!!descriptionError.length}
-          errorText={descriptionError}
-          multiline
-        />
-        <Divider className={classes.divider} />
-        <Box className={classes.tablesView}>
-          <Typography
-            className={classes.tablesViewTitle}
-            fontFamily={FontFamily.ROBOTO}
-          >
-            Choose a BigQuery table
-          </Typography>
-          <TablesTreeView onTableSelect={handleTableSelect} />
-        </Box>
+        {creationCompleted ? (
+          <CreateDatasetSuccessMessage />
+        ) : (
+          <>
+            <TextField label="Name" value={name} onChange={onNameChange} />
+            <TextField
+              label="Description"
+              value={description}
+              onChange={onDescriptionChange}
+              error={!!descriptionError.length}
+              errorText={descriptionError}
+              multiline
+            />
+            <Divider className={classes.divider} />
+            <Box className={classes.tablesView}>
+              <Typography
+                className={classes.tablesViewTitle}
+                fontFamily={FontFamily.ROBOTO}
+              >
+                Choose a BigQuery table
+              </Typography>
+              <TablesTreeView onTableSelect={handleTableSelect} />
+            </Box>
+          </>
+        )}
+
         <Divider className={classes.divider} />
         <Box className={classes.dialogControls}>
           <Button
@@ -179,15 +201,17 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
             className={classes.dialogButton}
             onClick={handleClose}
           >
-            Cancel
+            {creationCompleted ? 'Close' : 'Cancel'}
           </Button>
-          <Button
-            disabled={!isCreateButtonEnabled()}
-            className={classes.dialogButton}
-            onClick={handleDatasetCreation}
-          >
-            {!loading ? 'Create' : <CircularProgress size="1em" />}
-          </Button>
+          {!creationCompleted && (
+            <Button
+              disabled={!isCreateButtonEnabled()}
+              className={classes.dialogButton}
+              onClick={handleDatasetCreation}
+            >
+              {!loading ? 'Create' : <CircularProgress size="1em" />}
+            </Button>
+          )}
         </Box>
       </DialogContent>
     </Dialog>

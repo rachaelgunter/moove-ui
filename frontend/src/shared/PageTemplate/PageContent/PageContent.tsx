@@ -20,7 +20,7 @@ const PageContent: React.FC<PageContentProps> = ({
   const classes = useStyles();
 
   return (
-    <Paper elevation={0} square className={classes.root}>
+    <Paper elevation={0} square className={classes.root} id="page-content">
       {children}
     </Paper>
   );

@@ -1,12 +1,14 @@
 substitutions:
   _DEPLOY_BRANCH: "master"
   _ENVIRONMENT: ""
+  _GITHUB_SSH_KEY_NAME: ""
   _REACT_APP_AUTH0_DOMAIN: ""
   _REACT_APP_AUTH0_CLIENT_ID: ""
   _REACT_APP_AUTH0_AUDIENCE: ""
   _REACT_APP_AUTH0_REDIRECT_URI: ""
   _REACT_APP_GRAPHQL_API: ""
   _REACT_APP_AUTH0_LOGOUT_REDIRECT_URI: ""
+  _REACT_APP_JUPYTERHUB_URL: ""
 
 steps:
   - name: 'gcr.io/cloud-builders/docker'
@@ -18,6 +20,7 @@ steps:
           '--build-arg', 'REACT_APP_AUTH0_REDIRECT_URI=$_REACT_APP_AUTH0_REDIRECT_URI',
           '--build-arg', 'REACT_APP_GRAPHQL_API=$_REACT_APP_GRAPHQL_API',
           '--build-arg', 'REACT_APP_AUTH0_LOGOUT_REDIRECT_URI=$_REACT_APP_AUTH0_LOGOUT_REDIRECT_URI',
+          '--build-arg', 'REACT_APP_JUPYTERHUB_URL=$_REACT_APP_JUPYTERHUB_URL',
            '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-frontend:latest',
            '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-frontend:$COMMIT_SHA',
            '-f', 'frontend/Dockerfile.ci' ]
@@ -32,7 +35,7 @@ steps:
     args:
       - '-c'
       - |
-        gcloud secrets versions access latest --secret github_ssh_key > /root/.ssh/id_github
+        gcloud secrets versions access latest --secret $_GITHUB_SSH_KEY_NAME > /root/.ssh/id_github
     volumes:
       - name: ssh
         path: /root/.ssh
@@ -68,7 +71,7 @@ steps:
     id: 'Update chart'
     args:
       - 'e'
-      - '.spec.template.spec.containers[0].image = "gcr.io/moove-platform-lineate-dev/moove-unified-ui-frontend:$COMMIT_SHA"'
+      - '.spec.template.spec.containers[0].image = "gcr.io/$PROJECT_ID/moove-unified-ui-frontend:$COMMIT_SHA"'
       - '-i'
       - /workspace/infrastructure/deploy/kubernetes/unified-ui/frontend/environments/$_ENVIRONMENT/deployment-patch.yml
 
