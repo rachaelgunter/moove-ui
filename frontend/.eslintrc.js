@@ -27,7 +27,7 @@ module.exports = {
     },
     ecmaVersion: 2018,
     sourceType: 'module',
-    project: './tsconfig.json',
+    project: ['./tsconfig.json', './auth-pages/tsconfig.json'],
   },
   rules: {
     'linebreak-style': 'off',
@@ -38,5 +38,7 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
+    'react/jsx-props-no-spreading': 'off',
+    'no-console': ['error', { allow: ['warn', 'error'] }],
   },
 };

@@ -1,0 +1,79 @@
+substitutions:
+  _DEPLOY_BRANCH: "master"
+  _ENVIRONMENT: ""
+  _GITHUB_SSH_KEY_NAME: ""
+
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build container (no cache)'
+    args: ['build', 'backend',
+           '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-backend:latest',
+           '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-backend:$COMMIT_SHA',
+           '-f', 'backend/Dockerfile.ci' ]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push builded image to GCR'
+    args: ['push', 'gcr.io/$PROJECT_ID/moove-unified-ui-backend']
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'Decrypt git key'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud secrets versions access latest --secret $_GITHUB_SSH_KEY_NAME > /root/.ssh/id_github
+    volumes:
+      - name: ssh
+        path: /root/.ssh
+
+  - name: 'gcr.io/cloud-builders/git'
+    id: 'Configure git to clone infrastructure repo'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        chmod 400 /root/.ssh/id_github
+        cat <<EOF >/root/.ssh/config
+        Hostname github.com
+        IdentityFile /root/.ssh/id_github
+        EOF
+        ssh-keyscan -t ecdsa,rsa,ed25519 github.com > /root/.ssh/known_hosts
+    volumes:
+      - name: ssh
+        path: /root/.ssh
+
+  - name: 'gcr.io/cloud-builders/git'
+    id: 'Clone infrastructure repo'
+    args:
+      - clone
+      - --branch
+      - $_DEPLOY_BRANCH
+      - git@github.com:moove-ai/infrastructure.git
+    volumes:
+      - name: ssh
+        path: /root/.ssh
+
+  - name: 'gcr.io/$PROJECT_ID/yq'
+    id: 'Update chart'
+    args:
+      - 'e'
+      - '.spec.template.spec.containers[0].image = "gcr.io/$PROJECT_ID/moove-unified-ui-backend:$COMMIT_SHA"'
+      - '-i'
+      - /workspace/infrastructure/deploy/kubernetes/unified-ui/backend/environments/$_ENVIRONMENT/deployment-patch.yml
+
+  - name: 'gcr.io/cloud-builders/git'
+    id: 'Commit and push changes to infrastructure repo'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        set -x && \
+        git config --global user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)') && \
+        git config --global user.name moove-devopsbot && \
+        cd /workspace/infrastructure
+        git add deploy/kubernetes/unified-ui/backend/environments/$_ENVIRONMENT/deployment-patch.yml
+        git commit -m "CI: ${COMMIT_SHA} Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
+        git push
+    volumes:
+      - name: ssh
+        path: /root/.ssh

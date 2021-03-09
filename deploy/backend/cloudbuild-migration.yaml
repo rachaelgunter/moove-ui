@@ -1,0 +1,10 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build container (no cache)'
+    args: ['build', 'backend/',
+           '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-migration:latest',
+           '-f', 'backend/prisma/Dockerfile.ci' ]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push builded image to GCR'
+    args: ['push', 'gcr.io/$PROJECT_ID/moove-unified-ui-migration']
