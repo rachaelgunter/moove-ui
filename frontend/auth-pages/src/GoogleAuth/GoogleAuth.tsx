@@ -57,6 +57,10 @@ const GoogleAuth: FC<GoogleAuthProps> = ({
   const signInWithGoogle = () => {
     webAuth.authorize({
       connection: 'google-oauth2',
+      accessType: 'offline',
+      connection_scope: 'https://www.googleapis.com/auth/bigquery.readonly',
+      approvalPrompt: 'force',
+      state: undefined,
     });
   };
 

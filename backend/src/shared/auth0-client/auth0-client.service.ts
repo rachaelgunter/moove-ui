@@ -11,6 +11,7 @@ export class Auth0ClientService {
       domain: this.configService.get('AUTH0_DOMAIN'),
       clientId: this.configService.get('AUTH0_CLIENT_ID'),
       clientSecret: this.configService.get('AUTH0_CLIENT_SECRET'),
+      scope: 'read:user_idp_tokens',
     });
   }
 
@@ -18,6 +19,10 @@ export class Auth0ClientService {
     email: string,
   ): Promise<User<AppMetadata, UserMetadata>[]> {
     return this.client.getUsersByEmail(email);
+  }
+
+  async getUser(userId: string) {
+    return this.client.getUser({ id: userId });
   }
 
   async linkUsersAccounts(

@@ -13,6 +13,8 @@ export const prismaUserMock: PrismaUser & { organization: Organization } = {
     id: 12,
     name: 'test org',
   },
+  refreshToken: null,
+  accessToken: null,
 };
 
 export const graphqlUserMock: User = {

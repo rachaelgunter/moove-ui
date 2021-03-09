@@ -22,3 +22,27 @@ export type ColumnModel = {
   min: string | number;
   max: string | number;
 };
+
+export type BigQueryProjectsResponse = {
+  getUsersProjects: BigQueryProject[];
+};
+
+export type BigQueryProject = {
+  projectId: string;
+  datasets: BigQueryDataset[];
+};
+
+export type BigQueryDataset = {
+  datasetId: string;
+  tables: BigQueryTable[];
+};
+
+export type BigQueryTable = {
+  tableId: string;
+};
+
+export type TableIdentity = {
+  projectId: string;
+  datasetId: string;
+  tableId: string;
+};

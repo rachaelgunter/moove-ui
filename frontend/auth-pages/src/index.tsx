@@ -31,6 +31,7 @@ function getAuthOptions() {
     clientID: config.clientID,
     redirectUri: config.callbackURL,
     responseType: 'code',
+    scope: 'openid profile email',
     ...config.internalOptions,
   };
 }

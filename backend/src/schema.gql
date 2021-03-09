@@ -11,12 +11,38 @@ type User {
   organization: String
 }
 
+type BigQueryTable {
+  datasetId: String!
+  tableId: String!
+}
+
+type BigQueryDataset {
+  projectId: String!
+  datasetId: String!
+  tables: [BigQueryTable]
+}
+
+type BigQueryProject {
+  projectId: String!
+  numericId: String!
+  friendlyName: String!
+  datasets: [BigQueryDataset]
+}
+
 type Query {
   getCurrentUser: User!
+  getUsersProjects: [BigQueryProject!]!
+  tables(tablesParams: BigQueryTablesParams!): [BigQueryTable]
+}
+
+input BigQueryTablesParams {
+  projectId: String!
+  datasetId: String!
 }
 
 type Mutation {
   syncUserData(signedInUser: UserInput!): User!
+  createDataset(datasetParams: DatasetParamsInput!): String!
 }
 
 input UserInput {
@@ -24,4 +50,12 @@ input UserInput {
   email: String!
   picture: String!
   name: String!
+}
+
+input DatasetParamsInput {
+  name: String!
+  description: String!
+  projectId: String!
+  datasetId: String!
+  tableId: String!
 }

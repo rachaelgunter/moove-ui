@@ -1,7 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
+import { AppMetadata, UserMetadata, User } from 'auth0';
 import { Auth0ClientService } from '../shared/auth0-client/auth0-client.service';
-import { UserInput } from './users.types';
+import { TokenPair, UserInput } from './users.types';
 
 @Injectable()
 export class UsersService {
@@ -38,16 +39,24 @@ export class UsersService {
         );
       }
 
+      const { refreshToken, accessToken } = this.isGoogleUser(freshUser.user_id)
+        ? this.getGoogleTokensFromAuth0User(freshUser)
+        : { accessToken: null, refreshToken: null };
+
       const syncedUser = await this.prisma.user.upsert({
         create: {
           id: userInput.sub,
           email: userInput.email,
           name: userInput.name ?? null,
           picture: userInput.picture,
+          accessToken,
+          refreshToken,
         },
         update: {
           name: userInput.name ?? null,
           picture: userInput.picture,
+          accessToken,
+          refreshToken,
         },
         where: { id: existingUser ? existingUser.user_id : userInput.sub },
         include: {
@@ -83,5 +92,30 @@ export class UsersService {
     });
 
     return user;
+  }
+
+  getGoogleTokensFromAuth0User(
+    auth0User: User<AppMetadata, UserMetadata>,
+  ): TokenPair {
+    const googleIdentity = auth0User.identities.find(
+      (identity) => identity.provider === 'google-oauth2',
+    );
+
+    return {
+      accessToken: googleIdentity.access_token,
+      refreshToken: ((googleIdentity as unknown) as { refresh_token: string })
+        .refresh_token,
+    };
+  }
+
+  isGoogleUser(userId: string): boolean {
+    return userId.includes('google');
+  }
+
+  async getGoogleTokens(userId: string): Promise<TokenPair> {
+    return this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { accessToken: true, refreshToken: true },
+    });
   }
 }
