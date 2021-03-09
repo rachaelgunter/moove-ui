@@ -26,7 +26,12 @@ const DatasetList: React.FC<DatasetListProps> = ({
   const classes = useStyles();
 
   return (
-    <List disablePadding subheader={<ListSubheader />} className={classes.root}>
+    <List
+      disablePadding
+      subheader={<ListSubheader />}
+      className={classes.root}
+      id="dataset-list"
+    >
       {datasets.map((dataset) => {
         const { id, name, status } = dataset;
         return (

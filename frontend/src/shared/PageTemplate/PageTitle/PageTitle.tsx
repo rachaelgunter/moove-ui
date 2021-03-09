@@ -17,7 +17,7 @@ const PageTitle: React.FC<PageTitleProps> = ({ children }: PageTitleProps) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} id="page-title">
       <Typography variant="body1">{children}</Typography>
     </div>
   );

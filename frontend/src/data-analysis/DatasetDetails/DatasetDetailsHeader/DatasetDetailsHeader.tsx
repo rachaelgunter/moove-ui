@@ -102,6 +102,7 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
           </Grid>
           <Grid item xs={5}>
             <Typography
+              id="dataset-name"
               variant="h5"
               color="textPrimary"
               fontFamily={FontFamily.ROBOTO}
@@ -110,17 +111,17 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
             </Typography>
           </Grid>
           <Grid item container wrap="nowrap">
-            <SpecificationColumn title="Status">
+            <SpecificationColumn title="Status" id="dataset-status">
               <StatusChip status={datasetModel.status} />
             </SpecificationColumn>
-            <SpecificationColumn title="Created On">
+            <SpecificationColumn title="Created On" id="dataset-created-on">
               <ThinText>{createdOn}</ThinText>
             </SpecificationColumn>
-            <SpecificationColumn title="Total Rows">
+            <SpecificationColumn title="Total Rows" id="dataset-total-rows">
               <ThinText>{totalRows}</ThinText>
             </SpecificationColumn>
           </Grid>
-          <Grid item className={classes.actions}>
+          <Grid item className={classes.actions} id="dataset-actions">
             {!isProcessing && (
               <>
                 <Menu
@@ -151,7 +152,7 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
             )}
           </Grid>
         </Grid>
-        <Grid item>
+        <Grid item id="dataset-edit">
           <EditableLabel
             value={description}
             onChange={onDescriptionChanged}

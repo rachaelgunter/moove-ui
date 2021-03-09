@@ -32,6 +32,7 @@ const AddDatasetButton: React.FC<ButtonProps> = (props: ButtonProps) => {
   return (
     <Button
       disableElevation
+      id="dataset-new"
       classes={{
         root: classes.root,
         containedPrimary: classes.containedPrimary,
