@@ -9,15 +9,13 @@ import {
 export class BigQueryClient {
   private readonly oauthClient: OAuth2Client;
   private readonly bigQuery: bigquery_v2.Bigquery;
-  private readonly cloudFunction = google.cloudfunctions('v1');
 
-  constructor({ accessToken, refreshToken }: TokenPair) {
+  constructor({ refreshToken }: TokenPair) {
     this.oauthClient = new google.auth.OAuth2({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     });
     this.oauthClient.setCredentials({
-      access_token: accessToken,
       refresh_token: refreshToken,
     });
     this.bigQuery = google.bigquery('v2');
