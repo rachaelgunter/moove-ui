@@ -18,9 +18,7 @@ import {
   InMemoryCache,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { Provider } from 'react-redux';
 import { loginRedirectLink, authLink, httpLink } from './graphql-client/links';
-import store from './kepler/store';
 
 const domain = process.env.REACT_APP_AUTH0_DOMAIN;
 const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
@@ -69,9 +67,7 @@ createAuth0Client({
   return render(
     <ApolloProvider client={client}>
       <AuthContext.Provider value={auth0}>
-        <Provider store={store}>
-          <App />
-        </Provider>
+        <App />
       </AuthContext.Provider>
     </ApolloProvider>,
     document.getElementById('root'),
