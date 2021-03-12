@@ -140,7 +140,7 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
                   onClose={handleClose}
                 >
                   <MenuItem className={classes.actionsMenuItem}>
-                    <Link href="https://jupyter.lineate-dev.moove.ai">
+                    <Link href={process.env.REACT_APP_JUPYTERHUB_URL}>
                       View Notebook
                     </Link>
                   </MenuItem>
