@@ -29,10 +29,38 @@ type BigQueryProject {
   datasets: [BigQueryDataset]
 }
 
+type BigQueryTableDataCell {
+  v: String!
+}
+
+type BigQueryTableDataRow {
+  f: [BigQueryTableDataCell]
+}
+
+type BigQueryTableData {
+  totalRows: String!
+  rows: [BigQueryTableDataRow]
+}
+
+type BigQueryTableFieldSchema {
+  name: String!
+  type: String!
+}
+
+type BigQueryTableSchema {
+  fields: [BigQueryTableFieldSchema]
+}
+
+type BigQueryTableInfo {
+  schema: BigQueryTableSchema!
+}
+
 type Query {
   getCurrentUser: User!
   getUsersProjects: [BigQueryProject!]!
   tables(tablesParams: BigQueryTablesParams!): [BigQueryTable]
+  tableData(projectId: String!, datasetId: String!, tableId: String!, offset: String = "0", limit: Int = 5): BigQueryTableData!
+  tableInfo(projectId: String!, datasetId: String!, tableId: String!): BigQueryTableInfo!
 }
 
 input BigQueryTablesParams {
