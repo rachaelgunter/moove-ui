@@ -5,10 +5,7 @@ import {
   BigQueryDataset,
   BigQueryProject,
   BigQueryTable,
-  BigQueryTableData,
-  BigQueryTableInfo,
 } from '../bigquery.types';
-
 export class BigQueryClient {
   private readonly oauthClient: OAuth2Client;
   private readonly bigQuery: bigquery_v2.Bigquery;
@@ -76,72 +73,5 @@ export class BigQueryClient {
       datasetId: tableReference.datasetId,
       tableId: tableReference.tableId,
     }));
-  }
-
-  async getTableDataList(
-    projectId: string,
-    datasetId: string,
-    tableId: string,
-    startIndex: string,
-    maxResults: number,
-  ): Promise<BigQueryTableData> {
-    return this.bigQuery.tabledata
-      .list({
-        auth: this.oauthClient,
-        datasetId,
-        projectId,
-        tableId,
-        startIndex,
-        maxResults,
-      })
-      .then(({ data }) => {
-        const rows = data.rows.map((row) => {
-          const values = row.f.map((item) => {
-            let v = item.v;
-            if (typeof item.v === 'object') {
-              v = JSON.stringify(item.v);
-            }
-            return { v };
-          });
-
-          return {
-            ...row,
-            ...{ f: values },
-          };
-        });
-
-        const res = {
-          ...data,
-          rows: rows,
-        };
-
-        return res;
-      });
-  }
-
-  async getTableInfo(
-    projectId: string,
-    datasetId: string,
-    tableId: string,
-  ): Promise<BigQueryTableInfo> {
-    return this.bigQuery.tables
-      .get({
-        auth: this.oauthClient,
-        datasetId,
-        projectId,
-        tableId,
-      })
-      .then(({ data }) => {
-        const fields = data.schema?.fields?.map((field) => ({
-          name: field.name,
-          type: field.type,
-        }));
-
-        return {
-          schema: {
-            fields,
-          },
-        };
-      });
   }
 }
