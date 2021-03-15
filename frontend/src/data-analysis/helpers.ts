@@ -1,24 +1,23 @@
-import { DatasetModel } from './types';
+import { DatasetModel, DatasetStatus } from './types';
 
 interface DatasetDataProps {
   bigQueryDatasetName: string;
   description: string;
   totalRows: number;
   createdAt: string;
-  [key: string]: any; // TODO remove
+  status: DatasetStatus;
 }
 
 export const getDatasetModel = (
   data: DatasetDataProps,
   index: number,
 ): DatasetModel => ({
-  id: data.id ? data.id : index,
+  id: index,
   name: data.bigQueryDatasetName,
   description: data.description,
   totalRows: data.totalRows,
   createdAt: data.createdAt,
-  status: data.status ? data.status : '',
-  columns: data.columns,
+  status: data.status ? data.status : DatasetStatus.ACTIVE, // TODO edit
 });
 
 export const getDatasetModels = (data: DatasetDataProps[]): DatasetModel[] =>
