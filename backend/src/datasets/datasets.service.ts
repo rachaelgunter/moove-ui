@@ -3,7 +3,6 @@ import { map } from 'rxjs/operators';
 import {
   Dataset,
   DatasetListingResponse,
-  StatusesListingResponse,
   DatasetParamsInput,
 } from './datasets.types';
 import { google } from 'googleapis';
@@ -111,38 +110,13 @@ export class DatasetsService {
       .toPromise();
   }
 
-  async mapDatasets(datasetsResponse: DatasetListingResponse) {
-    return Promise.all([
-      ...Object.keys(datasetsResponse).map(async (key) => ({
-        analysisName: key,
-        bigQueryDatasetName: datasetsResponse[key].dataset_id,
-        description: datasetsResponse[key].description,
-        totalRows: datasetsResponse[key].total_rows,
-        createdAt: datasetsResponse[key].created_at,
-        status: await this.getDatasetsStatuses(key),
-      })),
-    ]);
-  }
-
-  async getDatasetsStatuses(analysisName: string) {
-    const cloudFunctionUrl =
-      'https://us-central1-moove-road-iq-staging.cloudfunctions.net/poll-ingest';
-
-    const client = await this.auth.getIdTokenClient(cloudFunctionUrl);
-    const headers = await client.getRequestHeaders(cloudFunctionUrl);
-
-    return this.httpService
-      .post(cloudFunctionUrl, { analysis_name: analysisName }, { headers })
-      .pipe(map(({ data }) => this.mapDatasetStatuses(data)))
-      .toPromise()
-      .catch((error) => {
-        console.error({ error: error.message });
-
-        return 'error';
-      });
-  }
-
-  mapDatasetStatuses(statusesResponse: StatusesListingResponse) {
-    return statusesResponse.dataset_status;
+  mapDatasets(datasetsResponse: DatasetListingResponse): Dataset[] {
+    return Object.keys(datasetsResponse).map((key) => ({
+      analysisName: key,
+      bigQueryDatasetName: datasetsResponse[key].dataset_id,
+      description: datasetsResponse[key].description,
+      totalRows: datasetsResponse[key].total_rows,
+      createdAt: datasetsResponse[key].created_at,
+    }));
   }
 }

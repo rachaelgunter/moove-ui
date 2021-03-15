@@ -35,7 +35,6 @@ type Dataset {
   description: String!
   totalRows: String!
   createdAt: String!
-  status: String!
 }
 
 type Query {

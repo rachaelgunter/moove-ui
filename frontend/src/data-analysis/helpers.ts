@@ -13,12 +13,12 @@ export const getDatasetModel = (
   index: number,
 ): DatasetModel => ({
   id: data.id ? data.id : index,
-  name: data.bigQueryDatasetName ? data.bigQueryDatasetName : '',
-  description: data.description ? data.description : '',
-  totalRows: data.totalRows ? data.totalRows : 0,
-  createdAt: data.createdAt ? data.createdAt : '-',
+  name: data.bigQueryDatasetName,
+  description: data.description,
+  totalRows: data.totalRows,
+  createdAt: data.createdAt,
   status: data.status ? data.status : '',
-  columns: data.columns ? data.columns : [],
+  columns: data.columns,
 });
 
 export const getDatasetModels = (data: DatasetDataProps[]): DatasetModel[] =>

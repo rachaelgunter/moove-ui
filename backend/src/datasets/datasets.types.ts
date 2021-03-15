@@ -32,10 +32,6 @@ export type DatasetListingResponse = Record<
   }
 >;
 
-export type StatusesListingResponse = {
-  dataset_status: string;
-};
-
 @ObjectType()
 export class Dataset {
   @Field()
@@ -52,7 +48,4 @@ export class Dataset {
 
   @Field()
   createdAt: string;
-
-  @Field()
-  status?: string;
 }
