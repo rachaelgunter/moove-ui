@@ -57,7 +57,7 @@ const initialData = [
   },
   {
     id: 2,
-    name: 'Dataset 3',
+    name: 'denver_friction',
     description: 'Description',
     status: DatasetStatus.ACTIVE,
     totalRows: 6726993,
