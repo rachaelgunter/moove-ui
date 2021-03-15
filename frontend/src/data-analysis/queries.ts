@@ -23,7 +23,11 @@ export const BIG_QUERY_TABLES_QUERY = gql`
 export const DATASET_QUERY = gql`
   query getDatasets {
     getDatasets {
+      analysisName
       bigQueryDatasetName
+      description
+      totalRows
+      createdAt
     }
   }
 `;

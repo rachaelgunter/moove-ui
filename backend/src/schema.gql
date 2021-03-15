@@ -32,6 +32,10 @@ type BigQueryProject {
 type Dataset {
   analysisName: String!
   bigQueryDatasetName: String!
+  description: String!
+  totalRows: String!
+  createdAt: String!
+  status: String!
 }
 
 type Query {

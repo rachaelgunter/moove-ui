@@ -19,9 +19,7 @@ const DataAnalysis: React.FC = () => {
 
   const [isCreationDialogOpen, setIsCreationDialogOpen] = useState(false);
 
-  const {
-    data: { getDatasets: datasets },
-  } = useQuery(DATASET_QUERY);
+  const { data } = useQuery(DATASET_QUERY);
 
   const onAddDatasetClick = () => {
     setIsCreationDialogOpen(true);
@@ -46,11 +44,11 @@ const DataAnalysis: React.FC = () => {
             <AddDatasetButton onClick={onAddDatasetClick} />
           </Grid>
         </Grid>
-        {datasets.length ? (
+        {data.getDatasets ? (
           <Grid item container spacing={2}>
             <Grid item xs={3}>
               <DatasetList
-                datasets={getDatasetModels(datasets)}
+                datasets={getDatasetModels(data.getDatasets)}
                 selectedDataset={selectedDataset}
                 onSelect={onDatasetSelect}
               />

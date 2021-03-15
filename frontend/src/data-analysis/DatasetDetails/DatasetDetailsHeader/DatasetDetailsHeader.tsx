@@ -88,7 +88,7 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
     str.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
   const isProcessing = datasetModel.status === DatasetStatus.PROCESSING;
-  const createdOn = isProcessing ? '—' : datasetModel.creationDate;
+  const createdOn = isProcessing ? '—' : datasetModel.createdAt;
   const totalRows = isProcessing
     ? '—'
     : formatStringWithCommas(datasetModel.totalRows.toString());
