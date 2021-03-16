@@ -29,6 +29,9 @@ export type DatasetListingResponse = Record<
     description: string;
     total_rows: string;
     created_at: string;
+    ingest_status: {
+      dataset_status: string;
+    };
   }
 >;
 
@@ -48,4 +51,7 @@ export class Dataset {
 
   @Field()
   createdAt: string;
+
+  @Field()
+  status: string;
 }

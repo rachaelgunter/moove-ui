@@ -116,6 +116,7 @@ export class DatasetsService {
       description: datasetsResponse[key].description,
       totalRows: datasetsResponse[key].total_rows,
       createdAt: datasetsResponse[key].created_at,
+      status: datasetsResponse[key].ingest_status.dataset_status,
     }));
   }
 }

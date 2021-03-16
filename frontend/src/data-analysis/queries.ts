@@ -28,6 +28,7 @@ export const DATASET_QUERY = gql`
       description
       totalRows
       createdAt
+      status
     }
   }
 `;
