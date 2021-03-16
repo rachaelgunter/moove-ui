@@ -94,8 +94,7 @@ export class DatasetsService {
   }
 
   async getDatasets(): Promise<Dataset[]> {
-    const cloudFunctionUrl =
-      'https://us-central1-moove-road-iq-staging.cloudfunctions.net/get-galileo-analyses';
+    const cloudFunctionUrl = process.env.GOOGLE_CLOUD_FUNCTION_URL_GET_DATASETS;
 
     const client = await this.auth.getIdTokenClient(cloudFunctionUrl);
     const headers = await client.getRequestHeaders(cloudFunctionUrl);

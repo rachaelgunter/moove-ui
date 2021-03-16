@@ -10,6 +10,7 @@ import DatasetDetails from './DatasetDetails';
 import CreateDatasetDialog from './CreateDatasetDialog/CreateDatasetDialog';
 import { DATASET_QUERY } from './queries';
 import { getDatasetModels } from './helpers';
+import { NoDatasetsHint } from './hints';
 
 const DataAnalysis: React.FC = () => {
   const [selectedDataset, setSelectedDataset] = useState<DatasetModel | null>(
@@ -34,7 +35,7 @@ const DataAnalysis: React.FC = () => {
 
   return (
     <PageTemplate title="Data analysis">
-      <Grid container direction="column" spacing={2} wrap="nowrap">
+      <Grid container direction="column" spacing={2}>
         <Grid item container justify="space-between" alignItems="center">
           <Grid item>
             <Typography variant="subtitle1">Datasets</Typography>
@@ -43,8 +44,13 @@ const DataAnalysis: React.FC = () => {
             <AddDatasetButton onClick={onAddDatasetClick} />
           </Grid>
         </Grid>
-        {!loading ? (
-          <Grid item container spacing={2}>
+        {loading && (
+          <Grid item container justify="center">
+            <CircularProgress />
+          </Grid>
+        )}
+        {!loading && data.getDatasets.length && (
+          <Grid item container spacing={2} wrap="nowrap">
             <Grid item xs={3}>
               <DatasetList
                 datasets={getDatasetModels(data.getDatasets)}
@@ -56,11 +62,8 @@ const DataAnalysis: React.FC = () => {
               <DatasetDetails datasetModel={selectedDataset} />
             )}
           </Grid>
-        ) : (
-          <Grid item container justify="center">
-            <CircularProgress />
-          </Grid>
         )}
+        {!loading && !data.getDatasets.length && <NoDatasetsHint />}
       </Grid>
       <CreateDatasetDialog
         open={isCreationDialogOpen}
