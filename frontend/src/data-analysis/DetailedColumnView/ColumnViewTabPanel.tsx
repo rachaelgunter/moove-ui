@@ -1,3 +1,4 @@
+import { CSSProperties } from '@material-ui/styles';
 import React, { FC } from 'react';
 
 interface TabPanelProps {
@@ -12,12 +13,16 @@ const ColumnViewTabPanel: FC<TabPanelProps> = ({
   index,
   ...other
 }: TabPanelProps) => {
+  const getStyles = (): CSSProperties => {
+    return value === index ? { flex: 1, height: '100%', display: 'flex' } : {};
+  };
+
   return (
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
+      id={`tabpanel-${index}`}
+      style={getStyles()}
       {...other}
     >
       {value === index && children}

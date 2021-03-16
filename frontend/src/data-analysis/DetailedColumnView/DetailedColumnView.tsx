@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Box, Button, makeStyles, Tabs, Tab, Theme } from '@material-ui/core';
 import { FontFamily } from 'src/app/styles/fonts';
 import DialogWrapper from 'src/shared/DialogWrapper/DialogWrapper';
@@ -46,7 +46,7 @@ const DetailedColumnView: FC<DetailedColumnViewProps> = ({
   onClose,
 }: DetailedColumnViewProps) => {
   const classes = useStyles();
-  const [value, setValue] = React.useState(1);
+  const [value, setValue] = useState(1);
 
   const handleChange = (
     _: React.ChangeEvent<Record<string, string>>,

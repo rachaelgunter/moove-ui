@@ -7,9 +7,11 @@ import {
   makeStyles,
   Theme,
 } from '@material-ui/core';
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { FontFamily } from 'src/app/styles/fonts';
+import MaximizeIcon from 'src/data-analysis/icons/MaximizeIcon';
 import Typography from 'src/shared/Typography';
+import IconButton from '../IconButton';
 
 interface DialogWrapperProps {
   open: boolean;
@@ -35,6 +37,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   dialogTitleRoot: {
     padding: theme.spacing(3),
+  },
+  dialogTitleContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   dialogTitle: {
     fontWeight: 400,
@@ -67,17 +73,28 @@ const DialogWrapper: FC<DialogWrapperProps> = ({
   dialogControls,
 }: DialogWrapperProps) => {
   const classes = useStyles();
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   return (
-    <Dialog classes={{ paper: classes.paper }} open={open} onClose={onClose}>
+    <Dialog
+      fullScreen={isFullScreen}
+      classes={{ paper: classes.paper }}
+      open={open}
+      onClose={onClose}
+    >
       <DialogTitle className={classes.dialogTitleRoot}>
-        <Typography
-          color="textPrimary"
-          fontFamily={FontFamily.ROBOTO}
-          className={classes.dialogTitle}
-        >
-          {dialogTitle}
-        </Typography>
+        <Box className={classes.dialogTitleContainer}>
+          <Typography
+            color="textPrimary"
+            fontFamily={FontFamily.ROBOTO}
+            className={classes.dialogTitle}
+          >
+            {dialogTitle}
+          </Typography>
+          <IconButton onClick={() => setIsFullScreen(!isFullScreen)}>
+            <MaximizeIcon />
+          </IconButton>
+        </Box>
       </DialogTitle>
       <DialogContent className={classes.contentRoot}>
         {dialogContent}
