@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography, CircularProgress } from '@material-ui/core';
 import { useQuery } from '@apollo/client';
 
 import PageTemplate from 'src/shared/PageTemplate';
 import { DatasetModel } from 'src/data-analysis/types';
-import { NoDatasetsHint } from './hints';
 import AddDatasetButton from './AddDatasetButton';
 import DatasetList from './DatasetList';
 import DatasetDetails from './DatasetDetails';
@@ -60,7 +59,9 @@ const DataAnalysis: React.FC = () => {
             )}
           </Grid>
         ) : (
-          <NoDatasetsHint />
+          <Grid item container justify="center">
+            <CircularProgress />
+          </Grid>
         )}
       </Grid>
       <CreateDatasetDialog

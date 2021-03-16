@@ -77,3 +77,20 @@ Run this command to make changes in node_modules available in docker container:
 ```bash
 $ npm run docker:rebuild-volumes
 ```
+
+### Generate application_default_credentials.json
+
+ 1. Go https://console.cloud.google.com.
+ 2. choose project "moove-platform-lineate-dev".
+ 3. Choose "IAM & Admin" in sidebar.
+ 4. Choose "Service Accounts" in sidebar.
+ 5. Click table row with column name "Compute Engine default service account".
+ 6. Go to tab "KEYS".
+ 7. Click button "ADD KEY".
+ 8. Choose "Create new key".
+ 9. Choose "json type" (recomended).
+ 10. Create.
+
+Or you can try this [link](https://console.cloud.google.com/iam-admin/serviceaccounts/details/109215757079588502741?authuser=2&project=moove-platform-lineate-dev)
+
+After you click "Create" you download .json file with your key. Rename it to "application_default_credentials.json" and put in root of backend folder.
