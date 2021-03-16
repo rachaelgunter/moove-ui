@@ -9,7 +9,7 @@ export type DatasetModel = {
   description: string;
   status: DatasetStatus;
   totalRows: number;
-  creationDate: string;
+  createdAt: string;
   columns?: ColumnModel[];
 };
 

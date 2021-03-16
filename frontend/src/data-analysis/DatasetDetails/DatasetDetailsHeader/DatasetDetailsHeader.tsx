@@ -27,6 +27,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(2),
     width: '100%',
   },
+  ellipsis: {
+    display: 'inline-block',
+    maxWidth: '100%',
+    width: 'auto',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden !important',
+    textOverflow: 'ellipsis',
+  },
   thinText: {
     wordBreak: 'break-word',
     fontFamily: FontFamily.ROBOTO,
@@ -81,7 +89,7 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
     str.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
   const isProcessing = datasetModel.status === DatasetStatus.PROCESSING;
-  const createdOn = isProcessing ? '—' : datasetModel.creationDate;
+  const createdOn = isProcessing ? '—' : datasetModel.createdAt;
   const totalRows = isProcessing
     ? '—'
     : formatStringWithCommas(datasetModel.totalRows.toString());
@@ -107,6 +115,7 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
               variant="h5"
               color="textPrimary"
               fontFamily={FontFamily.ROBOTO}
+              className={classes.ellipsis}
             >
               {datasetModel.name}
             </Typography>

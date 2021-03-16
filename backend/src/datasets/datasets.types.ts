@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 
 @InputType()
 export class DatasetParamsInput {
@@ -16,4 +16,42 @@ export class DatasetParamsInput {
 
   @Field()
   tableId: string;
+}
+
+export interface DatasetListingRequestPayload {
+  analysis_project: string;
+}
+
+export type DatasetListingResponse = Record<
+  string,
+  {
+    dataset_id: string;
+    description: string;
+    total_rows: string;
+    created_at: string;
+    ingest_status: {
+      dataset_status: string;
+    };
+  }
+>;
+
+@ObjectType()
+export class Dataset {
+  @Field()
+  analysisName: string;
+
+  @Field()
+  bigQueryDatasetName: string;
+
+  @Field()
+  description: string;
+
+  @Field()
+  totalRows: string;
+
+  @Field()
+  createdAt: string;
+
+  @Field()
+  status: string;
 }

@@ -55,12 +55,22 @@ type BigQueryTableInfo {
   schema: BigQueryTableSchema!
 }
 
+type Dataset {
+  analysisName: String!
+  bigQueryDatasetName: String!
+  description: String!
+  totalRows: String!
+  createdAt: String!
+  status: String!
+}
+
 type Query {
   getCurrentUser: User!
   getUsersProjects: [BigQueryProject!]!
   tables(tablesParams: BigQueryTablesParams!): [BigQueryTable]
   tableData(projectId: String!, datasetId: String!, tableId: String!, offset: String = "0", limit: Int = 5): BigQueryTableData!
   tableInfo(projectId: String!, datasetId: String!, tableId: String!): BigQueryTableInfo!
+  getDatasets: [Dataset]
 }
 
 input BigQueryTablesParams {
