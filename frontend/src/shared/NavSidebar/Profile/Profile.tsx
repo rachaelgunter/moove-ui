@@ -1,8 +1,9 @@
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Box, Paper } from '@material-ui/core';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
 import React from 'react';
+import { CURRENT_USER_QUERY } from 'src/shared/queries';
 import ProfileMenuItem from './ProfileMenuItem';
 import ProfileMenu from './ProfileMenu';
 import ProfileBrief from './ProfileBrief';
@@ -28,19 +29,6 @@ const useStyles = makeStyles<Theme, ProfileProps>((theme: Theme) =>
     },
   }),
 );
-
-const CURRENT_USER_QUERY = gql`
-  query getCurrentUser {
-    getCurrentUser {
-      name
-      sub
-      organization
-      email
-      picture
-      role
-    }
-  }
-`;
 
 const Profile: React.FC<ProfileProps> = ({
   isNavSidebarOpened,

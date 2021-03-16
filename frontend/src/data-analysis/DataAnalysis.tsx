@@ -34,7 +34,7 @@ const DataAnalysis: React.FC = () => {
 
   return (
     <PageTemplate title="Data analysis">
-      <Grid container direction="column" spacing={2}>
+      <Grid container direction="column" spacing={2} wrap="nowrap">
         <Grid item container justify="space-between" alignItems="center">
           <Grid item>
             <Typography variant="subtitle1">Datasets</Typography>
@@ -53,9 +53,7 @@ const DataAnalysis: React.FC = () => {
               />
             </Grid>
             {selectedDataset && (
-              <Grid item xs={9}>
-                <DatasetDetails datasetModel={selectedDataset} />
-              </Grid>
+              <DatasetDetails datasetModel={selectedDataset} />
             )}
           </Grid>
         ) : (

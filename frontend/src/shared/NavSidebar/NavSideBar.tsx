@@ -71,7 +71,7 @@ const NavSidebar: React.FC = () => {
     {
       label: 'RoadIQ',
       // TODO use history instead
-      onClick: () => window.open('https://moove-prod-ui.moove.ai/', '_blank'),
+      onClick: () => window.open(process.env.REACT_APP_ROAD_IQ_URL, '_blank'),
       Icon: ViewWeekOutlinedIcon,
     },
   ];

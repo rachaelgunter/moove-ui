@@ -25,6 +25,7 @@ type DatasetDetailsHeaderProps = DatasetDetailsProps;
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(2),
+    width: '100%',
   },
   ellipsis: {
     display: 'inline-block',
