@@ -59,9 +59,14 @@ type BigQueryPreviewHeaders {
   type: String!
 }
 
+type BigQueryTableMetadata {
+  totalRows: Float!
+}
+
 type BigQueryPreviewTable {
   headers: [BigQueryPreviewHeaders]
   rows: [[String]]
+  tableMetadata: BigQueryTableMetadata
 }
 
 type BigQueryColumnTable {

@@ -23,7 +23,13 @@ const DatasetDetailsContent: React.FC<DatasetDetailsContentProps> = ({
 }: DatasetDetailsContentProps) => {
   const classes = useStyles();
 
-  const { data: datasetColumns } = useQuery(DATASET_COLUMNS_QUERY);
+  const { data: datasetColumns } = useQuery(DATASET_COLUMNS_QUERY, {
+    variables: {
+      projectId: 'moove-platform-testing-data',
+      datasetId: `${datasetModel.name}_galileo_analysis`,
+      tableId: `${datasetModel.name}_general_stats`,
+    },
+  });
 
   if (datasetModel.status === DatasetStatus.PROCESSING) {
     return (

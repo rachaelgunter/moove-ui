@@ -34,16 +34,21 @@ export const DATASET_QUERY = gql`
 `;
 
 export const DATASET_COLUMNS_QUERY = gql`
-  query ColumnsTable {
+  query ColumnsTable(
+    $projectId: String!
+    $datasetId: String!
+    $tableId: String!
+  ) {
     columnsTable(
-      projectId: "moove-platform-testing-data"
-      datasetId: "denver_friction5_galileo_analysis"
-      tableId: "denver_friction5_general_stats"
+      projectId: $projectId
+      datasetId: $datasetId
+      tableId: $tableId
     ) {
       min
       max
       name
       type
+      populated
     }
   }
 `;

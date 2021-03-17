@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { BigQueryClient } from './bigquery-client/bigquery-client';
 import { UsersService } from 'src/users/users.service';
 import { UserTokenPayload } from 'src/users/users.types';
@@ -6,12 +6,13 @@ import {
   BigQueryPreviewTable,
   BigQueryTableData,
   BigQueryTableInfo,
-  PreviewTableListingResponse,
   BigQueryColumnTable,
 } from './bigquery.types';
 
 @Injectable()
 export class BigQueryService {
+  private readonly logger = new Logger(BigQueryService.name);
+
   constructor(private readonly usersService: UsersService) {}
 
   async getClient(user: UserTokenPayload): Promise<BigQueryClient> {
@@ -76,13 +77,41 @@ export class BigQueryService {
     limit: number,
   ): Promise<BigQueryColumnTable[]> {
     const bigQueryClient = await this.getClient(user);
-    return await bigQueryClient
-      .getPreviewTable(projectId, datasetId, tableId, offset, limit)
-      .then((data) => this.mapColumnsTable(data));
+    const columnsData = await bigQueryClient.getPreviewTable(
+      projectId,
+      datasetId,
+      tableId,
+      offset,
+      limit,
+    );
+    /**
+     * Replace here is a dirty hack since we don't know the analysis name on the backend
+     * TODO: move tables names composing from FE to BE, so that we pass only analysis name as a query param
+     *  */
+    const analysisName = datasetId.replace('galileo_analysis', 'null_counts');
+    let emptyColumnsData: BigQueryPreviewTable | null = null;
+    try {
+      emptyColumnsData = await bigQueryClient.getPreviewTable(
+        projectId,
+        datasetId,
+        analysisName,
+        offset,
+        limit,
+      );
+    } catch (e) {
+      this.logger.log(
+        `Null counts table for dataset ${analysisName} is not present`,
+      );
+    }
+
+    return this.mapColumnsTable(columnsData, emptyColumnsData);
   }
 
   // TODO refactor
-  mapColumnsTable(data: PreviewTableListingResponse) {
+  mapColumnsTable(
+    data: BigQueryPreviewTable,
+    emptyColumnsData: BigQueryPreviewTable | null,
+  ) {
     const markers = { min: '_MIN', max: '_MAX' };
 
     const res = [];
@@ -93,7 +122,13 @@ export class BigQueryService {
         column.name = header.name.replace(markers.min, '');
         column.type = header.type;
         column.min = data.rows[0][index];
-        column.populated = 100;
+        column.populated = emptyColumnsData
+          ? this.getColumnPopulatedValue(
+              column.name,
+              data.tableMetadata.totalRows,
+              emptyColumnsData,
+            )
+          : 100;
       }
 
       if (header.name.endsWith(markers.max)) {
@@ -107,5 +142,23 @@ export class BigQueryService {
     });
 
     return res;
+  }
+
+  getColumnPopulatedValue(
+    columnName: string,
+    totalRows: number,
+    emptyColumnsData: BigQueryPreviewTable,
+  ): number {
+    const rowIndex = emptyColumnsData.rows.findIndex(
+      ([name]) => name === columnName,
+    );
+    const percentage =
+      (1 - +emptyColumnsData.rows[rowIndex]?.[1] / totalRows) * 100;
+
+    if (Number.isNaN(percentage)) {
+      return 100;
+    }
+
+    return Math.round((percentage + Number.EPSILON) * 100) / 100;
   }
 }
