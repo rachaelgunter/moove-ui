@@ -15,7 +15,7 @@ const Dashboard: React.FC = () => {
     {
       label: 'RoadIQ',
       Icon: MapOutlinedIcon,
-      onClick: () => history.push(routes.roadIQ),
+      onClick: () => history.push(routes.roadIQ.path),
     },
   ];
 

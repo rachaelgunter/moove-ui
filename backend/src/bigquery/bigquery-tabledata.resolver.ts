@@ -3,16 +3,18 @@ import { Args, Resolver, Query } from '@nestjs/graphql';
 import { GqlAuthGuard } from 'src/auth/graphql-auth.guard';
 import { CurrentUser } from 'src/auth/graphql-current-user.decorator';
 import { BigQueryService } from './bigquery.service';
-import { UserTokenPayload } from 'src/users/users.types';
+import { Role, UserTokenPayload } from 'src/users/users.types';
 import { BigQueryTableData, BigQueryTableDataParams } from './bigquery.types';
 import { handleGoogleError } from './utils';
+import { Roles } from 'src/auth/roles.decorator';
 
 @Resolver(() => BigQueryTableData)
 export class BigQueryTableDataResolver {
   private readonly logger = new Logger(BigQueryTableDataResolver.name);
   constructor(private readonly bigQueryService: BigQueryService) {}
 
-  @UseGuards(new GqlAuthGuard())
+  @Roles(Role.PAID_USER, Role.ADMIN)
+  @UseGuards(GqlAuthGuard)
   @Query(() => BigQueryTableData)
   async tableData(
     @CurrentUser()

@@ -7,7 +7,6 @@ type User {
   email: String!
   picture: String
   name: String
-  role: String!
   organization: String
 }
 

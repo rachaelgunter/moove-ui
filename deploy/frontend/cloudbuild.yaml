@@ -10,6 +10,7 @@ substitutions:
   _REACT_APP_AUTH0_LOGOUT_REDIRECT_URI: ""
   _REACT_APP_JUPYTERHUB_URL: ""
   _REACT_APP_ROAD_IQ_URL: ""
+  _REACT_APP_AUTH0_CLAIMS_NAMESPACE: ""
 
 steps:
   - name: 'gcr.io/cloud-builders/docker'
@@ -23,6 +24,7 @@ steps:
           '--build-arg', 'REACT_APP_AUTH0_LOGOUT_REDIRECT_URI=$_REACT_APP_AUTH0_LOGOUT_REDIRECT_URI',
           '--build-arg', 'REACT_APP_JUPYTERHUB_URL=$_REACT_APP_JUPYTERHUB_URL',
           '--build-arg', 'REACT_APP_ROAD_IQ_URL=$_REACT_APP_ROAD_IQ_URL',
+          '--build-arg', 'REACT_APP_AUTH0_CLAIMS_NAMESPACE=$_REACT_APP_AUTH0_CLAIMS_NAMESPACE',
            '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-frontend:latest',
            '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-frontend:$COMMIT_SHA',
            '-f', 'frontend/Dockerfile.ci' ]

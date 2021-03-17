@@ -35,7 +35,7 @@ const RoadIQ: React.FC = () => {
   const classes = useStyles();
 
   const onBackClick = () => {
-    history.push(routes.dashboard);
+    history.push(routes.dashboard.path);
   };
 
   return (

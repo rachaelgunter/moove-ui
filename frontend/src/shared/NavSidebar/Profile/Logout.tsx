@@ -1,7 +1,7 @@
 import { createStyles, Grid, makeStyles } from '@material-ui/core';
 import React, { useContext } from 'react';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import AuthContext from 'src';
+import AuthContext from 'src/index';
 
 const useStyles = makeStyles(() =>
   createStyles({
