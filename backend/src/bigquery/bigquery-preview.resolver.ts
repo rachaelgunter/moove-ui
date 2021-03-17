@@ -15,7 +15,7 @@ export class BigQueryPreviewResolver {
   private readonly logger = new Logger(BigQueryPreviewResolver.name);
   constructor(private readonly bigQueryService: BigQueryService) {}
 
-  @UseGuards(new GqlAuthGuard())
+  @UseGuards(GqlAuthGuard)
   @Query(() => BigQueryPreviewTable)
   async previewTable(
     @CurrentUser()
