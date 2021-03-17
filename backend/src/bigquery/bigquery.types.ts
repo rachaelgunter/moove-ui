@@ -130,6 +130,13 @@ export class BigQueryPreviewHeaders {
   @Field()
   type: string;
 }
+
+@ObjectType()
+export class BigQueryTableMetadata {
+  @Field()
+  totalRows?: number;
+}
+
 @ObjectType()
 export class BigQueryPreviewTable {
   @Field(() => [BigQueryPreviewHeaders], { nullable: 'itemsAndList' })
@@ -137,4 +144,25 @@ export class BigQueryPreviewTable {
 
   @Field(() => [[String]], { nullable: 'itemsAndList' })
   rows?: string[][];
+
+  @Field({ nullable: true })
+  tableMetadata?: BigQueryTableMetadata;
+}
+
+@ObjectType()
+export class BigQueryColumnTable {
+  @Field()
+  name: string;
+
+  @Field()
+  type: string;
+
+  @Field()
+  min: string;
+
+  @Field()
+  max: string;
+
+  @Field()
+  populated: number;
 }

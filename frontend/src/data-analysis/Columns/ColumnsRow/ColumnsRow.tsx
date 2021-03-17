@@ -13,6 +13,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+const columnsOrder = ['name', 'type', 'populated', 'min', 'max'];
+
 interface ColumnsRowsProps {
   columnModel: ColumnModel;
 }
@@ -24,9 +26,9 @@ const ColumnsRow: FC<ColumnsRowsProps> = ({
 
   return (
     <TableRow key={columnModel.name} data-testid="columns-table-row">
-      {Object.keys(columnModel).map((key, index) => (
-        <TableCell className={classes.cell} key={`${columnModel.name}-${key}`}>
-          {columnModel[key]}
+      {columnsOrder.map((name) => (
+        <TableCell className={classes.cell} key={`${columnModel.name}-${name}`}>
+          {columnModel[name]}
         </TableCell>
       ))}
     </TableRow>
