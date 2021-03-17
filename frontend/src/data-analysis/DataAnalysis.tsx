@@ -12,31 +12,6 @@ import { DATASET_QUERY } from './queries';
 import { getDatasetModels } from './helpers';
 import { NoDatasetsHint } from './hints';
 
-function createData( // TODO remove
-  name: string,
-  type: string,
-  populated: number,
-  min: string | number,
-  max: string | number,
-) {
-  return { name, type, populated, min, max };
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const columns = [
-  createData('accelerateVector', 'FLOAT', 100, 123, 99875),
-  createData('errorAmplitudeVector', 'FLOAT', 98.5, 0.1, 9.8),
-  createData('delivery', 'BOOLEAN', 0, '-', '-'),
-  createData('speed_category_offset', 'STRING', 99.5, 1200020, 3200020),
-  createData(
-    'source_timestamp',
-    'TIMESTAMP',
-    100,
-    'June 1, 2019',
-    'June 30, 2020',
-  ),
-];
-
 const DataAnalysis: React.FC = () => {
   const [selectedDataset, setSelectedDataset] = useState<DatasetModel | null>(
     null,
@@ -84,7 +59,7 @@ const DataAnalysis: React.FC = () => {
               />
             </Grid>
             {selectedDataset && (
-              <DatasetDetails datasetModel={{ ...selectedDataset, columns }} />
+              <DatasetDetails datasetModel={selectedDataset} />
             )}
           </Grid>
         )}
