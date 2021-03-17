@@ -3,10 +3,11 @@ import {
   ListItem as MuiListItem,
   ListItemIcon,
   ListItemProps as MuiListItemProps,
-  ListItemText,
+  ListItemText as MuiListItemText,
   makeStyles,
   Theme,
 } from '@material-ui/core';
+import { withStyles, createStyles } from '@material-ui/styles';
 
 import { DatasetStatus } from '../../types';
 import { ActiveIcon, ProcessingIcon } from '../../icons';
@@ -30,6 +31,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(2),
   },
 }));
+
+const ListItemText = withStyles((theme: Theme) =>
+  createStyles({
+    primary: {
+      display: 'inline-block',
+      width: '100%',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden !important',
+      textOverflow: 'ellipsis',
+    },
+  }),
+)(MuiListItemText);
 
 const ListItem: React.FC<ListItemProps> = ({
   label,

@@ -67,3 +67,16 @@ export const KEPLER_STRUCTURE_QUERY = gql`
     }
   }
 `;
+
+export const DATASET_QUERY = gql`
+  query getDatasets {
+    getDatasets {
+      analysisName
+      bigQueryDatasetName
+      description
+      totalRows
+      createdAt
+      status
+    }
+  }
+`;

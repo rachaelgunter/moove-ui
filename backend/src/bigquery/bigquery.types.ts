@@ -121,3 +121,12 @@ export class BigQueryTableInfo {
   @Field()
   schema?: BigQueryTableSchema;
 }
+
+@ObjectType()
+export class BigQueryPreviewTable {
+  @Field(() => [String], { nullable: 'itemsAndList' })
+  headers?: string[];
+
+  @Field(() => [[String]], { nullable: 'itemsAndList' })
+  rows?: string[][];
+}
