@@ -54,8 +54,13 @@ type BigQueryTableInfo {
   schema: BigQueryTableSchema!
 }
 
+type BigQueryPreviewHeaders {
+  name: String!
+  type: String!
+}
+
 type BigQueryPreviewTable {
-  headers: [String]
+  headers: [BigQueryPreviewHeaders]
   rows: [[String]]
 }
 
