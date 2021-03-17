@@ -31,9 +31,6 @@ const getData = (
 ): KeplerDataset => {
   const { previewTable: keplerData } = data;
 
-  // eslint-disable-next-line no-console
-  console.log(keplerData.rows);
-
   return {
     info: {
       label: columnName,
