@@ -123,9 +123,17 @@ export class BigQueryTableInfo {
 }
 
 @ObjectType()
+export class BigQueryPreviewHeaders {
+  @Field()
+  name: string;
+
+  @Field()
+  type: string;
+}
+@ObjectType()
 export class BigQueryPreviewTable {
-  @Field(() => [String], { nullable: 'itemsAndList' })
-  headers?: string[];
+  @Field(() => [BigQueryPreviewHeaders], { nullable: 'itemsAndList' })
+  headers?: BigQueryPreviewHeaders[];
 
   @Field(() => [[String]], { nullable: 'itemsAndList' })
   rows?: string[][];
