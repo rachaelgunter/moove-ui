@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { BadRequestException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { GqlAuthGuard } from 'src/auth/graphql-auth.guard';
 import { DatasetsService } from './datasets.service';
@@ -13,7 +13,12 @@ export class DatasetsResolver {
   async createDataset(
     @Args({ name: 'datasetParams' }) datasetParams: DatasetParamsInput,
   ): Promise<string> {
-    return this.datasetsService.createDataset(datasetParams);
+    try {
+      const response = await this.datasetsService.createDataset(datasetParams);
+      return response;
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
   }
 
   @UseGuards(GqlAuthGuard)
