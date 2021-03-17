@@ -6,6 +6,10 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { KEPLER_DATA_QUERY, KEPLER_STRUCTURE_QUERY } from '../queries';
 import KeplerWrapper from './KeplerWrapper';
 
+interface ColumnViewMapProps {
+  columnName: string;
+}
+
 const useStyles = makeStyles(() => ({
   spinnerContainer: {
     justifyContent: 'center',
@@ -19,14 +23,14 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const getData = (rows: any, columns: any): any => {
+const getData = (rows: any, columns: any, columnName: string): any => {
   const { tableData } = rows;
   const { tableInfo } = columns;
 
   return {
     info: {
-      label: 'Analysis results',
-      id: 'analysis_data',
+      label: columnName,
+      id: `${columnName} analysis_data`,
     },
     data: {
       fields: tableInfo.schema.fields,
@@ -37,18 +41,22 @@ const getData = (rows: any, columns: any): any => {
   };
 };
 
-const ColumnViewMap: FC = () => {
+const ColumnViewMap: FC<ColumnViewMapProps> = ({
+  columnName,
+}: ColumnViewMapProps) => {
   const projectId = 'moove-platform-testing-data';
   const datasetId = 'denver_friction_galileo_analysis';
   const tableId = 'denver_friction_contextualized_sample';
 
+  const selectedFields = ['source_geom', columnName];
+
   const { data: rows, loading: rowsLoading } = useQuery(KEPLER_DATA_QUERY, {
-    variables: { datasetId, projectId, tableId },
+    variables: { datasetId, projectId, tableId, selectedFields, limit: 20000 },
   });
   const { data: columns, loading: columnsLoading } = useQuery(
     KEPLER_STRUCTURE_QUERY,
     {
-      variables: { datasetId, projectId, tableId },
+      variables: { datasetId, projectId, tableId, selectedFields },
     },
   );
 
@@ -69,7 +77,8 @@ const ColumnViewMap: FC = () => {
       <AutoSizer>
         {({ width, height }) => (
           <KeplerWrapper
-            data={getData(rows, columns)}
+            columnName={columnName}
+            data={getData(rows, columns, columnName)}
             width={width}
             height={height}
           />

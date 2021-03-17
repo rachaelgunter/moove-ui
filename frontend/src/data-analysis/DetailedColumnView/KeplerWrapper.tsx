@@ -2,12 +2,13 @@ import React, { FC, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import KeplerGl from 'kepler.gl';
 import { addDataToMap, wrapTo } from 'kepler.gl/actions';
-import { KeplerConfig } from './KeplerConfig';
+import { getKeplerConfig } from './KeplerConfig';
 
 interface KeplerWrapperProps {
   data: unknown;
   height: number;
   width: number;
+  columnName: string;
 }
 
 const TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
@@ -16,27 +17,29 @@ const KeplerWrapper: FC<KeplerWrapperProps> = ({
   data,
   height,
   width,
+  columnName,
 }: KeplerWrapperProps) => {
   const dispatch = useDispatch();
+  const keplerInstanceId = `${columnName}_KEPLER_INSTANCE`;
 
   useEffect(() => {
     dispatch(
       wrapTo(
-        'foo',
+        keplerInstanceId,
         addDataToMap({
           datasets: data,
           options: {
             centerMap: true,
           },
-          config: KeplerConfig,
+          config: getKeplerConfig(columnName),
         }),
       ),
     );
-  }, [data, dispatch]);
+  }, [data, dispatch, keplerInstanceId, columnName]);
 
   return (
     <KeplerGl
-      id="foo"
+      id={keplerInstanceId}
       width={width}
       mapboxApiAccessToken={TOKEN}
       height={height}

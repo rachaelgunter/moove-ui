@@ -8,6 +8,7 @@ import ColumnViewMap from './ColumnViewMap';
 
 interface DetailedColumnViewProps {
   open: boolean;
+  columnName: string;
   onClose: () => void;
 }
 
@@ -43,6 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const DetailedColumnView: FC<DetailedColumnViewProps> = ({
   open,
+  columnName,
   onClose,
 }: DetailedColumnViewProps) => {
   const classes = useStyles();
@@ -79,7 +81,7 @@ const DetailedColumnView: FC<DetailedColumnViewProps> = ({
         Analytics
       </ColumnViewTabPanel>
       <ColumnViewTabPanel value={value} index={1}>
-        <ColumnViewMap />
+        <ColumnViewMap columnName={columnName} />
       </ColumnViewTabPanel>
       <ColumnViewTabPanel value={value} index={2}>
         Relationships

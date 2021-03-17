@@ -21,8 +21,20 @@ export const BIG_QUERY_TABLES_QUERY = gql`
 `;
 
 export const KEPLER_DATA_QUERY = gql`
-  query TableData($projectId: String!, $datasetId: String!, $tableId: String!) {
-    tableData(projectId: $projectId, datasetId: $datasetId, tableId: $tableId) {
+  query TableData(
+    $projectId: String!
+    $datasetId: String!
+    $tableId: String!
+    $selectedFields: [String]
+    $limit: Int
+  ) {
+    tableData(
+      projectId: $projectId
+      datasetId: $datasetId
+      tableId: $tableId
+      selectedFields: $selectedFields
+      limit: $limit
+    ) {
       totalRows
       rows {
         f {
@@ -34,8 +46,18 @@ export const KEPLER_DATA_QUERY = gql`
 `;
 
 export const KEPLER_STRUCTURE_QUERY = gql`
-  query TableInfo($projectId: String!, $datasetId: String!, $tableId: String!) {
-    tableInfo(projectId: $projectId, datasetId: $datasetId, tableId: $tableId) {
+  query TableInfo(
+    $projectId: String!
+    $datasetId: String!
+    $tableId: String!
+    $selectedFields: [String]
+  ) {
+    tableInfo(
+      projectId: $projectId
+      datasetId: $datasetId
+      tableId: $tableId
+      selectedFields: $selectedFields
+    ) {
       schema {
         fields {
           name

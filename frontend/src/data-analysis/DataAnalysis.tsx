@@ -20,21 +20,17 @@ function createData( // TODO remove
 }
 
 const columns = [
-  createData('ID', 'string', 100, 123, 99875),
-  createData('Friction', 'float', 98.5, 0.1, 9.8),
-  createData('Last', 'float', 99.5, 1000000, 2000000),
-  createData('Long', 'float', 99.5, 1200020, 3200020),
-  createData('Date', 'Timestamp', 100, 'June 1, 2019', 'June 30, 2020'),
-  createData('ID', 'string', 100, 123, 99875),
-  createData('Friction', 'float', 98.5, 0.1, 9.8),
-  createData('Last', 'float', 99.5, 1000000, 2000000),
-  createData('Long', 'float', 99.5, 1200020, 3200020),
-  createData('Date', 'Timestamp', 100, 'June 1, 2019', 'June 30, 2020'),
-  createData('ID', 'string', 100, 123, 99875),
-  createData('Friction', 'float', 98.5, 0.1, 9.8),
-  createData('Last', 'float', 99.5, 1000000, 2000000),
-  createData('Long', 'float', 99.5, 1200020, 3200020),
-  createData('Date', 'Timestamp', 100, 'June 1, 2019', 'June 30, 2020'),
+  createData('accelerateVector', 'FLOAT', 100, 123, 99875),
+  createData('errorAmplitudeVector', 'FLOAT', 98.5, 0.1, 9.8),
+  createData('delivery', 'BOOLEAN', 0, '-', '-'),
+  createData('speed_category_offset', 'STRING', 99.5, 1200020, 3200020),
+  createData(
+    'source_timestamp',
+    'TIMESTAMP',
+    100,
+    'June 1, 2019',
+    'June 30, 2020',
+  ),
 ];
 
 // TODO remove

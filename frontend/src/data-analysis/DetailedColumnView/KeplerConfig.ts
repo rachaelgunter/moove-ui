@@ -1,29 +1,25 @@
 // eslint-disable-next-line import/prefer-default-export
-export const KeplerConfig = {
+export const getKeplerConfig = (columnName: string): unknown => ({
   version: 'v1',
   config: {
     visState: {
       filters: [],
       layers: [
         {
-          id: '8r0xqd',
-          type: 'point',
+          id: 'n93mxvf',
+          type: 'geojson',
           config: {
-            dataId: '6dhgg4oof',
-            label: 'Point',
-            color: [246, 209, 138],
+            dataId: `${columnName} analysis_data`,
+            label: columnName,
+            color: [30, 150, 190],
             columns: {
-              lat: 'latitude',
-              lng: 'longitude',
-              altitude: null,
+              geojson: 'source_geom',
             },
             isVisible: true,
             visConfig: {
-              radius: 11,
-              fixedRadius: false,
               opacity: 0.8,
-              outline: true,
-              thickness: 2,
+              strokeOpacity: 0.8,
+              thickness: 0.5,
               strokeColor: null,
               colorRange: {
                 name: 'Global Warming',
@@ -51,15 +47,31 @@ export const KeplerConfig = {
                   '#FFC300',
                 ],
               },
+              radius: 10,
+              sizeRange: [0, 10],
               radiusRange: [0, 50],
+              heightRange: [0, 500],
+              elevationScale: 5,
+              stroked: false,
               filled: true,
+              enable3d: false,
+              wireframe: false,
             },
             hidden: false,
-            textLabel: [],
+            textLabel: [
+              {
+                field: null,
+                color: [255, 255, 255],
+                size: 18,
+                offset: [0, 0],
+                anchor: 'start',
+                alignment: 'center',
+              },
+            ],
           },
           visualChannels: {
             colorField: {
-              name: 'distance_from_incident',
+              name: columnName,
               type: 'real',
             },
             colorScale: 'quantile',
@@ -67,31 +79,19 @@ export const KeplerConfig = {
             strokeColorScale: 'quantile',
             sizeField: null,
             sizeScale: 'linear',
+            heightField: null,
+            heightScale: 'linear',
+            radiusField: null,
+            radiusScale: 'linear',
           },
         },
       ],
       interactionConfig: {
         tooltip: {
           fieldsToShow: {
-            '6dhgg4oof': [
+            [`${columnName} analysis_data`]: [
               {
-                name: 'here_segment_id',
-                format: null,
-              },
-              {
-                name: 'distance_from_incident',
-                format: null,
-              },
-              {
-                name: 'heading_deg',
-                format: null,
-              },
-              {
-                name: 'accelerateVector',
-                format: null,
-              },
-              {
-                name: 'errorAmplitudeVector',
+                name: columnName,
                 format: null,
               },
             ],
@@ -121,10 +121,8 @@ export const KeplerConfig = {
     mapState: {
       bearing: 0,
       dragRotate: false,
-      latitude: 39.72719001828028,
-      longitude: -105.00142787402388,
       pitch: 0,
-      zoom: 10,
+      zoom: 9,
       isSplit: false,
     },
     mapStyle: {
@@ -147,4 +145,4 @@ export const KeplerConfig = {
       mapStyles: {},
     },
   },
-};
+});

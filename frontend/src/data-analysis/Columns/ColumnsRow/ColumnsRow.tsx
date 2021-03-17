@@ -36,9 +36,11 @@ const ColumnsRow: FC<ColumnsRowsProps> = ({
   const [isDetailedColumnViewOpened, setDetailedColumnViewOpened] = useState(
     false,
   );
+  const [detailedViewColumn, setDetailedViewColumn] = useState<string>('');
 
-  const openDetailedColumnView = () => {
+  const openDetailedColumnView = (columnName: string) => {
     setDetailedColumnViewOpened(true);
+    setDetailedViewColumn(columnName);
   };
 
   const closeDetailedColumnView = () => {
@@ -56,7 +58,7 @@ const ColumnsRow: FC<ColumnsRowsProps> = ({
         <Button
           startIcon={<MagnifierIcon />}
           className={classes.rowActionButton}
-          onClick={openDetailedColumnView}
+          onClick={() => openDetailedColumnView(columnModel.name)}
         >
           View
         </Button>
@@ -64,6 +66,7 @@ const ColumnsRow: FC<ColumnsRowsProps> = ({
       <DetailedColumnView
         open={isDetailedColumnViewOpened}
         onClose={closeDetailedColumnView}
+        columnName={detailedViewColumn}
       />
     </TableRow>
   );
