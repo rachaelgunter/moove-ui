@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { BigQueryClient } from './bigquery-client/bigquery-client';
 import { UsersService } from 'src/users/users.service';
 import { UserTokenPayload } from 'src/users/users.types';
-import { BigQueryTableData, BigQueryTableInfo } from './bigquery.types';
+import {
+  BigQueryPreviewTable,
+  BigQueryTableData,
+  BigQueryTableInfo,
+} from './bigquery.types';
 
 @Injectable()
 export class BigQueryService {
@@ -41,5 +45,23 @@ export class BigQueryService {
     const bigQueryClient = new BigQueryClient(tokens);
 
     return await bigQueryClient.getTableInfo(projectId, datasetId, tableId);
+  }
+
+  async getPreviewTable(
+    user: UserTokenPayload,
+    projectId: string,
+    datasetId: string,
+    tableId: string,
+    offset: string,
+    limit: number,
+  ): Promise<BigQueryPreviewTable> {
+    const bigQueryClient = await this.getClient(user);
+    return await bigQueryClient.getPreviewTable(
+      projectId,
+      datasetId,
+      tableId,
+      offset,
+      limit,
+    );
   }
 }

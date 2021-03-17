@@ -55,6 +55,11 @@ type BigQueryTableInfo {
   schema: BigQueryTableSchema!
 }
 
+type BigQueryPreviewTable {
+  headers: [String]
+  rows: [[String]]
+}
+
 type Dataset {
   analysisName: String!
   bigQueryDatasetName: String!
@@ -70,6 +75,7 @@ type Query {
   tables(tablesParams: BigQueryTablesParams!): [BigQueryTable]
   tableData(projectId: String!, datasetId: String!, tableId: String!, offset: String = "0", limit: Int = 5): BigQueryTableData!
   tableInfo(projectId: String!, datasetId: String!, tableId: String!): BigQueryTableInfo!
+  previewTable(projectId: String!, datasetId: String!, tableId: String!, offset: String = "0", limit: Int = 5): BigQueryPreviewTable!
   getDatasets: [Dataset]
 }
 

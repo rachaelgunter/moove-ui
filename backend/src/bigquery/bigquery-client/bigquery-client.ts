@@ -3,11 +3,13 @@ import { bigquery_v2, google } from 'googleapis';
 import { TokenPair } from 'src/users/users.types';
 import {
   BigQueryDataset,
+  BigQueryPreviewTable,
   BigQueryProject,
   BigQueryTable,
   BigQueryTableData,
   BigQueryTableInfo,
 } from '../bigquery.types';
+import { convertTableDataRowsToArray, getPreviewTableHeaders } from '../utils';
 
 export class BigQueryClient {
   private readonly oauthClient: OAuth2Client;
@@ -143,5 +145,42 @@ export class BigQueryClient {
           },
         };
       });
+  }
+
+  async getPreviewTable(
+    projectId: string,
+    datasetId: string,
+    tableId: string,
+    startIndex: string,
+    maxResults: number,
+  ): Promise<BigQueryPreviewTable> {
+    const pRows = this.bigQuery.tabledata
+      .list({
+        auth: this.oauthClient,
+        datasetId,
+        projectId,
+        tableId,
+        startIndex,
+        maxResults,
+      })
+      .then(({ data }) => {
+        return convertTableDataRowsToArray(data.rows);
+      });
+    const pHeaders = this.bigQuery.tables
+      .get({
+        auth: this.oauthClient,
+        datasetId,
+        projectId,
+        tableId,
+      })
+      .then(({ data }) => {
+        return getPreviewTableHeaders(data.schema.fields);
+      });
+    const [rows, headers] = await Promise.all([pRows, pHeaders]);
+
+    return {
+      rows,
+      headers,
+    };
   }
 }
