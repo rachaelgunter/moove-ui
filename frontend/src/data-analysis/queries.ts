@@ -28,42 +28,15 @@ export const KEPLER_DATA_QUERY = gql`
     $selectedFields: [String]
     $limit: Int
   ) {
-    tableData(
+    previewTable(
       projectId: $projectId
       datasetId: $datasetId
       tableId: $tableId
       selectedFields: $selectedFields
       limit: $limit
     ) {
-      totalRows
-      rows {
-        f {
-          v
-        }
-      }
-    }
-  }
-`;
-
-export const KEPLER_STRUCTURE_QUERY = gql`
-  query TableInfo(
-    $projectId: String!
-    $datasetId: String!
-    $tableId: String!
-    $selectedFields: [String]
-  ) {
-    tableInfo(
-      projectId: $projectId
-      datasetId: $datasetId
-      tableId: $tableId
-      selectedFields: $selectedFields
-    ) {
-      schema {
-        fields {
-          name
-          type
-        }
-      }
+      headers
+      rows
     }
   }
 `;

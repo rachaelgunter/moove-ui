@@ -45,3 +45,23 @@ export type TableIdentity = {
   datasetId: string;
   tableId: string;
 };
+
+export type KeplerDataQueryResponse = {
+  previewTable: {
+    headers: string[];
+    rows: unknown[];
+  };
+};
+
+export type KeplerDataset = {
+  info: {
+    label: string;
+    id: string;
+  };
+  data: {
+    fields: {
+      name: string;
+    }[];
+    rows: unknown[];
+  };
+};

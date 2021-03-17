@@ -54,6 +54,7 @@ export class BigQueryService {
     tableId: string,
     offset: string,
     limit: number,
+    selectedFields?: string[],
   ): Promise<BigQueryPreviewTable> {
     const bigQueryClient = await this.getClient(user);
     return await bigQueryClient.getPreviewTable(
@@ -62,6 +63,7 @@ export class BigQueryService {
       tableId,
       offset,
       limit,
+      selectedFields,
     );
   }
 }

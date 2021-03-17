@@ -1,14 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { FC } from 'react';
 import { useQuery } from '@apollo/client';
 import { CircularProgress, makeStyles } from '@material-ui/core';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { KEPLER_DATA_QUERY, KEPLER_STRUCTURE_QUERY } from '../queries';
+import { KEPLER_DATA_QUERY } from '../queries';
 import KeplerWrapper from './KeplerWrapper';
+import { KeplerDataQueryResponse, KeplerDataset } from '../types';
 
 interface ColumnViewMapProps {
   columnName: string;
 }
+
+const KEPLER_DATASET_SIZE = 20000;
 
 const useStyles = makeStyles(() => ({
   spinnerContainer: {
@@ -23,9 +25,14 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const getData = (rows: any, columns: any, columnName: string): any => {
-  const { tableData } = rows;
-  const { tableInfo } = columns;
+const getData = (
+  data: KeplerDataQueryResponse,
+  columnName: string,
+): KeplerDataset => {
+  const { previewTable: keplerData } = data;
+
+  // eslint-disable-next-line no-console
+  console.log(keplerData.rows);
 
   return {
     info: {
@@ -33,10 +40,8 @@ const getData = (rows: any, columns: any, columnName: string): any => {
       id: `${columnName} analysis_data`,
     },
     data: {
-      fields: tableInfo.schema.fields,
-      rows: tableData.rows.map((row: { f: any[] }) =>
-        row.f.map((field: { v: any }) => field.v),
-      ),
+      fields: keplerData.headers.map((field) => ({ name: field })),
+      rows: keplerData.rows,
     },
   };
 };
@@ -50,19 +55,19 @@ const ColumnViewMap: FC<ColumnViewMapProps> = ({
 
   const selectedFields = ['source_geom', columnName];
 
-  const { data: rows, loading: rowsLoading } = useQuery(KEPLER_DATA_QUERY, {
-    variables: { datasetId, projectId, tableId, selectedFields, limit: 20000 },
-  });
-  const { data: columns, loading: columnsLoading } = useQuery(
-    KEPLER_STRUCTURE_QUERY,
-    {
-      variables: { datasetId, projectId, tableId, selectedFields },
+  const { data, loading: dataLoading } = useQuery(KEPLER_DATA_QUERY, {
+    variables: {
+      datasetId,
+      projectId,
+      tableId,
+      selectedFields,
+      limit: KEPLER_DATASET_SIZE,
     },
-  );
+  });
 
   const classes = useStyles();
 
-  if (rowsLoading || columnsLoading) {
+  if (dataLoading) {
     return (
       <div className={classes.keplerInstanceContainer}>
         <div className={classes.spinnerContainer}>
@@ -78,7 +83,7 @@ const ColumnViewMap: FC<ColumnViewMapProps> = ({
         {({ width, height }) => (
           <KeplerWrapper
             columnName={columnName}
-            data={getData(rows, columns, columnName)}
+            data={getData(data, columnName)}
             width={width}
             height={height}
           />

@@ -73,9 +73,9 @@ type Query {
   getCurrentUser: User!
   getUsersProjects: [BigQueryProject!]!
   tables(tablesParams: BigQueryTablesParams!): [BigQueryTable]
-  tableData(projectId: String!, datasetId: String!, tableId: String!, offset: String = "0", limit: Int = 5): BigQueryTableData!
+  tableData(projectId: String!, datasetId: String!, tableId: String!, offset: String = "0", limit: Int = 5, selectedFields: [String]): BigQueryTableData!
   tableInfo(projectId: String!, datasetId: String!, tableId: String!): BigQueryTableInfo!
-  previewTable(projectId: String!, datasetId: String!, tableId: String!, offset: String = "0", limit: Int = 5): BigQueryPreviewTable!
+  previewTable(projectId: String!, datasetId: String!, tableId: String!, offset: String = "0", limit: Int = 5, selectedFields: [String]): BigQueryPreviewTable!
   getDatasets: [Dataset]
 }
 
