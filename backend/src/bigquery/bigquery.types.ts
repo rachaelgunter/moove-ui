@@ -160,4 +160,7 @@ export class BigQueryColumnTable {
 
   @Field()
   max: string;
+
+  @Field()
+  populated: number;
 }

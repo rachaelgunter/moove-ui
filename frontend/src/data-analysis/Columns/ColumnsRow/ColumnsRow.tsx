@@ -22,11 +22,24 @@ const ColumnsRow: FC<ColumnsRowsProps> = ({
 }: ColumnsRowsProps) => {
   const classes = useStyles();
 
+  const transformColumnModel = ({
+    name,
+    type,
+    populated,
+    min,
+    max,
+  }: ColumnModel) => {
+    return [name, type, populated, min, max];
+  };
+
   return (
     <TableRow key={columnModel.name} data-testid="columns-table-row">
-      {Object.keys(columnModel).map((key, index) => (
-        <TableCell className={classes.cell} key={`${columnModel.name}-${key}`}>
-          {columnModel[key]}
+      {transformColumnModel(columnModel).map((cellValue) => (
+        <TableCell
+          className={classes.cell}
+          key={`${columnModel.name}-${cellValue}`}
+        >
+          {cellValue}
         </TableCell>
       ))}
     </TableRow>

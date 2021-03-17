@@ -32,3 +32,18 @@ export const DATASET_QUERY = gql`
     }
   }
 `;
+
+export const DATASET_COLUMNS_QUERY = gql`
+  query ColumnsTable {
+    columnsTable(
+      projectId: "moove-platform-testing-data"
+      datasetId: "denver_friction5_galileo_analysis"
+      tableId: "denver_friction5_general_stats"
+    ) {
+      min
+      max
+      name
+      type
+    }
+  }
+`;

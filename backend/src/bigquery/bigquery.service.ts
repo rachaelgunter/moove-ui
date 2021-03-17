@@ -93,6 +93,7 @@ export class BigQueryService {
         column.name = header.name.replace(markers.min, '');
         column.type = header.type;
         column.min = data.rows[0][index];
+        column.populated = 100;
       }
 
       if (header.name.endsWith(markers.max)) {

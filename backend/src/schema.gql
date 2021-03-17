@@ -69,6 +69,7 @@ type BigQueryColumnTable {
   type: String!
   min: String!
   max: String!
+  populated: Float!
 }
 
 type Dataset {
