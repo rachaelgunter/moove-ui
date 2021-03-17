@@ -177,13 +177,16 @@ export class BigQueryClient {
         selectedFields: selectedFieldsString ?? undefined,
       })
       .then(({ data }) => {
-        return getPreviewTableHeaders(data.schema.fields);
+        return {
+          headers: getPreviewTableHeaders(data.schema.fields),
+          tableMetadata: { totalRows: +data.numRows },
+        };
       });
     const [rows, headers] = await Promise.all([pRows, pHeaders]);
 
     return {
       rows,
-      headers,
+      ...headers,
     };
   }
 }

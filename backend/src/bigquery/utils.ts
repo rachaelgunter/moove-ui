@@ -10,13 +10,16 @@ export function handleGoogleError(
   throw new InternalServerErrorException(errorMessage);
 }
 
-export const getPreviewTableHeaders = (fields, prefix = ''): string[] => {
+export const getPreviewTableHeaders = (
+  fields,
+  prefix = '',
+): { name: string; type: string }[] => {
   const res = [];
 
   const n = fields.length;
   for (let i = 0; i < n; i++) {
     if (!fields[i].fields) {
-      res.push(prefix + fields[i].name);
+      res.push({ name: `${prefix}${fields[i].name}`, type: fields[i].type });
     } else {
       res.push(
         ...getPreviewTableHeaders(

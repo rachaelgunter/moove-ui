@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
-import { useQuery } from '@apollo/client';
 
 import { DatasetModel } from 'src/data-analysis/types';
-import { CURRENT_USER_QUERY } from 'src/shared/queries';
+import { UserContext } from 'src/auth/UserProvider';
 
 const VISUALIZATION_BLOCK_HEIGHT = 320;
 const DATASET_BUCKET = process.env.REACT_APP_DATASET_ASSETS_BUCKET;
@@ -36,8 +35,7 @@ const DatasetVisualization: React.FC<DatasetVisualizationProps> = ({
 }: DatasetVisualizationProps) => {
   const classes = useStyles();
 
-  const { data } = useQuery(CURRENT_USER_QUERY);
-  const user = data?.getCurrentUser;
+  const user = useContext(UserContext);
 
   const generateAssetLink = (filePath: string) =>
     GCS_URL.replace('{dataset}', datasetModel.name)

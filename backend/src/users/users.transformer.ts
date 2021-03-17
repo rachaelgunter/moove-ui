@@ -7,13 +7,12 @@ export class UsersTransformer {
   transformUserToGraphQLResponseObject(
     user: PrismaUser & { organization?: Organization },
   ): User {
-    const { email, role, organization, picture, name, id } = user;
+    const { email, organization, picture, name, id } = user;
     return {
       sub: id,
       email,
       name,
       picture,
-      role,
       organization: organization?.name ?? null,
     };
   }

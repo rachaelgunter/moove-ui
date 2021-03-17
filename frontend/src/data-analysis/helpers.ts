@@ -2,6 +2,7 @@ import { DatasetModel, DatasetStatus } from './types';
 
 interface DatasetDataProps {
   bigQueryDatasetName: string;
+  analysisName: string;
   description: string;
   totalRows: number;
   createdAt: string;
@@ -13,7 +14,7 @@ export const getDatasetModel = (
   index: number,
 ): DatasetModel => ({
   id: index,
-  name: data.bigQueryDatasetName,
+  name: data.analysisName,
   description: data.description,
   totalRows: data.totalRows,
   createdAt: data.createdAt,

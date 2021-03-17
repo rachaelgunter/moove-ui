@@ -37,7 +37,7 @@ const getData = (
       id: `${columnName} analysis_data`,
     },
     data: {
-      fields: keplerData.headers.map((field) => ({ name: field })),
+      fields: keplerData.headers,
       rows: keplerData.rows,
     },
   };

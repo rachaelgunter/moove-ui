@@ -48,7 +48,7 @@ export type TableIdentity = {
 
 export type KeplerDataQueryResponse = {
   previewTable: {
-    headers: string[];
+    headers: { name: string }[];
     rows: unknown[];
   };
 };

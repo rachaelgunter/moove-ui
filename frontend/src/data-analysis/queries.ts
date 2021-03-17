@@ -35,7 +35,9 @@ export const KEPLER_DATA_QUERY = gql`
       selectedFields: $selectedFields
       limit: $limit
     ) {
-      headers
+      headers {
+        name
+      }
       rows
     }
   }
@@ -50,6 +52,26 @@ export const DATASET_QUERY = gql`
       totalRows
       createdAt
       status
+    }
+  }
+`;
+
+export const DATASET_COLUMNS_QUERY = gql`
+  query ColumnsTable(
+    $projectId: String!
+    $datasetId: String!
+    $tableId: String!
+  ) {
+    columnsTable(
+      projectId: $projectId
+      datasetId: $datasetId
+      tableId: $tableId
+    ) {
+      min
+      max
+      name
+      type
+      populated
     }
   }
 `;

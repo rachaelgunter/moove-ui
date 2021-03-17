@@ -126,10 +126,46 @@ export class BigQueryTableInfo {
 }
 
 @ObjectType()
+export class BigQueryPreviewHeaders {
+  @Field()
+  name: string;
+
+  @Field()
+  type: string;
+}
+
+@ObjectType()
+export class BigQueryTableMetadata {
+  @Field()
+  totalRows?: number;
+}
+
+@ObjectType()
 export class BigQueryPreviewTable {
-  @Field(() => [String], { nullable: 'itemsAndList' })
-  headers?: string[];
+  @Field(() => [BigQueryPreviewHeaders], { nullable: 'itemsAndList' })
+  headers?: BigQueryPreviewHeaders[];
 
   @Field(() => [[String]], { nullable: 'itemsAndList' })
   rows?: string[][];
+
+  @Field({ nullable: true })
+  tableMetadata?: BigQueryTableMetadata;
+}
+
+@ObjectType()
+export class BigQueryColumnTable {
+  @Field()
+  name: string;
+
+  @Field()
+  type: string;
+
+  @Field()
+  min: string;
+
+  @Field()
+  max: string;
+
+  @Field()
+  populated: number;
 }

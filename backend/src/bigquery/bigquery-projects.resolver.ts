@@ -9,7 +9,7 @@ import {
 import { GqlAuthGuard } from 'src/auth/graphql-auth.guard';
 import { CurrentUser } from 'src/auth/graphql-current-user.decorator';
 import { UsersService } from 'src/users/users.service';
-import { UserTokenPayload } from 'src/users/users.types';
+import { Role, UserTokenPayload } from 'src/users/users.types';
 import { BigQueryClient } from './bigquery-client/bigquery-client';
 import {
   BigQueryDataset,
@@ -17,6 +17,7 @@ import {
   BigQueryResolverContext,
 } from './bigquery.types';
 import { handleGoogleError } from './utils';
+import { Roles } from 'src/auth/roles.decorator';
 
 @Resolver(() => BigQueryProject)
 export class BigQueryProjectsResolver {
@@ -24,6 +25,7 @@ export class BigQueryProjectsResolver {
 
   constructor(private readonly usersService: UsersService) {}
 
+  @Roles(Role.PAID_USER, Role.ADMIN)
   @UseGuards(GqlAuthGuard)
   @Query(() => [BigQueryProject])
   async getUsersProjects(
