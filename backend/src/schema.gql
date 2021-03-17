@@ -64,6 +64,13 @@ type BigQueryPreviewTable {
   rows: [[String]]
 }
 
+type BigQueryColumnTable {
+  name: String!
+  type: String!
+  min: String!
+  max: String!
+}
+
 type Dataset {
   analysisName: String!
   bigQueryDatasetName: String!
@@ -80,6 +87,7 @@ type Query {
   tableData(projectId: String!, datasetId: String!, tableId: String!, offset: String = "0", limit: Int = 5): BigQueryTableData!
   tableInfo(projectId: String!, datasetId: String!, tableId: String!): BigQueryTableInfo!
   previewTable(projectId: String!, datasetId: String!, tableId: String!, offset: String = "0", limit: Int = 5): BigQueryPreviewTable!
+  columnsTable(projectId: String!, datasetId: String!, tableId: String!, offset: String = "0", limit: Int = 5): [BigQueryColumnTable]
   getDatasets: [Dataset]
 }
 

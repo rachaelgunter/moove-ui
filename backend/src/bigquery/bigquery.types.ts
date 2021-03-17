@@ -138,3 +138,26 @@ export class BigQueryPreviewTable {
   @Field(() => [[String]], { nullable: 'itemsAndList' })
   rows?: string[][];
 }
+
+export interface PreviewTableListingResponse {
+  headers?: {
+    name: string;
+    type: string;
+  }[];
+  rows?: string[][];
+}
+
+@ObjectType()
+export class BigQueryColumnTable {
+  @Field()
+  name: string;
+
+  @Field()
+  type: string;
+
+  @Field()
+  min: string;
+
+  @Field()
+  max: string;
+}

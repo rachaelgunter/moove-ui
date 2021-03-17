@@ -6,6 +6,8 @@ import {
   BigQueryPreviewTable,
   BigQueryTableData,
   BigQueryTableInfo,
+  PreviewTableListingResponse,
+  BigQueryColumnTable,
 } from './bigquery.types';
 
 @Injectable()
@@ -63,5 +65,46 @@ export class BigQueryService {
       offset,
       limit,
     );
+  }
+
+  async getColumnsTable(
+    user: UserTokenPayload,
+    projectId: string,
+    datasetId: string,
+    tableId: string,
+    offset: string,
+    limit: number,
+  ): Promise<BigQueryColumnTable[]> {
+    const bigQueryClient = await this.getClient(user);
+    return await bigQueryClient
+      .getPreviewTable(projectId, datasetId, tableId, offset, limit)
+      .then((data) => this.mapColumnsTable(data));
+  }
+
+  // TODO refactor
+  mapColumnsTable(data: PreviewTableListingResponse) {
+    const markers = { min: '_MIN', max: '_MAX' };
+
+    const res = [];
+    let column = {} as BigQueryColumnTable;
+
+    data.headers.forEach((header, index) => {
+      if (header.name.endsWith(markers.min)) {
+        column.name = header.name.replace(markers.min, '');
+        column.type = header.type;
+        column.min = data.rows[0][index];
+      }
+
+      if (header.name.endsWith(markers.max)) {
+        column.max = data.rows[0][index];
+      }
+
+      if (column.name && column.type && column.min && column.max) {
+        res.push(column);
+        column = {} as BigQueryColumnTable;
+      }
+    });
+
+    return res;
   }
 }

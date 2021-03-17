@@ -7,6 +7,7 @@ import { UserTokenPayload } from 'src/users/users.types';
 import {
   BigQueryPreviewTable,
   BigQueryTableDataParams,
+  BigQueryColumnTable,
 } from './bigquery.types';
 import { handleGoogleError } from './utils';
 
@@ -25,6 +26,32 @@ export class BigQueryPreviewResolver {
     const { datasetId, projectId, tableId, offset, limit } = args;
     try {
       return await this.bigQueryService.getPreviewTable(
+        user,
+        projectId,
+        datasetId,
+        tableId,
+        offset,
+        limit,
+      );
+    } catch (e) {
+      handleGoogleError(
+        this.logger,
+        `Unable to get BigQuery tables for dataset: ${projectId}:${datasetId}`,
+        e,
+      );
+    }
+  }
+
+  @UseGuards(new GqlAuthGuard())
+  @Query(() => [BigQueryColumnTable], { nullable: 'itemsAndList' })
+  async columnsTable(
+    @CurrentUser()
+    user: UserTokenPayload,
+    @Args() args: BigQueryTableDataParams,
+  ): Promise<BigQueryColumnTable[]> {
+    const { datasetId, projectId, tableId, offset, limit } = args;
+    try {
+      return await this.bigQueryService.getColumnsTable(
         user,
         projectId,
         datasetId,
