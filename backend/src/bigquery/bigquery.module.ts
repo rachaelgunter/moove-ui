@@ -5,6 +5,7 @@ import { BigQueryTablesResolver } from './bigquery-tables.resolver';
 import { BigQueryTableDataResolver } from './bigquery-tabledata.resolver';
 import { BigQueryTableInfoResolver } from './bigquery-tableinfo.resolver';
 import { BigQueryProjectsResolver } from './bigquery-projects.resolver';
+import { BigQueryPreviewResolver } from './bigquery-preview.resolver';
 
 @Module({
   imports: [UsersModule],
@@ -14,6 +15,7 @@ import { BigQueryProjectsResolver } from './bigquery-projects.resolver';
     BigQueryTablesResolver,
     BigQueryTableDataResolver,
     BigQueryTableInfoResolver,
+    BigQueryPreviewResolver,
   ],
 })
 export class BigqueryModule {}
