@@ -2,7 +2,11 @@ import { HttpService, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { DatasetParamsInput } from './datasets.types';
+import {
+  Dataset,
+  DatasetListingResponse,
+  DatasetParamsInput,
+} from './datasets.types';
 import { google } from 'googleapis';
 
 @Injectable()
@@ -115,5 +119,32 @@ export class DatasetsService {
         }),
       )
       .toPromise();
+  }
+
+  async getDatasets(): Promise<Dataset[]> {
+    const cloudFunctionUrl = process.env.GOOGLE_CLOUD_FUNCTION_URL_GET_DATASETS;
+
+    const client = await this.auth.getIdTokenClient(cloudFunctionUrl);
+    const headers = await client.getRequestHeaders(cloudFunctionUrl);
+
+    return this.httpService
+      .post(
+        cloudFunctionUrl,
+        { analysis_project: 'moove-platform-testing-data' },
+        { headers },
+      )
+      .pipe(map(({ data }) => this.mapDatasets(data)))
+      .toPromise();
+  }
+
+  mapDatasets(datasetsResponse: DatasetListingResponse): Dataset[] {
+    return Object.keys(datasetsResponse).map((key) => ({
+      analysisName: key,
+      bigQueryDatasetName: datasetsResponse[key].dataset_id,
+      description: datasetsResponse[key].description,
+      totalRows: datasetsResponse[key].total_rows,
+      createdAt: datasetsResponse[key].created_at,
+      status: datasetsResponse[key].ingest_status.dataset_status,
+    }));
   }
 }

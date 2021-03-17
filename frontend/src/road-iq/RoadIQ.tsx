@@ -38,8 +38,6 @@ const RoadIQ: React.FC = () => {
     history.push(routes.dashboard);
   };
 
-  // TODO add loader
-
   return (
     <div className={classes.root}>
       <PageTitle>
@@ -62,7 +60,7 @@ const RoadIQ: React.FC = () => {
       <iframe
         className={classes.iframe}
         title="RoadIQ"
-        src="https://moove-prod-ui.moove.ai/"
+        src={process.env.REACT_APP_ROAD_IQ_URL}
         frameBorder="0"
       />
     </div>

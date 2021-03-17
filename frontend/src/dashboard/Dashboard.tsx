@@ -1,18 +1,21 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { Grid, Typography } from '@material-ui/core';
 
 import MapOutlinedIcon from '@material-ui/icons/MapOutlined';
 
 import PageTemplate from 'src/shared/PageTemplate';
+import routes from 'src/shared/routes';
 import Shortcut from './Shortcut';
 
 const Dashboard: React.FC = () => {
+  const history = useHistory();
+
   const shortcuts = [
     {
       label: 'RoadIQ',
       Icon: MapOutlinedIcon,
-      // TODO use history instead
-      onClick: () => window.open('https://moove-prod-ui.moove.ai/', '_blank'),
+      onClick: () => history.push(routes.roadIQ),
     },
   ];
 
