@@ -5,6 +5,7 @@ import DialogWrapper from 'src/shared/DialogWrapper/DialogWrapper';
 import ColumnViewBreadcrumbs from './ColumnViewBreadcrumbs';
 import ColumnViewTabPanel from './ColumnViewTabPanel';
 import ColumnViewMap from './ColumnViewMap';
+import ColumnViewAnalytics from './ColumnViewAnalytics';
 
 interface DetailedColumnViewProps {
   open: boolean;
@@ -50,7 +51,7 @@ const DetailedColumnView: FC<DetailedColumnViewProps> = ({
   onClose,
 }: DetailedColumnViewProps) => {
   const classes = useStyles();
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState(0);
 
   const handleChange = (
     _: React.ChangeEvent<Record<string, string>>,
@@ -77,13 +78,13 @@ const DetailedColumnView: FC<DetailedColumnViewProps> = ({
           aria-label="simple tabs example"
           className={classes.tabs}
         >
-          <Tab className={classes.tab} disabled label="Analytics" />
+          <Tab className={classes.tab} label="Analytics" />
           <Tab className={classes.tab} label="Map" />
           <Tab className={classes.tab} disabled label="Relationships" />
         </Tabs>
       </Box>
       <ColumnViewTabPanel value={value} index={0}>
-        Analytics
+        <ColumnViewAnalytics />
       </ColumnViewTabPanel>
       <ColumnViewTabPanel value={value} index={1}>
         <ColumnViewMap columnName={columnName} />
