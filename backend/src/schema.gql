@@ -75,6 +75,11 @@ type BigQueryColumnTable {
   min: String!
   max: String!
   populated: Float!
+  average: Float
+  standardDeviation: Float
+  sum: Float
+  variance: Float
+  count: Float
 }
 
 type Dataset {

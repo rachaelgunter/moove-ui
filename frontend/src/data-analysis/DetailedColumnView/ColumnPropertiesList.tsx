@@ -2,11 +2,10 @@ import { Theme } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/styles';
 import React, { FC } from 'react';
-
-export type ColumnProperty = Record<string, string | number>;
+import { ColumnModel } from '../types';
 
 interface ColumnPropertiesListProps {
-  columnProperties: ColumnProperty[];
+  column: ColumnModel;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -28,20 +27,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const ColumnPropertiesList: FC<ColumnPropertiesListProps> = ({
-  columnProperties,
+  column,
 }: ColumnPropertiesListProps) => {
   const classes = useStyles();
 
   return (
     <Box className={classes.columnPropertiesList}>
-      {columnProperties.map((property) => {
-        const key = Object.keys(property)[0];
-        const value = Object.values(property)[0];
-
+      {Object.keys(column).map((key) => {
         return (
           <Box key={key} className={classes.columnPropetry}>
             <Box>{key}</Box>
-            <Box>{value}</Box>
+            <Box>{column[key]}</Box>
           </Box>
         );
       })}

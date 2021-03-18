@@ -6,10 +6,11 @@ import ColumnViewBreadcrumbs from './ColumnViewBreadcrumbs';
 import ColumnViewTabPanel from './ColumnViewTabPanel';
 import ColumnViewMap from './ColumnViewMap';
 import ColumnViewAnalytics from './ColumnViewAnalytics';
+import { ColumnModel } from '../types';
 
 interface DetailedColumnViewProps {
   open: boolean;
-  columnName: string;
+  column: ColumnModel;
   datasetName: string;
   onClose: () => void;
 }
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const DetailedColumnView: FC<DetailedColumnViewProps> = ({
   open,
-  columnName,
+  column,
   datasetName,
   onClose,
 }: DetailedColumnViewProps) => {
@@ -69,7 +70,7 @@ const DetailedColumnView: FC<DetailedColumnViewProps> = ({
     <>
       <Box className={classes.header}>
         <ColumnViewBreadcrumbs
-          columnName={columnName}
+          columnName={column.name}
           datasetName={datasetName}
         />
         <Tabs
@@ -84,10 +85,10 @@ const DetailedColumnView: FC<DetailedColumnViewProps> = ({
         </Tabs>
       </Box>
       <ColumnViewTabPanel value={value} index={0}>
-        <ColumnViewAnalytics />
+        <ColumnViewAnalytics column={column} />
       </ColumnViewTabPanel>
       <ColumnViewTabPanel value={value} index={1}>
-        <ColumnViewMap columnName={columnName} />
+        <ColumnViewMap columnName={column.name} />
       </ColumnViewTabPanel>
       <ColumnViewTabPanel value={value} index={2}>
         Relationships

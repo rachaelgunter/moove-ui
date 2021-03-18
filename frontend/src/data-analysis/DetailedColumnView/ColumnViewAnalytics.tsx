@@ -1,19 +1,12 @@
 import { Box, Grid, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React, { FC } from 'react';
-import ColumnPropertiesList, { ColumnProperty } from './ColumnPropertiesList';
+import { ColumnModel } from '../types';
+import ColumnPropertiesList from './ColumnPropertiesList';
 
-const columnProperties: ColumnProperty[] = [
-  {
-    type: 'FLOAT',
-  },
-  {
-    'Populated %': 100,
-  },
-  {
-    'Standard Deviation': 11.64,
-  },
-];
+interface ColumnViewAnalyticsProps {
+  column: ColumnModel;
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   gridContainer: {
@@ -35,7 +28,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const ColumnViewAnalytics: FC = () => {
+const ColumnViewAnalytics: FC<ColumnViewAnalyticsProps> = ({
+  column,
+}: ColumnViewAnalyticsProps) => {
   const classes = useStyles();
 
   return (
@@ -43,7 +38,7 @@ const ColumnViewAnalytics: FC = () => {
       <Grid className={classes.gridItem} item xs={3}>
         <Box className={classes.contentContainer}>
           <Box>Properties</Box>
-          <ColumnPropertiesList columnProperties={columnProperties} />
+          <ColumnPropertiesList column={column} />
         </Box>
       </Grid>
       <Grid className={classes.gridItem} item xs={9}>

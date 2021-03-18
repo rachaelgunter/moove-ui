@@ -72,6 +72,11 @@ export const DATASET_COLUMNS_QUERY = gql`
       name
       type
       populated
+      average
+      standardDeviation
+      variance
+      count
+      sum
     }
   }
 `;
