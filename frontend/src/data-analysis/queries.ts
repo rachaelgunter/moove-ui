@@ -80,3 +80,17 @@ export const DATASET_COLUMNS_QUERY = gql`
     }
   }
 `;
+
+export const DATASET_COLUMN_VISUALIZATIONS_QUERY = gql`
+  query datasetsVisualizations(
+    $bucketName: String!
+    $analysisName: String!
+    $columnName: String!
+  ) {
+    datasetColumnVisualiztions(
+      bucketName: $bucketName
+      analysisName: $analysisName
+      columnName: $columnName
+    )
+  }
+`;

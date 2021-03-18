@@ -85,7 +85,7 @@ const DetailedColumnView: FC<DetailedColumnViewProps> = ({
         </Tabs>
       </Box>
       <ColumnViewTabPanel value={value} index={0}>
-        <ColumnViewAnalytics column={column} />
+        <ColumnViewAnalytics column={column} analysisName={datasetName} />
       </ColumnViewTabPanel>
       <ColumnViewTabPanel value={value} index={1}>
         <ColumnViewMap columnName={column.name} />

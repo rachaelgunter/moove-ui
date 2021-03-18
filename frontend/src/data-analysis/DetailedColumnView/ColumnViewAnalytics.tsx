@@ -1,11 +1,16 @@
-import { Box, Grid, Theme } from '@material-ui/core';
+import { useQuery } from '@apollo/client';
+import { Box, CircularProgress, Grid, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
+import { UserContext } from 'src/auth/UserProvider';
+import { DATASET_COLUMN_VISUALIZATIONS_QUERY } from '../queries';
 import { ColumnModel } from '../types';
 import ColumnPropertiesList from './ColumnPropertiesList';
+import ColumnViewCharts from './ColumnViewCharts';
 
 interface ColumnViewAnalyticsProps {
   column: ColumnModel;
+  analysisName: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -25,13 +30,35 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
     borderRadius: theme.spacing(0.5),
     padding: '10px',
+    overflow: 'hidden',
+  },
+  analyticalMetricsTitle: {
+    marginBottom: '10px',
+  },
+  analyticalMetricsContent: {
+    height: '100%',
+    overflow: 'hidden',
+    display: 'flex',
+  },
+  spinner: {
+    alignSelf: 'center',
+    margin: '0 auto',
   },
 }));
 
 const ColumnViewAnalytics: FC<ColumnViewAnalyticsProps> = ({
   column,
+  analysisName,
 }: ColumnViewAnalyticsProps) => {
   const classes = useStyles();
+  const { data } = useQuery(DATASET_COLUMN_VISUALIZATIONS_QUERY, {
+    variables: {
+      bucketName: process.env.REACT_APP_DATASET_ASSETS_BUCKET,
+      analysisName,
+      columnName: column.name,
+    },
+  });
+  const user = useContext(UserContext);
 
   return (
     <Grid className={classes.gridContainer} container>
@@ -43,7 +70,19 @@ const ColumnViewAnalytics: FC<ColumnViewAnalyticsProps> = ({
       </Grid>
       <Grid className={classes.gridItem} item xs={9}>
         <Box className={classes.contentContainer}>
-          <Box>Analytical Metrics</Box>
+          <Box className={classes.analyticalMetricsTitle}>
+            Analytical Metrics
+          </Box>
+          <Box className={classes.analyticalMetricsContent}>
+            {data ? (
+              <ColumnViewCharts
+                chartsUrls={data.datasetColumnVisualiztions}
+                user={user}
+              />
+            ) : (
+              <CircularProgress className={classes.spinner} />
+            )}
+          </Box>
         </Box>
       </Grid>
     </Grid>
