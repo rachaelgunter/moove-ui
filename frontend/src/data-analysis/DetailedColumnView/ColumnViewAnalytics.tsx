@@ -1,6 +1,19 @@
 import { Box, Grid, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React, { FC } from 'react';
+import ColumnPropertiesList, { ColumnProperty } from './ColumnPropertiesList';
+
+const columnProperties: ColumnProperty[] = [
+  {
+    type: 'FLOAT',
+  },
+  {
+    'Populated %': 100,
+  },
+  {
+    'Standard Deviation': 11.64,
+  },
+];
 
 const useStyles = makeStyles((theme: Theme) => ({
   gridContainer: {
@@ -28,10 +41,15 @@ const ColumnViewAnalytics: FC = () => {
   return (
     <Grid className={classes.gridContainer} container>
       <Grid className={classes.gridItem} item xs={3}>
-        <Box className={classes.contentContainer}>Properties</Box>
+        <Box className={classes.contentContainer}>
+          <Box>Properties</Box>
+          <ColumnPropertiesList columnProperties={columnProperties} />
+        </Box>
       </Grid>
       <Grid className={classes.gridItem} item xs={9}>
-        <Box className={classes.contentContainer}>Analytical Metrics</Box>
+        <Box className={classes.contentContainer}>
+          <Box>Analytical Metrics</Box>
+        </Box>
       </Grid>
     </Grid>
   );
