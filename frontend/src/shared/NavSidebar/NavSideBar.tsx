@@ -3,10 +3,10 @@ import { useHistory } from 'react-router-dom';
 import { Divider, Drawer, List, makeStyles, Theme } from '@material-ui/core';
 import {
   DashboardOutlined as DashboardIcon,
+  MoreHoriz as MoreHorizIcon,
+  PersonOutlineOutlined as PersonOutlineOutlinedIcon,
   ViewAgendaOutlined as ViewAgendaIcon,
   ViewWeekOutlined as ViewWeekOutlinedIcon,
-  PersonOutlineOutlined as PersonOutlineOutlinedIcon,
-  MoreHoriz as MoreHorizIcon,
 } from '@material-ui/icons';
 
 import routes from 'src/shared/routes';
@@ -58,36 +58,40 @@ const NavSidebar: React.FC = () => {
   const primaryLinks: NavLink[] = [
     {
       label: 'Dashboard',
-      path: routes.dashboard,
-      onClick: () => history.push(routes.dashboard),
+      path: routes.dashboard.path,
+      onClick: () => history.push(routes.dashboard.path),
       Icon: DashboardIcon,
+      allowedRoles: routes.dashboard.allowedRoles,
     },
     {
       label: 'Data Analysis',
-      path: routes.dataAnalysis,
-      onClick: () => history.push(routes.dataAnalysis),
+      path: routes.dataAnalysis.path,
+      onClick: () => history.push(routes.dataAnalysis.path),
       Icon: ViewAgendaIcon,
+      allowedRoles: routes.dataAnalysis.allowedRoles,
     },
     {
       label: 'RoadIQ',
-      // TODO use history instead
-      onClick: () => window.open(process.env.REACT_APP_ROAD_IQ_URL, '_blank'),
+      onClick: () => history.push(routes.roadIQ.path),
       Icon: ViewWeekOutlinedIcon,
+      allowedRoles: routes.roadIQ.allowedRoles,
     },
   ];
 
   const secondaryLinks: NavLink[] = [
     {
       label: 'Users',
-      path: routes.users,
-      onClick: () => history.push(routes.users),
+      path: routes.users.path,
+      onClick: () => history.push(routes.users.path),
       Icon: PersonOutlineOutlinedIcon,
+      allowedRoles: routes.users.allowedRoles,
     },
     {
       label: 'Settings',
-      path: routes.settings,
-      onClick: () => history.push(routes.settings),
+      path: routes.settings.path,
+      onClick: () => history.push(routes.settings.path),
       Icon: MoreHorizIcon,
+      allowedRoles: routes.settings.allowedRoles,
     },
   ];
 

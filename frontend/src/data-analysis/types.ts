@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
 export enum DatasetStatus {
   ACTIVE,
   PROCESSING,
@@ -10,7 +9,7 @@ export type DatasetModel = {
   description: string;
   status: DatasetStatus;
   totalRows: number;
-  creationDate: string;
+  createdAt: string;
   columns?: ColumnModel[];
 };
 
@@ -45,4 +44,24 @@ export type TableIdentity = {
   projectId: string;
   datasetId: string;
   tableId: string;
+};
+
+export type KeplerDataQueryResponse = {
+  previewTable: {
+    headers: { name: string }[];
+    rows: unknown[];
+  };
+};
+
+export type KeplerDataset = {
+  info: {
+    label: string;
+    id: string;
+  };
+  data: {
+    fields: {
+      name: string;
+    }[];
+    rows: unknown[];
+  };
 };

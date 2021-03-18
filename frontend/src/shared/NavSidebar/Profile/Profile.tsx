@@ -1,8 +1,8 @@
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Box, Paper } from '@material-ui/core';
-import { gql, useQuery } from '@apollo/client';
 
-import React from 'react';
+import React, { useContext } from 'react';
+import { UserContext } from 'src/auth/UserProvider';
 import ProfileMenuItem from './ProfileMenuItem';
 import ProfileMenu from './ProfileMenu';
 import ProfileBrief from './ProfileBrief';
@@ -29,26 +29,12 @@ const useStyles = makeStyles<Theme, ProfileProps>((theme: Theme) =>
   }),
 );
 
-const CURRENT_USER_QUERY = gql`
-  query getCurrentUser {
-    getCurrentUser {
-      name
-      sub
-      organization
-      email
-      picture
-      role
-    }
-  }
-`;
-
 const Profile: React.FC<ProfileProps> = ({
   isNavSidebarOpened,
 }: ProfileProps) => {
   const classes = useStyles({ isNavSidebarOpened });
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const { data } = useQuery(CURRENT_USER_QUERY);
-  const user = data?.getCurrentUser;
+  const user = useContext(UserContext);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget);
@@ -57,10 +43,6 @@ const Profile: React.FC<ProfileProps> = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  if (!user) {
-    return null;
-  }
 
   return (
     <div>

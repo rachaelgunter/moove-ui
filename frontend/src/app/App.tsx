@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/styles';
 import { CssBaseline, makeStyles } from '@material-ui/core';
 
@@ -14,6 +14,8 @@ import theme from 'src/app/styles';
 import routes from 'src/shared/routes';
 import NavSidebarProvider from 'src/shared/NavSidebar/NavSidebarProvider';
 import AuthCallBackHandler from 'src/auth/AuthCallbackHandler';
+import PrivateRoute from 'src/app/PrivateRoute';
+import UserProvider from 'src/auth/UserProvider';
 
 const useStyles = makeStyles({
   root: {
@@ -30,34 +32,48 @@ const App: React.FC = () => {
       <BrowserRouter>
         <CssBaseline />
         <Switch>
-          <Route path={routes.callback}>
+          <Route path={routes.callback.path}>
             <AuthCallBackHandler />
           </Route>
-          <Route exact path={routes.roadIQ}>
+          <Route exact path={routes.roadIQ.path}>
             <RoadIQ />
           </Route>
-          <Route>
-            <div className={classes.root}>
-              <NavSidebarProvider>
-                <NavSidebar />
-              </NavSidebarProvider>
-              <Switch>
-                <Redirect exact from="/" to={routes.dashboard} />
-                <Route exact path={routes.dashboard}>
-                  <Dashboard />
-                </Route>
-                <Route exact path={routes.dataAnalysis}>
-                  <DataAnalysis />
-                </Route>
-                <Route exact path={routes.users}>
-                  <Users />
-                </Route>
-                <Route exact path={routes.settings}>
-                  <Settings />
-                </Route>
-              </Switch>
-            </div>
-          </Route>
+          <UserProvider>
+            <Route>
+              <div className={classes.root}>
+                <NavSidebarProvider>
+                  <NavSidebar />
+                </NavSidebarProvider>
+                <Switch>
+                  <Redirect exact from="/" to={routes.dashboard.path} />
+                  <Route exact path={routes.dashboard.path}>
+                    <Dashboard />
+                  </Route>
+                  <PrivateRoute
+                    exact
+                    path={routes.dataAnalysis.path}
+                    allowedRoles={routes.dataAnalysis.allowedRoles}
+                  >
+                    <DataAnalysis />
+                  </PrivateRoute>
+                  <PrivateRoute
+                    exact
+                    path={routes.users.path}
+                    allowedRoles={routes.users.allowedRoles}
+                  >
+                    <Users />
+                  </PrivateRoute>
+                  <PrivateRoute
+                    exact
+                    path={routes.settings.path}
+                    allowedRoles={routes.settings.allowedRoles}
+                  >
+                    <Settings />
+                  </PrivateRoute>
+                </Switch>
+              </div>
+            </Route>
+          </UserProvider>
         </Switch>
       </BrowserRouter>
     </ThemeProvider>

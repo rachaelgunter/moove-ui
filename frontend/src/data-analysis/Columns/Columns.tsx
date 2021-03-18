@@ -5,7 +5,7 @@ import Table from 'src/shared/Table';
 import { ColumnModel } from '../types';
 import ColumnsRow from './ColumnsRow';
 
-const COLUMNS = ['Name', 'Type', 'Populated %', 'Min', 'Max'];
+const COLUMNS = ['Name', 'Type', 'Populated %', 'Min', 'Max', ''];
 export const INIT_NUMBER_OF_ROWS = 5;
 export const STEP = 5;
 
@@ -21,11 +21,11 @@ const Columns: FC<ColumnsProps> = ({ columnModels }: ColumnsProps) => {
   const getColumnsByQuota = () => columnModels.slice(0, quota);
 
   return (
-    <Grid container direction="column" spacing={2}>
+    <Grid item container direction="column" spacing={2}>
       <Grid item>
         <Typography variant="subtitle1">Columns</Typography>
       </Grid>
-      <Grid item>
+      <Grid item container>
         <Table
           columnNames={COLUMNS}
           onShowMoreClick={onShowMoreClick}

@@ -7,7 +7,6 @@ type User {
   email: String!
   picture: String
   name: String
-  role: String!
   organization: String
 }
 
@@ -29,10 +28,73 @@ type BigQueryProject {
   datasets: [BigQueryDataset]
 }
 
+type BigQueryTableDataCell {
+  v: String!
+}
+
+type BigQueryTableDataRow {
+  f: [BigQueryTableDataCell]
+}
+
+type BigQueryTableData {
+  totalRows: String!
+  rows: [BigQueryTableDataRow]
+}
+
+type BigQueryTableFieldSchema {
+  name: String!
+  type: String!
+}
+
+type BigQueryTableSchema {
+  fields: [BigQueryTableFieldSchema]
+}
+
+type BigQueryTableInfo {
+  schema: BigQueryTableSchema!
+}
+
+type BigQueryPreviewHeaders {
+  name: String!
+  type: String!
+}
+
+type BigQueryTableMetadata {
+  totalRows: Float!
+}
+
+type BigQueryPreviewTable {
+  headers: [BigQueryPreviewHeaders]
+  rows: [[String]]
+  tableMetadata: BigQueryTableMetadata
+}
+
+type BigQueryColumnTable {
+  name: String!
+  type: String!
+  min: String!
+  max: String!
+  populated: Float!
+}
+
+type Dataset {
+  analysisName: String!
+  bigQueryDatasetName: String!
+  description: String!
+  totalRows: String!
+  createdAt: String!
+  status: String!
+}
+
 type Query {
   getCurrentUser: User!
   getUsersProjects: [BigQueryProject!]!
   tables(tablesParams: BigQueryTablesParams!): [BigQueryTable]
+  tableData(projectId: String!, datasetId: String!, tableId: String!, offset: String = "0", limit: Int = 5, selectedFields: [String]): BigQueryTableData!
+  tableInfo(projectId: String!, datasetId: String!, tableId: String!): BigQueryTableInfo!
+  previewTable(projectId: String!, datasetId: String!, tableId: String!, offset: String = "0", limit: Int = 5, selectedFields: [String]): BigQueryPreviewTable!
+  columnsTable(projectId: String!, datasetId: String!, tableId: String!, offset: String = "0", limit: Int = 5, selectedFields: [String]): [BigQueryColumnTable]
+  getDatasets: [Dataset]
 }
 
 input BigQueryTablesParams {

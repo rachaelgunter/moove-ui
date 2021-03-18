@@ -30,9 +30,6 @@ export class User {
   @Field(() => String, { nullable: true })
   name?: string;
 
-  @Field()
-  role: string;
-
   @Field(() => String, { nullable: true })
   organization: string;
 }
@@ -44,4 +41,10 @@ export interface UserTokenPayload {
 export interface TokenPair {
   accessToken: string;
   refreshToken: string;
+}
+
+export enum Role {
+  USER = 'USER',
+  PAID_USER = 'PAID_USER',
+  ADMIN = 'ADMIN',
 }

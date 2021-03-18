@@ -7,9 +7,10 @@ import {
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UsersService } from 'src/users/users.service';
 import { UsersTransformer } from 'src/users/users.transformer';
-import { User, UserInput, UserTokenPayload } from 'src/users/users.types';
+import { Role, User, UserInput, UserTokenPayload } from 'src/users/users.types';
 import { GqlAuthGuard } from './graphql-auth.guard';
 import { CurrentUser } from './graphql-current-user.decorator';
+import { Roles } from 'src/auth/roles.decorator';
 
 @Resolver()
 export class AuthResolver {
@@ -20,6 +21,7 @@ export class AuthResolver {
     private readonly usersTransformer: UsersTransformer,
   ) {}
 
+  @Roles(Role.USER, Role.PAID_USER, Role.ADMIN)
   @UseGuards(GqlAuthGuard)
   @Mutation(() => User)
   async syncUserData(
@@ -39,6 +41,7 @@ export class AuthResolver {
     }
   }
 
+  @Roles(Role.USER, Role.PAID_USER, Role.ADMIN)
   @UseGuards(GqlAuthGuard)
   @Query(() => User)
   async getCurrentUser(@CurrentUser() user: UserTokenPayload): Promise<User> {

@@ -15,7 +15,6 @@ const USER_SYNC_MUTATION = gql`
       name
       email
       organization
-      role
       picture
     }
   }

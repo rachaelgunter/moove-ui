@@ -17,7 +17,6 @@ model User {
   name           String?
   picture        String?
   createdAt      DateTime      @default(now())
-  role           Role          @default(FREEMIUM)
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId Int?
   accessToken    String?
@@ -28,10 +27,4 @@ model Organization {
   id   Int    @id @default(autoincrement())
   name String
   User User[]
-}
-
-enum Role {
-  FREEMIUM
-  PAID
-  ADMIN
 }

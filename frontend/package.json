@@ -16,14 +16,21 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.6.3",
     "graphql": "^15.5.0",
+    "kepler.gl": "^2.5.0",
+    "mapbox-gl": "^1.13.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-router-dom": "^5.2.0"
+    "react-palm": "^3.3.7",
+    "react-redux": "^7.2.2",
+    "react-router-dom": "^5.2.0",
+    "react-virtualized-auto-sizer": "^1.0.5",
+    "redux": "^4.0.5",
+    "styled-components": "^5.2.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired --max-old-space-size=8192 build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "format": "prettier --write src/**/*.ts{,x}",
     "lint": "tsc --noEmit && eslint src/**/*.ts{,x}",
@@ -53,7 +60,9 @@
     "@types/node": "^12.19.16",
     "@types/react": "^17.0.1",
     "@types/react-dom": "^17.0.0",
+    "@types/react-redux": "^7.1.16",
     "@types/react-router-dom": "^5.1.7",
+    "@types/react-virtualized-auto-sizer": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "^4.15.0",
     "@typescript-eslint/parser": "^4.15.0",
     "eslint": "^7.19.0",
@@ -70,8 +79,10 @@
     "lint-staged": "^10.5.4",
     "node-sass": "^5.0.0",
     "prettier": "^2.2.1",
+    "react-app-rewired": "^2.1.8",
     "react-scripts": "4.0.2",
-    "typescript": "^4.1.3"
+    "typescript": "^4.1.3",
+    "umd-compat-loader": "^2.1.2"
   },
   "husky": {
     "hooks": {

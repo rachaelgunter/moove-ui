@@ -1,4 +1,4 @@
-import { Organization, Role, User as PrismaUser } from '@prisma/client';
+import { Organization, User as PrismaUser } from '@prisma/client';
 import { User } from './users.types';
 
 export const prismaUserMock: PrismaUser & { organization: Organization } = {
@@ -7,7 +7,6 @@ export const prismaUserMock: PrismaUser & { organization: Organization } = {
   name: 'name',
   picture: 'http://picture.com',
   createdAt: new Date(2020, 10, 2),
-  role: Role.FREEMIUM,
   organizationId: 12,
   organization: {
     id: 12,
@@ -22,6 +21,5 @@ export const graphqlUserMock: User = {
   email: 'test@mail.com',
   name: 'name',
   picture: 'http://picture.com',
-  role: 'FREEMIUM',
   organization: 'test org',
 };
