@@ -9,6 +9,7 @@ import ColumnViewMap from './ColumnViewMap';
 interface DetailedColumnViewProps {
   open: boolean;
   columnName: string;
+  datasetName: string;
   onClose: () => void;
 }
 
@@ -45,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const DetailedColumnView: FC<DetailedColumnViewProps> = ({
   open,
   columnName,
+  datasetName,
   onClose,
 }: DetailedColumnViewProps) => {
   const classes = useStyles();
@@ -65,7 +67,10 @@ const DetailedColumnView: FC<DetailedColumnViewProps> = ({
   const Content = () => (
     <>
       <Box className={classes.header}>
-        <ColumnViewBreadcrumbs />
+        <ColumnViewBreadcrumbs
+          columnName={columnName}
+          datasetName={datasetName}
+        />
         <Tabs
           value={value}
           onChange={handleChange}

@@ -29,10 +29,12 @@ const columnsOrder = ['name', 'type', 'populated', 'min', 'max'];
 
 interface ColumnsRowsProps {
   columnModel: ColumnModel;
+  datasetName: string;
 }
 
 const ColumnsRow: FC<ColumnsRowsProps> = ({
   columnModel,
+  datasetName,
 }: ColumnsRowsProps) => {
   const classes = useStyles();
   const [isDetailedColumnViewOpened, setDetailedColumnViewOpened] = useState(
@@ -69,6 +71,7 @@ const ColumnsRow: FC<ColumnsRowsProps> = ({
         open={isDetailedColumnViewOpened}
         onClose={closeDetailedColumnView}
         columnName={detailedViewColumn}
+        datasetName={datasetName}
       />
     </TableRow>
   );
