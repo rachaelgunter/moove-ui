@@ -4,6 +4,32 @@ import { makeStyles } from '@material-ui/styles';
 import React, { FC } from 'react';
 import { ColumnModel } from '../types';
 
+enum ColumnProperties {
+  NAME = 'name',
+  TYPE = 'type',
+  MIN = 'min',
+  MAX = 'max',
+  POPULATED = 'populated',
+  AVERAGE = 'average',
+  STDDEV = 'standardDeviation',
+  VARIANCE = 'variance',
+  COUNT = 'count',
+  SUM = 'sum',
+}
+
+const columnPropertiesUI: { [key in ColumnProperties]: string } = {
+  [ColumnProperties.NAME]: 'Name',
+  [ColumnProperties.TYPE]: 'Type',
+  [ColumnProperties.MIN]: 'Minimum',
+  [ColumnProperties.MAX]: 'Maximum',
+  [ColumnProperties.AVERAGE]: 'Average',
+  [ColumnProperties.POPULATED]: 'Populated',
+  [ColumnProperties.STDDEV]: 'Standard Deviation',
+  [ColumnProperties.COUNT]: 'Count',
+  [ColumnProperties.SUM]: 'Sum',
+  [ColumnProperties.VARIANCE]: 'Variance',
+};
+
 interface ColumnPropertiesListProps {
   column: ColumnModel;
 }
@@ -31,13 +57,20 @@ const ColumnPropertiesList: FC<ColumnPropertiesListProps> = ({
 }: ColumnPropertiesListProps) => {
   const classes = useStyles();
 
+  const processValue = (value: string | number) => {
+    if (typeof value === 'number') {
+      return Math.round((value + Number.EPSILON) * 1e6) / 1e6;
+    }
+    return value;
+  };
+
   return (
     <Box className={classes.columnPropertiesList}>
-      {Object.keys(column).map((key) => {
+      {Object.values(ColumnProperties).map((key: ColumnProperties) => {
         return (
           <Box key={key} className={classes.columnPropetry}>
-            <Box>{key}</Box>
-            <Box>{column[key]}</Box>
+            <Box>{columnPropertiesUI[key]}</Box>
+            <Box>{processValue(column[key])}</Box>
           </Box>
         );
       })}
