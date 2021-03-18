@@ -12,6 +12,8 @@ substitutions:
   _REACT_APP_ROAD_IQ_URL: ""
   _REACT_APP_AUTH0_CLAIMS_NAMESPACE: ""
   _REACT_APP_MAPBOX_TOKEN: ""
+  _GENERATE_SOURCEMAP: ""
+  _DISABLE_ESLINT_PLUGIN: ""
 
 steps:
   - name: 'gcr.io/cloud-builders/docker'
@@ -26,7 +28,8 @@ steps:
           '--build-arg', 'REACT_APP_JUPYTERHUB_URL=$_REACT_APP_JUPYTERHUB_URL',
           '--build-arg', 'REACT_APP_ROAD_IQ_URL=$_REACT_APP_ROAD_IQ_URL',
           '--build-arg', 'REACT_APP_AUTH0_CLAIMS_NAMESPACE=$_REACT_APP_AUTH0_CLAIMS_NAMESPACE',
-          '--build-arg', 'REACT_APP_MAPBOX_TOKEN=$_REACT_APP_MAPBOX_TOKEN',
+          '--build-arg', 'DISABLE_ESLINT_PLUGIN=$_DISABLE_ESLINT_PLUGIN',
+          '--build-arg', 'GENERATE_SOURCEMAP=$_GENERATE_SOURCEMAP',
            '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-frontend:latest',
            '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-frontend:$COMMIT_SHA',
            '-f', 'frontend/Dockerfile.ci' ]
