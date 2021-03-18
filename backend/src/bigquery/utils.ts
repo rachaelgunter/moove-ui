@@ -6,7 +6,7 @@ export function handleGoogleError(
   error: Error,
 ): never {
   logger.error(errorMessage);
-  logger.error(error.message);
+  logger.error(error);
   throw new InternalServerErrorException(errorMessage);
 }
 
