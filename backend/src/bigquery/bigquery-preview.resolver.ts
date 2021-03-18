@@ -23,7 +23,14 @@ export class BigQueryPreviewResolver {
     user: UserTokenPayload,
     @Args() args: BigQueryTableDataParams,
   ): Promise<BigQueryPreviewTable> {
-    const { datasetId, projectId, tableId, offset, limit } = args;
+    const {
+      datasetId,
+      projectId,
+      tableId,
+      offset,
+      limit,
+      selectedFields,
+    } = args;
     try {
       return await this.bigQueryService.getPreviewTable(
         user,
@@ -32,6 +39,7 @@ export class BigQueryPreviewResolver {
         tableId,
         offset,
         limit,
+        selectedFields,
       );
     } catch (e) {
       handleGoogleError(

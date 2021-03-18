@@ -66,6 +66,9 @@ export class BigQueryTableDataParams {
 
   @Field(() => Int, { defaultValue: 5 })
   limit: number;
+
+  @Field(() => [String], { nullable: 'itemsAndList' })
+  selectedFields?: string[];
 }
 
 @ArgsType()

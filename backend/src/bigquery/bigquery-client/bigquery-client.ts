@@ -14,7 +14,6 @@ import { convertTableDataRowsToArray, getPreviewTableHeaders } from '../utils';
 export class BigQueryClient {
   private readonly oauthClient: OAuth2Client;
   private readonly bigQuery: bigquery_v2.Bigquery;
-  private readonly cloudFunction = google.cloudfunctions('v1');
 
   constructor({ accessToken, refreshToken }: TokenPair) {
     this.oauthClient = new google.auth.OAuth2({
@@ -153,7 +152,9 @@ export class BigQueryClient {
     tableId: string,
     startIndex: string,
     maxResults: number,
+    selectedFields?: string[],
   ): Promise<BigQueryPreviewTable> {
+    const selectedFieldsString = selectedFields?.join(',');
     const pRows = this.bigQuery.tabledata
       .list({
         auth: this.oauthClient,
@@ -162,6 +163,7 @@ export class BigQueryClient {
         tableId,
         startIndex,
         maxResults,
+        selectedFields: selectedFieldsString ?? undefined,
       })
       .then(({ data }) => {
         return convertTableDataRowsToArray(data.rows);
@@ -172,6 +174,7 @@ export class BigQueryClient {
         datasetId,
         projectId,
         tableId,
+        selectedFields: selectedFieldsString ?? undefined,
       })
       .then(({ data }) => {
         return {
