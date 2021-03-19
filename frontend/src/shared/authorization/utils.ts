@@ -7,6 +7,6 @@ export const haveAccess = (
 ): boolean => {
   return (
     !allowedRoles.length ||
-    userRoles.some((role) => allowedRoles.includes(role))
+    (userRoles && userRoles.some((role) => allowedRoles.includes(role)))
   );
 };

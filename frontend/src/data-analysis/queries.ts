@@ -87,10 +87,36 @@ export const DATASET_COLUMN_VISUALIZATIONS_QUERY = gql`
     $analysisName: String!
     $columnName: String!
   ) {
-    datasetColumnVisualiztions(
+    datasetColumnVisualizations(
       bucketName: $bucketName
       analysisName: $analysisName
       columnName: $columnName
     )
+  }
+`;
+
+export const BIG_QUERY_PREVIEW_TABLE_QUERY = gql`
+  query getPreviewTable(
+    $projectId: String!
+    $datasetId: String!
+    $tableId: String!
+    $offset: Int!
+    $limit: Int!
+  ) {
+    previewTable(
+      projectId: $projectId
+      datasetId: $datasetId
+      tableId: $tableId
+      offset: $offset
+      limit: $limit
+    ) {
+      tableMetadata {
+        totalRows
+      }
+      headers {
+        name
+      }
+      rows
+    }
   }
 `;

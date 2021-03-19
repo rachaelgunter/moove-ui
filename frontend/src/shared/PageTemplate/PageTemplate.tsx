@@ -13,7 +13,8 @@ const useStyles = makeStyles({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    width: '100%',
+    width: 'calc(100% - 256px)',
+    flex: '1 0 auto',
   },
 });
 

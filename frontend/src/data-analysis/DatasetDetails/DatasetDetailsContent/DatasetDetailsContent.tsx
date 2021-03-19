@@ -7,6 +7,7 @@ import Columns from 'src/data-analysis/Columns';
 import DatasetVisualization from 'src/data-analysis/DatasetVisualization';
 import { useQuery } from '@apollo/client';
 import { DATASET_COLUMNS_QUERY } from 'src/data-analysis/queries';
+import PreviewTable from 'src/data-analysis/PreviewTable';
 
 interface DatasetDetailsContentProps {
   datasetModel: DatasetModel;
@@ -55,6 +56,7 @@ const DatasetDetailsContent: React.FC<DatasetDetailsContentProps> = ({
         <div className={classes.columnsTableLoadingPlaceholder} />
       )}
 
+      <PreviewTable datasetModel={datasetModel} />
       <DatasetVisualization datasetModel={datasetModel} />
     </>
   );

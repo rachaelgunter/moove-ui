@@ -25,7 +25,7 @@ export class BigQueryService {
     projectId: string,
     datasetId: string,
     tableId: string,
-    offset: string,
+    offset: number,
     limit: number,
   ): Promise<BigQueryTableData> {
     const bigQueryClient = await this.getClient(user);
@@ -55,7 +55,7 @@ export class BigQueryService {
     projectId: string,
     datasetId: string,
     tableId: string,
-    offset: string,
+    offset: number,
     limit: number,
     selectedFields?: string[],
   ): Promise<BigQueryPreviewTable> {
@@ -75,7 +75,7 @@ export class BigQueryService {
     projectId: string,
     datasetId: string,
     tableId: string,
-    offset: string,
+    offset: number,
     limit: number,
   ): Promise<BigQueryColumnTable[]> {
     const bigQueryClient = await this.getClient(user);

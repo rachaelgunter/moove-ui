@@ -62,8 +62,9 @@ export const convertTableDataRowsToArray = (rows): string[][] => {
           });
         }
 
-        currIndex = currIndex + res[addIndex - 1].length - maxColumnsCount + 1;
-        maxColumnsCount = res[addIndex - 1].length;
+        currIndex =
+          currIndex + res[res.length - 1].length - maxColumnsCount + 1;
+        maxColumnsCount = res[res.length - 1].length;
       } else {
         res[idx][currIndex] = f[i].v;
         currIndex++;
