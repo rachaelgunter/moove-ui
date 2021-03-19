@@ -76,7 +76,7 @@ const ColumnViewAnalytics: FC<ColumnViewAnalyticsProps> = ({
           <Box className={classes.analyticalMetricsContent}>
             {data ? (
               <ColumnViewCharts
-                chartsUrls={data.datasetColumnVisualiztions}
+                chartsUrls={data.datasetColumnVisualizations}
                 user={user}
               />
             ) : (

@@ -83,7 +83,7 @@ export class BigQueryClient {
     projectId: string,
     datasetId: string,
     tableId: string,
-    startIndex: string,
+    startIndex: number,
     maxResults: number,
   ): Promise<BigQueryTableData> {
     return this.bigQuery.tabledata
@@ -92,7 +92,7 @@ export class BigQueryClient {
         datasetId,
         projectId,
         tableId,
-        startIndex,
+        startIndex: startIndex.toString(),
         maxResults,
       })
       .then(({ data }) => {
@@ -150,7 +150,7 @@ export class BigQueryClient {
     projectId: string,
     datasetId: string,
     tableId: string,
-    startIndex: string,
+    startIndex: number,
     maxResults: number,
     selectedFields?: string[],
   ): Promise<BigQueryPreviewTable> {
@@ -161,7 +161,7 @@ export class BigQueryClient {
         datasetId,
         projectId,
         tableId,
-        startIndex,
+        startIndex: startIndex.toString(),
         maxResults,
         selectedFields: selectedFieldsString ?? undefined,
       })
