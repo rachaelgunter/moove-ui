@@ -65,6 +65,7 @@ const ColumnViewCharts: FC<ColumnViewChartsProps> = ({
                 <LightboxImage
                   imgUrl={chart}
                   imgStyles={{ height: '100%', cursor: 'pointer' }}
+                  alt=""
                 />
               </GridListTile>
             ))}

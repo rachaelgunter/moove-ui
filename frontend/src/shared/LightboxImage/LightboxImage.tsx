@@ -8,11 +8,17 @@ import 'react-image-lightbox/style.css';
 interface LightboxImageProps {
   imgUrl: string;
   imgStyles: CSSProperties;
+  alt: string;
+  onLoad?: () => void;
+  onError?: () => void;
 }
 
 const LightboxImage: FC<LightboxImageProps> = ({
   imgUrl,
   imgStyles,
+  onError,
+  onLoad,
+  alt,
 }: LightboxImageProps) => {
   const [isLightboxOpened, setIsLightBoxOpened] = useState(false);
 
@@ -26,7 +32,14 @@ const LightboxImage: FC<LightboxImageProps> = ({
 
   return (
     <>
-      <img onClick={openLightbox} style={imgStyles} src={imgUrl} alt={imgUrl} />
+      <img
+        onClick={openLightbox}
+        onLoad={onLoad}
+        onError={onError}
+        style={imgStyles}
+        src={imgUrl}
+        alt={imgUrl}
+      />
       {isLightboxOpened && (
         <Lightbox
           reactModalStyle={{
@@ -40,6 +53,11 @@ const LightboxImage: FC<LightboxImageProps> = ({
       )}
     </>
   );
+};
+
+LightboxImage.defaultProps = {
+  onLoad: () => {},
+  onError: () => {},
 };
 
 export default LightboxImage;

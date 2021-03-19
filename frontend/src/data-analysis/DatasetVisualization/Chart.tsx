@@ -1,6 +1,6 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
 
+import LightboxImage from 'src/shared/LightboxImage/LightboxImage';
 import VisualizationBlock, {
   VisualizationBlockParams,
 } from './VisualizationBlock';
@@ -12,12 +12,6 @@ interface ChartParams extends Omit<VisualizationBlockParams, 'children'> {
   height: number;
 }
 
-const useStyles = makeStyles({
-  chart: {
-    maxWidth: '100%',
-  },
-});
-
 const Chart: React.FC<ChartParams> = ({
   onLoad,
   onError,
@@ -25,16 +19,19 @@ const Chart: React.FC<ChartParams> = ({
   height,
   loading,
 }: ChartParams) => {
-  const classes = useStyles();
+  const styles = {
+    maxWidth: '100%',
+    cursor: 'pointer',
+    height,
+  };
   return (
     <VisualizationBlock loading={loading}>
-      <img
+      <LightboxImage
+        imgUrl={src}
+        alt=""
         onLoad={onLoad}
         onError={onError}
-        height={height}
-        className={classes.chart}
-        src={src}
-        alt=""
+        imgStyles={styles}
       />
     </VisualizationBlock>
   );
