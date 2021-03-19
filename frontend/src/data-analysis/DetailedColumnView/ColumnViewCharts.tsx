@@ -7,6 +7,7 @@ import {
 import React, { FC } from 'react';
 import { User } from 'src/auth/UserProvider';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import LightboxImage from 'src/shared/LightboxImage/LightboxImage';
 
 interface ColumnViewChartsProps {
   chartsUrls: string[];
@@ -49,23 +50,28 @@ const ColumnViewCharts: FC<ColumnViewChartsProps> = ({
   }
 
   return (
-    <AutoSizer>
-      {({ height, width }) => (
-        <GridList
-          style={{ width, height }}
-          cellHeight={calculateHeight(width)}
-          spacing={GRID_COLUMNS_SPACING}
-          className={classes.root}
-          cols={GRID_COLUMNS_NUMBER}
-        >
-          {authorizedChartsUrls?.map((chart) => (
-            <GridListTile key={chart} cols={1} rows={1}>
-              <img className={classes.chartImage} src={chart} alt={chart} />
-            </GridListTile>
-          ))}
-        </GridList>
-      )}
-    </AutoSizer>
+    <>
+      <AutoSizer>
+        {({ height, width }) => (
+          <GridList
+            style={{ width, height }}
+            cellHeight={calculateHeight(width)}
+            spacing={GRID_COLUMNS_SPACING}
+            className={classes.root}
+            cols={GRID_COLUMNS_NUMBER}
+          >
+            {authorizedChartsUrls?.map((chart) => (
+              <GridListTile key={chart} cols={1} rows={1}>
+                <LightboxImage
+                  imgUrl={chart}
+                  imgStyles={{ height: '100%', cursor: 'pointer' }}
+                />
+              </GridListTile>
+            ))}
+          </GridList>
+        )}
+      </AutoSizer>
+    </>
   );
 };
 
