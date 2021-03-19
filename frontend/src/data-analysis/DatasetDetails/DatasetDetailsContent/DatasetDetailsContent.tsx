@@ -16,6 +16,11 @@ const useStyles = makeStyles({
   hintWrapper: {
     position: 'relative',
   },
+  columnsTableLoadingPlaceholder: {
+    width: '100%',
+    height: '430px',
+    margin: '-8px',
+  },
 });
 
 const DatasetDetailsContent: React.FC<DatasetDetailsContentProps> = ({
@@ -41,7 +46,12 @@ const DatasetDetailsContent: React.FC<DatasetDetailsContentProps> = ({
 
   return (
     <>
-      {datasetColumns && <Columns columnModels={datasetColumns.columnsTable} />}
+      {datasetColumns?.columnsTable?.length ? (
+        <Columns columnModels={datasetColumns?.columnsTable ?? []} />
+      ) : (
+        <div className={classes.columnsTableLoadingPlaceholder} />
+      )}
+
       <DatasetVisualization datasetModel={datasetModel} />
     </>
   );
