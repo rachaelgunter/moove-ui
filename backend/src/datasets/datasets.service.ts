@@ -47,6 +47,7 @@ export class DatasetsService {
           source_dataset: datasetId,
           source_project: projectId,
           analysis_description: description,
+          client: 'car_company', // hardcoded until user organizations are not implemented
           primary_id: 'uuid',
           primary_geography: 'geog',
           lat: 'latitude',
