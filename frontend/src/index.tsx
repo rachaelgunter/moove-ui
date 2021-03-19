@@ -22,12 +22,15 @@ import { Provider } from 'react-redux';
 import { loginRedirectLink, authLink, httpLink } from './graphql-client/links';
 import store from './kepler/store';
 
-const domain = process.env.REACT_APP_AUTH0_DOMAIN;
-const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
-const redirectUri = process.env.REACT_APP_AUTH0_REDIRECT_URI;
-const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
+const domain = process.env.REACT_APP_AUTH0_DOMAIN ?? '';
+const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID ?? '';
+const redirectUri = process.env.REACT_APP_AUTH0_REDIRECT_URI ?? '';
+const audience = process.env.REACT_APP_AUTH0_AUDIENCE ?? '';
 
-if (!domain || !clientId || !redirectUri || !audience) {
+if (
+  (!domain || !clientId || !redirectUri || !audience) &&
+  process.env.NODE_ENV !== 'test'
+) {
   throw new Error('Cannot retrieve auth0 configuration');
 }
 
