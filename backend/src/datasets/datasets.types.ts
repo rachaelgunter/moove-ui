@@ -65,5 +65,10 @@ export class Dataset {
   createdAt: string;
 
   @Field()
-  status: string;
+  status: DatasetStatus;
+}
+
+export enum DatasetStatus {
+  ACTIVE = 'active',
+  PROCESSING = 'processing',
 }

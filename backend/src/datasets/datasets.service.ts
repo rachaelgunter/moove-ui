@@ -6,6 +6,7 @@ import {
   Dataset,
   DatasetListingResponse,
   DatasetParamsInput,
+  DatasetStatus,
 } from './datasets.types';
 import { google } from 'googleapis';
 import { UsersService } from 'src/users/users.service';
@@ -148,7 +149,11 @@ export class DatasetsService {
       description: datasetsResponse[key].description,
       totalRows: datasetsResponse[key].total_rows,
       createdAt: datasetsResponse[key].created_at,
-      status: datasetsResponse[key].ingest_status.dataset_status,
+      status: Object.values(datasetsResponse[key].ingest_status).every(
+        (status) => status,
+      )
+        ? DatasetStatus.ACTIVE
+        : DatasetStatus.PROCESSING,
     }));
   }
 
