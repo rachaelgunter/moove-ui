@@ -61,8 +61,8 @@ export class BigQueryTableDataParams {
   @Field()
   tableId?: string;
 
-  @Field({ defaultValue: '0' })
-  offset: string;
+  @Field(() => Int, { defaultValue: 0 })
+  offset: number;
 
   @Field(() => Int, { defaultValue: 5 })
   limit: number;

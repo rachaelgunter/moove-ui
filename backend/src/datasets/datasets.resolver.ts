@@ -39,7 +39,7 @@ export class DatasetsResolver {
   @Roles(Role.PAID_USER, Role.ADMIN)
   @UseGuards(GqlAuthGuard)
   @Query(() => [String], { nullable: 'itemsAndList' })
-  async datasetColumnVisualiztions(
+  async datasetColumnVisualizations(
     @CurrentUser()
     user: UserTokenPayload,
     @Args() args: ColumnVisualizationParams,
