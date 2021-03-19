@@ -5,10 +5,13 @@ import DialogWrapper from 'src/shared/DialogWrapper/DialogWrapper';
 import ColumnViewBreadcrumbs from './ColumnViewBreadcrumbs';
 import ColumnViewTabPanel from './ColumnViewTabPanel';
 import ColumnViewMap from './ColumnViewMap';
+import ColumnViewAnalytics from './ColumnViewAnalytics';
+import { ColumnModel } from '../types';
 
 interface DetailedColumnViewProps {
   open: boolean;
-  columnName: string;
+  column: ColumnModel;
+  datasetName: string;
   onClose: () => void;
 }
 
@@ -44,11 +47,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const DetailedColumnView: FC<DetailedColumnViewProps> = ({
   open,
-  columnName,
+  column,
+  datasetName,
   onClose,
 }: DetailedColumnViewProps) => {
   const classes = useStyles();
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState(0);
 
   const handleChange = (
     _: React.ChangeEvent<Record<string, string>>,
@@ -65,23 +69,26 @@ const DetailedColumnView: FC<DetailedColumnViewProps> = ({
   const Content = () => (
     <>
       <Box className={classes.header}>
-        <ColumnViewBreadcrumbs />
+        <ColumnViewBreadcrumbs
+          columnName={column.name}
+          datasetName={datasetName}
+        />
         <Tabs
           value={value}
           onChange={handleChange}
           aria-label="simple tabs example"
           className={classes.tabs}
         >
-          <Tab className={classes.tab} disabled label="Analytics" />
+          <Tab className={classes.tab} label="Analytics" />
           <Tab className={classes.tab} label="Map" />
           <Tab className={classes.tab} disabled label="Relationships" />
         </Tabs>
       </Box>
       <ColumnViewTabPanel value={value} index={0}>
-        Analytics
+        <ColumnViewAnalytics column={column} analysisName={datasetName} />
       </ColumnViewTabPanel>
       <ColumnViewTabPanel value={value} index={1}>
-        <ColumnViewMap columnName={columnName} />
+        <ColumnViewMap columnName={column.name} />
       </ColumnViewTabPanel>
       <ColumnViewTabPanel value={value} index={2}>
         Relationships

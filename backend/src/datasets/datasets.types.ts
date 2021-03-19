@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { ArgsType, Field, InputType, ObjectType } from '@nestjs/graphql';
 
 @InputType()
 export class DatasetParamsInput {
@@ -16,6 +16,18 @@ export class DatasetParamsInput {
 
   @Field()
   tableId: string;
+}
+
+@ArgsType()
+export class ColumnVisualizationParams {
+  @Field()
+  bucketName: string;
+
+  @Field()
+  analysisName: string;
+
+  @Field()
+  columnName: string;
 }
 
 export interface DatasetListingRequestPayload {
@@ -53,5 +65,10 @@ export class Dataset {
   createdAt: string;
 
   @Field()
-  status: string;
+  status: DatasetStatus;
+}
+
+export enum DatasetStatus {
+  ACTIVE = 'active',
+  PROCESSING = 'processing',
 }

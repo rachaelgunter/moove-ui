@@ -168,4 +168,19 @@ export class BigQueryColumnTable {
 
   @Field()
   populated: number;
+
+  @Field({ nullable: true })
+  average?: number;
+
+  @Field({ nullable: true })
+  standardDeviation?: number;
+
+  @Field({ nullable: true })
+  sum?: number;
+
+  @Field({ nullable: true })
+  variance?: number;
+
+  @Field({ nullable: true })
+  count?: number;
 }

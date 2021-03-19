@@ -75,6 +75,11 @@ type BigQueryColumnTable {
   min: String!
   max: String!
   populated: Float!
+  average: Float
+  standardDeviation: Float
+  sum: Float
+  variance: Float
+  count: Float
 }
 
 type Dataset {
@@ -95,6 +100,7 @@ type Query {
   previewTable(projectId: String!, datasetId: String!, tableId: String!, offset: String = "0", limit: Int = 5, selectedFields: [String]): BigQueryPreviewTable!
   columnsTable(projectId: String!, datasetId: String!, tableId: String!, offset: String = "0", limit: Int = 5, selectedFields: [String]): [BigQueryColumnTable]
   getDatasets: [Dataset]
+  datasetColumnVisualiztions(bucketName: String!, analysisName: String!, columnName: String!): [String]
 }
 
 input BigQueryTablesParams {

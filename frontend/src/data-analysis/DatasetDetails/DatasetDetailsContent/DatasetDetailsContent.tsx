@@ -47,7 +47,10 @@ const DatasetDetailsContent: React.FC<DatasetDetailsContentProps> = ({
   return (
     <>
       {datasetColumns?.columnsTable?.length ? (
-        <Columns columnModels={datasetColumns?.columnsTable ?? []} />
+        <Columns
+          datasetName={datasetModel.name}
+          columnModels={datasetColumns?.columnsTable ?? []}
+        />
       ) : (
         <div className={classes.columnsTableLoadingPlaceholder} />
       )}

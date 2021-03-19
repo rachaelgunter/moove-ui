@@ -109,41 +109,50 @@ export class BigQueryService {
     return this.mapColumnsTable(columnsData, emptyColumnsData);
   }
 
-  // TODO refactor
   mapColumnsTable(
     data: BigQueryPreviewTable,
     emptyColumnsData: BigQueryPreviewTable | null,
   ) {
-    const markers = { min: '_MIN', max: '_MAX' };
+    const markers = {
+      min: '_MIN',
+      max: '_MAX',
+      average: '_AVG',
+      count: '_COUNT',
+      standardDeviation: '_STDDEV',
+      sum: '_SUM',
+      variance: '_VARIANCE',
+    };
 
-    const res = [];
+    const res: BigQueryColumnTable[] = [];
     let column = {} as BigQueryColumnTable;
 
     data.headers.forEach((header, index) => {
-      if (header.name.endsWith(markers.min)) {
-        column.name = header.name.replace(markers.min, '');
-        column.type = header.type;
-        column.min = data.rows[0][index];
-        column.populated = emptyColumnsData
-          ? this.getColumnPopulatedValue(
-              column.name,
-              data.tableMetadata.totalRows,
-              emptyColumnsData,
-            )
-          : 100;
-      }
+      Object.keys(markers).forEach((key) => {
+        if (header.name.endsWith(markers[key])) {
+          column[key] = data.rows[0][index];
 
-      if (header.name.endsWith(markers.max)) {
-        column.max = data.rows[0][index];
-      }
-
-      if (column.name && column.type && column.min && column.max) {
+          if (markers[key] === markers.min) {
+            column.name = header.name.replace(markers.min, '');
+            column.type = header.type;
+          }
+        }
+      });
+      if (Object.keys(markers).every((marker) => column[marker])) {
         res.push(column);
         column = {} as BigQueryColumnTable;
       }
     });
 
-    return res;
+    return res.map((column) => ({
+      ...column,
+      populated: emptyColumnsData
+        ? this.getColumnPopulatedValue(
+            column.name,
+            data.tableMetadata.totalRows,
+            emptyColumnsData,
+          )
+        : 100,
+    }));
   }
 
   getColumnPopulatedValue(
