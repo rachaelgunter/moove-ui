@@ -41,7 +41,12 @@ const DatasetDetailsContent: React.FC<DatasetDetailsContentProps> = ({
 
   return (
     <>
-      {datasetColumns && <Columns columnModels={datasetColumns.columnsTable} />}
+      {datasetColumns && (
+        <Columns
+          datasetName={datasetModel.name}
+          columnModels={datasetColumns.columnsTable}
+        />
+      )}
       <DatasetVisualization datasetModel={datasetModel} />
     </>
   );

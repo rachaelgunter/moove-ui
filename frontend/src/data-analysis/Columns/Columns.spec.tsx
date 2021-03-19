@@ -29,7 +29,7 @@ for (let i = 0; i < 15; i += 1) {
 const createWrapper = () =>
   render(
     <ThemeProvider theme={theme}>
-      <Columns columnModels={columns} />
+      <Columns datasetName="name" columnModels={columns} />
     </ThemeProvider>,
   );
 
