@@ -29,20 +29,24 @@ const columnsOrder = ['name', 'type', 'populated', 'min', 'max'];
 
 interface ColumnsRowsProps {
   columnModel: ColumnModel;
+  datasetName: string;
 }
 
 const ColumnsRow: FC<ColumnsRowsProps> = ({
   columnModel,
+  datasetName,
 }: ColumnsRowsProps) => {
   const classes = useStyles();
   const [isDetailedColumnViewOpened, setDetailedColumnViewOpened] = useState(
     false,
   );
-  const [detailedViewColumn, setDetailedViewColumn] = useState<string>('');
+  const [detailedViewColumn, setDetailedViewColumn] = useState<ColumnModel>(
+    {} as ColumnModel,
+  );
 
-  const openDetailedColumnView = (columnName: string) => {
+  const openDetailedColumnView = (column: ColumnModel) => {
     setDetailedColumnViewOpened(true);
-    setDetailedViewColumn(columnName);
+    setDetailedViewColumn(column);
   };
 
   const closeDetailedColumnView = () => {
@@ -60,7 +64,7 @@ const ColumnsRow: FC<ColumnsRowsProps> = ({
         <Button
           startIcon={<MagnifierIcon />}
           className={classes.rowActionButton}
-          onClick={() => openDetailedColumnView(columnModel.name)}
+          onClick={() => openDetailedColumnView(columnModel)}
         >
           View
         </Button>
@@ -68,7 +72,8 @@ const ColumnsRow: FC<ColumnsRowsProps> = ({
       <DetailedColumnView
         open={isDetailedColumnViewOpened}
         onClose={closeDetailedColumnView}
-        columnName={detailedViewColumn}
+        column={detailedViewColumn}
+        datasetName={datasetName}
       />
     </TableRow>
   );

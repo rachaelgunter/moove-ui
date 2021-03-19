@@ -3,6 +3,11 @@ import React, { FC } from 'react';
 import { Breadcrumbs, makeStyles, Theme, Typography } from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
+interface ColumnViewBreadcrumbsProps {
+  datasetName: string;
+  columnName: string;
+}
+
 const useStyles = makeStyles((theme: Theme) => ({
   breadcrumbs: {
     paddingLeft: '18px',
@@ -12,7 +17,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const ColumnViewBreadcrumbs: FC = () => {
+const ColumnViewBreadcrumbs: FC<ColumnViewBreadcrumbsProps> = ({
+  datasetName,
+  columnName,
+}: ColumnViewBreadcrumbsProps) => {
   const classes = useStyles();
 
   return (
@@ -20,9 +28,9 @@ const ColumnViewBreadcrumbs: FC = () => {
       className={classes.breadcrumbs}
       separator={<NavigateNextIcon fontSize="small" />}
     >
-      <Typography className={classes.breadcrumbsItem}>Dataset Name</Typography>
+      <Typography className={classes.breadcrumbsItem}>{datasetName}</Typography>
       <Typography className={classes.breadcrumbsItem} color="textPrimary">
-        Dataset Column
+        {columnName}
       </Typography>
     </Breadcrumbs>
   );

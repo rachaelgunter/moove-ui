@@ -2,9 +2,14 @@ import { BadRequestException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { GqlAuthGuard } from 'src/auth/graphql-auth.guard';
 import { DatasetsService } from './datasets.service';
-import { Dataset, DatasetParamsInput } from './datasets.types';
+import {
+  ColumnVisualizationParams,
+  Dataset,
+  DatasetParamsInput,
+} from './datasets.types';
 import { Roles } from 'src/auth/roles.decorator';
-import { Role } from 'src/users/users.types';
+import { Role, UserTokenPayload } from 'src/users/users.types';
+import { CurrentUser } from 'src/auth/graphql-current-user.decorator';
 
 @Resolver()
 export class DatasetsResolver {
@@ -29,5 +34,23 @@ export class DatasetsResolver {
   @Query(() => [Dataset], { nullable: 'itemsAndList' })
   async getDatasets(): Promise<Dataset[]> {
     return this.datasetsService.getDatasets();
+  }
+
+  @Roles(Role.PAID_USER, Role.ADMIN)
+  @UseGuards(GqlAuthGuard)
+  @Query(() => [String], { nullable: 'itemsAndList' })
+  async datasetColumnVisualiztions(
+    @CurrentUser()
+    user: UserTokenPayload,
+    @Args() args: ColumnVisualizationParams,
+  ): Promise<string[]> {
+    const { bucketName, analysisName, columnName } = args;
+
+    return this.datasetsService.getColumnVisualizations(
+      user,
+      bucketName,
+      analysisName,
+      columnName,
+    );
   }
 }

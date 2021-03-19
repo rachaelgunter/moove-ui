@@ -6,8 +6,12 @@ import {
   Dataset,
   DatasetListingResponse,
   DatasetParamsInput,
+  DatasetStatus,
 } from './datasets.types';
 import { google } from 'googleapis';
+import { UsersService } from 'src/users/users.service';
+import { UserTokenPayload } from 'src/users/users.types';
+import { GCSClient } from 'src/gcs/gcs-client';
 
 @Injectable()
 export class DatasetsService {
@@ -16,7 +20,8 @@ export class DatasetsService {
 
   constructor(
     private readonly httpService: HttpService,
-    private configService: ConfigService,
+    private readonly configService: ConfigService,
+    private readonly usersService: UsersService,
   ) {}
 
   async createDataset(datasetParams: DatasetParamsInput): Promise<string> {
@@ -42,6 +47,7 @@ export class DatasetsService {
           source_dataset: datasetId,
           source_project: projectId,
           analysis_description: description,
+          client: 'car_company', // hardcoded until user organizations are not implemented
           primary_id: 'uuid',
           primary_geography: 'geog',
           lat: 'latitude',
@@ -144,7 +150,23 @@ export class DatasetsService {
       description: datasetsResponse[key].description,
       totalRows: datasetsResponse[key].total_rows,
       createdAt: datasetsResponse[key].created_at,
-      status: datasetsResponse[key].ingest_status.dataset_status,
+      status: Object.values(datasetsResponse[key].ingest_status).every(
+        (status) => status,
+      )
+        ? DatasetStatus.ACTIVE
+        : DatasetStatus.PROCESSING,
     }));
+  }
+
+  async getColumnVisualizations(
+    user: UserTokenPayload,
+    bucketName: string,
+    analysisName: string,
+    columnName: string,
+  ): Promise<string[]> {
+    const tokens = await this.usersService.getGoogleTokens(user.sub);
+    const client = new GCSClient(tokens);
+
+    return client.listObjects(bucketName, analysisName, columnName);
   }
 }

@@ -6,7 +6,7 @@ interface DatasetDataProps {
   description: string;
   totalRows: number;
   createdAt: string;
-  status: string;
+  status: DatasetStatus;
 }
 
 export const getDatasetModel = (
@@ -18,10 +18,7 @@ export const getDatasetModel = (
   description: data.description,
   totalRows: data.totalRows,
   createdAt: data.createdAt,
-  status:
-    data.status === 'finished'
-      ? DatasetStatus.ACTIVE
-      : DatasetStatus.PROCESSING,
+  status: data.status,
 });
 
 export const getDatasetModels = (data: DatasetDataProps[]): DatasetModel[] =>

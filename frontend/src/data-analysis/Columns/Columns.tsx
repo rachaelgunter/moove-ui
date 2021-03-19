@@ -11,9 +11,13 @@ export const STEP = 5;
 
 interface ColumnsProps {
   columnModels: ColumnModel[];
+  datasetName: string;
 }
 
-const Columns: FC<ColumnsProps> = ({ columnModels }: ColumnsProps) => {
+const Columns: FC<ColumnsProps> = ({
+  columnModels,
+  datasetName,
+}: ColumnsProps) => {
   const [quota, setQuota] = useState(INIT_NUMBER_OF_ROWS);
 
   const onShowMoreClick = () => setQuota(quota + STEP);
@@ -35,6 +39,7 @@ const Columns: FC<ColumnsProps> = ({ columnModels }: ColumnsProps) => {
           {getColumnsByQuota().map((column) => (
             <ColumnsRow
               columnModel={column}
+              datasetName={datasetName}
               key={`columns-row-${column.name}`}
             />
           ))}

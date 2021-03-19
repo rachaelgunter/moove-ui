@@ -25,9 +25,13 @@ const useStyles = makeStyles<Theme, StyleProps, string>((theme: Theme) => ({
 
 const StatusChip: React.FC<StatusChipProps> = ({ status }: StatusChipProps) => {
   const isProcessing = status === DatasetStatus.PROCESSING;
+  const uiStatusesMap: { [key in DatasetStatus]: string } = {
+    [DatasetStatus.ACTIVE]: 'Active',
+    [DatasetStatus.PROCESSING]: 'Processing',
+  };
 
   const classes = useStyles({ isProcessing });
-  const label = isProcessing ? 'Processing' : 'Active';
+  const label = uiStatusesMap[status];
 
   return <Chip label={label} size="small" className={classes.root} />;
 };
