@@ -9,7 +9,6 @@ import {
   DatasetStatus,
 } from './datasets.types';
 import { google } from 'googleapis';
-import { UsersService } from 'src/users/users.service';
 import { UserTokenPayload } from 'src/users/users.types';
 import { GCSClient } from 'src/gcs/gcs-client';
 
@@ -21,7 +20,7 @@ export class DatasetsService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
-    private readonly usersService: UsersService,
+    private readonly storageClient: GCSClient,
   ) {}
 
   async createDataset(datasetParams: DatasetParamsInput): Promise<string> {
@@ -165,9 +164,6 @@ export class DatasetsService {
     analysisName: string,
     columnName: string,
   ): Promise<string[]> {
-    const tokens = await this.usersService.getGoogleTokens(user.sub);
-    const client = new GCSClient(tokens);
-
-    return client.listObjects(bucketName, analysisName, columnName);
+    return this.storageClient.listObjects(bucketName, analysisName, columnName);
   }
 }

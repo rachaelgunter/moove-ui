@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { BigQueryClient } from './bigquery-client/bigquery-client';
+
+import { BigqueryClientService } from './bigquery-client/bigquery-client.service';
 import { UsersService } from 'src/users/users.service';
 import { UserTokenPayload } from 'src/users/users.types';
 import {
@@ -13,12 +14,10 @@ import {
 export class BigQueryService {
   private readonly logger = new Logger(BigQueryService.name);
 
-  constructor(private readonly usersService: UsersService) {}
-
-  async getClient(user: UserTokenPayload): Promise<BigQueryClient> {
-    const tokens = await this.usersService.getGoogleTokens(user.sub);
-    return new BigQueryClient(tokens);
-  }
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly bigqueryClientService: BigqueryClientService,
+  ) {}
 
   async getTableDataList(
     user: UserTokenPayload,
@@ -28,8 +27,7 @@ export class BigQueryService {
     offset: number,
     limit: number,
   ): Promise<BigQueryTableData> {
-    const bigQueryClient = await this.getClient(user);
-    return await bigQueryClient.getTableDataList(
+    return await this.bigqueryClientService.getTableDataList(
       projectId,
       datasetId,
       tableId,
@@ -44,10 +42,11 @@ export class BigQueryService {
     datasetId: string,
     tableId: string,
   ): Promise<BigQueryTableInfo> {
-    const tokens = await this.usersService.getGoogleTokens(user.sub);
-    const bigQueryClient = new BigQueryClient(tokens);
-
-    return await bigQueryClient.getTableInfo(projectId, datasetId, tableId);
+    return await this.bigqueryClientService.getTableInfo(
+      projectId,
+      datasetId,
+      tableId,
+    );
   }
 
   async getPreviewTable(
@@ -59,8 +58,7 @@ export class BigQueryService {
     limit: number,
     selectedFields?: string[],
   ): Promise<BigQueryPreviewTable> {
-    const bigQueryClient = await this.getClient(user);
-    return await bigQueryClient.getPreviewTable(
+    return await this.bigqueryClientService.getPreviewTable(
       projectId,
       datasetId,
       tableId,
@@ -78,8 +76,7 @@ export class BigQueryService {
     offset: number,
     limit: number,
   ): Promise<BigQueryColumnTable[]> {
-    const bigQueryClient = await this.getClient(user);
-    const columnsData = await bigQueryClient.getPreviewTable(
+    const columnsData = await this.bigqueryClientService.getPreviewTable(
       projectId,
       datasetId,
       tableId,
@@ -93,7 +90,7 @@ export class BigQueryService {
     const analysisName = datasetId.replace('galileo_analysis', 'null_counts');
     let emptyColumnsData: BigQueryPreviewTable | null = null;
     try {
-      emptyColumnsData = await bigQueryClient.getPreviewTable(
+      emptyColumnsData = await this.bigqueryClientService.getPreviewTable(
         projectId,
         datasetId,
         analysisName,
