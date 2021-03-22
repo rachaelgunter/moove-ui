@@ -144,6 +144,7 @@ export class DatasetsService {
   }
 
   mapDatasets(datasetsResponse: DatasetListingResponse): Dataset[] {
+    const FINISHED_STATUS = 'finished';
     return Object.keys(datasetsResponse).map((key) => ({
       analysisName: key,
       bigQueryDatasetName: datasetsResponse[key].dataset_id,
@@ -151,7 +152,7 @@ export class DatasetsService {
       totalRows: datasetsResponse[key].total_rows,
       createdAt: datasetsResponse[key].created_at,
       status: Object.values(datasetsResponse[key].ingest_status).every(
-        (status) => status,
+        (status) => status === FINISHED_STATUS,
       )
         ? DatasetStatus.ACTIVE
         : DatasetStatus.PROCESSING,
