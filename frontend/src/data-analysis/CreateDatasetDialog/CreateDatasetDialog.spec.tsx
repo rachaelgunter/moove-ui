@@ -6,6 +6,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import theme from 'src/app/styles';
 
 import CreateDatasetDialog, {
+  DATASET_NAME_ERROR,
   DESCRIPTION_MAX_LENGTH_ERROR,
 } from './CreateDatasetDialog';
 
@@ -55,6 +56,37 @@ describe('CreateDatasetDialog', () => {
       });
       errorMessage = getErrorMessage();
       expect(errorMessage).toBeNull();
+    });
+  });
+
+  describe('dataset name error message', () => {
+    let nameField: HTMLElement;
+
+    const getErrorMessage = () => {
+      return wrapper.queryByText(DATASET_NAME_ERROR);
+    };
+
+    beforeEach(() => {
+      nameField = wrapper.getByLabelText('Name');
+    });
+
+    it('should appear if name contains non alphanumerical characters, dashes or underscores', () => {
+      fireEvent.change(nameField, {
+        target: { value: '@#%@!@%' },
+      });
+      expect(getErrorMessage()).toBeDefined();
+    });
+
+    it('should disappear if user fixes an error', () => {
+      fireEvent.change(nameField, {
+        target: { value: '@#%@!@%' },
+      });
+      expect(getErrorMessage()).toBeDefined();
+
+      fireEvent.change(nameField, {
+        target: { value: 'text' },
+      });
+      expect(getErrorMessage()).toBeNull();
     });
   });
 });

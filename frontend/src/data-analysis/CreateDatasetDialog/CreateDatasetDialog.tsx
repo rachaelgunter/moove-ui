@@ -22,6 +22,9 @@ import CreateDatasetSuccessMessage from './CreateDatasetSuccessMessage';
 const MAX_DESCRIPTION_LENGTH = 16384;
 export const DESCRIPTION_MAX_LENGTH_ERROR =
   'Maximum description length is limited to 16384 characters';
+export const DATASET_NAME_ERROR =
+  'Name should contain only alphanumeric characters, underscores or dashes';
+
 interface CreateDatasetDialogProps {
   open: boolean;
   onClose: () => void;
@@ -81,6 +84,7 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   const [description, setDescription] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
   const [name, setName] = useState('');
+  const [nameError, setNameError] = useState('');
   const [selectedTable, setSelectedTable] = useState<TableIdentity | null>(
     null,
   );
@@ -110,6 +114,7 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
 
   const onNameChange = (updatedName: string) => {
     setName(updatedName);
+    updateNameErrorState(updatedName);
   };
 
   const onDescriptionChange = (updatedDescription: string) => {
@@ -122,6 +127,14 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
       setDescriptionError(DESCRIPTION_MAX_LENGTH_ERROR);
     } else {
       setDescriptionError('');
+    }
+  };
+
+  const updateNameErrorState = (updatedName: string) => {
+    if (updatedName.match(/^[a-zA-Z0-9-_]*$/)) {
+      setNameError('');
+    } else {
+      setNameError(DATASET_NAME_ERROR);
     }
   };
 
@@ -172,7 +185,13 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
           <CreateDatasetSuccessMessage />
         ) : (
           <>
-            <TextField label="Name" value={name} onChange={onNameChange} />
+            <TextField
+              label="Name"
+              value={name}
+              onChange={onNameChange}
+              error={!!nameError.length}
+              errorText={nameError}
+            />
             <TextField
               label="Description"
               value={description}

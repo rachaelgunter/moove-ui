@@ -1,8 +1,15 @@
 import { ArgsType, Field, InputType, ObjectType } from '@nestjs/graphql';
+import { Matches } from 'class-validator';
+
+const ANALYSIS_NAME_VALIDATION_MESSAGE =
+  'Name should contain only alphanumeric characters, underscores or dashes';
 
 @InputType()
 export class DatasetParamsInput {
   @Field()
+  @Matches(/^[a-zA-Z0-9-_]+$/, {
+    message: ANALYSIS_NAME_VALIDATION_MESSAGE,
+  })
   name: string;
 
   @Field()
