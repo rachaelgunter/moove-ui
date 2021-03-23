@@ -109,7 +109,7 @@ const DatasetVisualization: React.FC<DatasetVisualizationProps> = ({
           onLoad={() => onChartLoad(ChartType.HEATMAP)}
           onError={() => onChartLoadingError(ChartType.HEATMAP)}
           src={generateAssetLink(assetPaths.heatmap)}
-          height={VISUALIZATION_BLOCK_HEIGHT}
+          height={VISUALIZATION_BLOCK_HEIGHT * 2}
           loading={chartsState[ChartType.HEATMAP].isLoading}
         />
       </Grid>
