@@ -9,7 +9,6 @@ import {
   DatasetStatus,
 } from './datasets.types';
 import { google } from 'googleapis';
-import { UserTokenPayload } from 'src/users/users.types';
 import { GCSClient } from 'src/gcs/gcs-client';
 
 @Injectable()
@@ -159,11 +158,16 @@ export class DatasetsService {
   }
 
   async getColumnVisualizations(
-    user: UserTokenPayload,
     bucketName: string,
     analysisName: string,
     columnName: string,
+    subFolder?: string,
   ): Promise<string[]> {
-    return this.storageClient.listObjects(bucketName, analysisName, columnName);
+    return this.storageClient.listObjects(
+      bucketName,
+      analysisName,
+      columnName,
+      subFolder,
+    );
   }
 }

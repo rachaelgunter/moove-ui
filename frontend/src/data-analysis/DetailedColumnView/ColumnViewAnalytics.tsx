@@ -1,7 +1,8 @@
+import React, { FC, useContext } from 'react';
 import { useQuery } from '@apollo/client';
 import { Box, CircularProgress, Grid, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import React, { FC, useContext } from 'react';
+
 import { UserContext } from 'src/auth/UserProvider';
 import { DATASET_COLUMN_VISUALIZATIONS_QUERY } from '../queries';
 import { ColumnModel } from '../types';

@@ -6,6 +6,7 @@ import ColumnViewBreadcrumbs from './ColumnViewBreadcrumbs';
 import ColumnViewTabPanel from './ColumnViewTabPanel';
 import ColumnViewMap from './ColumnViewMap';
 import ColumnViewAnalytics from './ColumnViewAnalytics';
+import ColumnViewRelationships from './ColumnViewRelationships';
 import { ColumnModel } from '../types';
 
 interface DetailedColumnViewProps {
@@ -81,7 +82,7 @@ const DetailedColumnView: FC<DetailedColumnViewProps> = ({
         >
           <Tab className={classes.tab} label="Analytics" />
           <Tab className={classes.tab} label="Map" />
-          <Tab className={classes.tab} disabled label="Relationships" />
+          <Tab className={classes.tab} label="Relationships" />
         </Tabs>
       </Box>
       <ColumnViewTabPanel value={value} index={0}>
@@ -91,7 +92,7 @@ const DetailedColumnView: FC<DetailedColumnViewProps> = ({
         <ColumnViewMap columnName={column.name} />
       </ColumnViewTabPanel>
       <ColumnViewTabPanel value={value} index={2}>
-        Relationships
+        <ColumnViewRelationships column={column} analysisName={datasetName} />
       </ColumnViewTabPanel>
     </>
   );
