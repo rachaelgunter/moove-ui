@@ -17,7 +17,7 @@ describe('CreateDatasetDialog', () => {
     wrapper = render(
       <MockedProvider>
         <ThemeProvider theme={theme}>
-          <CreateDatasetDialog open onClose={() => {}} />
+          <CreateDatasetDialog open onClose={() => {}} onComplete={() => {}} />
         </ThemeProvider>
       </MockedProvider>,
     );

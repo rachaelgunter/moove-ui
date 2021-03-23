@@ -28,6 +28,7 @@ export const DATASET_NAME_ERROR =
 interface CreateDatasetDialogProps {
   open: boolean;
   onClose: () => void;
+  onComplete: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -80,6 +81,7 @@ const useStyles = makeStyles((theme: Theme) => {
 const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   open,
   onClose,
+  onComplete,
 }: CreateDatasetDialogProps) => {
   const [description, setDescription] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
@@ -93,6 +95,7 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   const [createDataset, { loading }] = useMutation(CREATE_DATASET_MUTATION, {
     onCompleted: () => {
       setCreationCompleted(true);
+      onComplete();
     },
   });
 
