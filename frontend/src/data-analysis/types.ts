@@ -20,6 +20,11 @@ export type ColumnModel = {
   populated: number;
   min: string | number;
   max: string | number;
+  average: number;
+  standardDeviation: number;
+  variance: number;
+  count: number;
+  sum: number;
 };
 
 export type BigQueryProjectsResponse = {

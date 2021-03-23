@@ -7,8 +7,10 @@ import {
   SHOW_MORE_BUTTON_TITLE,
   SHOW_LESS_BUTTON_TITLE,
 } from 'src/shared/Table';
+import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import Columns, { INIT_NUMBER_OF_ROWS, STEP } from './Columns';
-import { ColumnModel } from '../types';
+import { ColumnModel, DatasetModel, DatasetStatus } from '../types';
+import { DATASET_COLUMNS_QUERY } from '../queries';
 
 function createData(
   name: string,
@@ -16,20 +18,55 @@ function createData(
   populated: number,
   min: string | number,
   max: string | number,
-) {
-  return { name, type, populated, min, max };
+): ColumnModel {
+  return {
+    name,
+    type,
+    populated,
+    min,
+    max,
+    average: 0,
+    variance: 0,
+    sum: 0,
+    count: 0,
+    standardDeviation: 0,
+  };
 }
-
 const columns = [] as ColumnModel[];
 
 for (let i = 0; i < 15; i += 1) {
   columns.push(createData(`Test column ${i}`, 'string', 100, 1, 10));
 }
 
+const dataset: DatasetModel = {
+  id: 1,
+  description: 'desc',
+  createdAt: '',
+  totalRows: 15,
+  name: 'dataset',
+  status: DatasetStatus.ACTIVE,
+};
+
+const columnsMock: MockedResponse = {
+  request: {
+    query: DATASET_COLUMNS_QUERY,
+    variables: {
+      projectId: 'moove-platform-testing-data',
+      datasetId: `dataset_galileo_analysis`,
+      tableId: `dataset_general_stats`,
+    },
+  },
+  result: {
+    data: { columnsTable: columns },
+  },
+};
+
 const createWrapper = () =>
   render(
     <ThemeProvider theme={theme}>
-      <Columns datasetName="name" columnModels={columns} />
+      <MockedProvider mocks={[columnsMock]} addTypename={false}>
+        <Columns datasetModel={dataset} />
+      </MockedProvider>
     </ThemeProvider>,
   );
 
@@ -38,14 +75,15 @@ describe('Columns', () => {
   let showMoreButton: HTMLButtonElement;
   let showLessButton: HTMLButtonElement;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     wrapper = createWrapper();
-    showMoreButton = wrapper
-      .getByText(SHOW_MORE_BUTTON_TITLE)
-      .closest('button') as HTMLButtonElement;
-    showLessButton = wrapper
-      .getByText(SHOW_LESS_BUTTON_TITLE)
-      .closest('button') as HTMLButtonElement;
+
+    showMoreButton = (await wrapper.findByText(SHOW_MORE_BUTTON_TITLE)).closest(
+      'button',
+    ) as HTMLButtonElement;
+    showLessButton = (await wrapper.findByText(SHOW_LESS_BUTTON_TITLE)).closest(
+      'button',
+    ) as HTMLButtonElement;
   });
 
   describe('should have the initial number of rows', () => {
