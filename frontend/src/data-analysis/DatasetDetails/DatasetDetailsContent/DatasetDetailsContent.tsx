@@ -5,8 +5,6 @@ import { DatasetModel, DatasetStatus } from 'src/data-analysis/types';
 import { IngestionInProgressHint } from 'src/data-analysis/hints';
 import Columns from 'src/data-analysis/Columns';
 import DatasetVisualization from 'src/data-analysis/DatasetVisualization';
-import { useQuery } from '@apollo/client';
-import { DATASET_COLUMNS_QUERY } from 'src/data-analysis/queries';
 import PreviewTable from 'src/data-analysis/PreviewTable';
 
 interface DatasetDetailsContentProps {
@@ -29,14 +27,6 @@ const DatasetDetailsContent: React.FC<DatasetDetailsContentProps> = ({
 }: DatasetDetailsContentProps) => {
   const classes = useStyles();
 
-  const { data: datasetColumns } = useQuery(DATASET_COLUMNS_QUERY, {
-    variables: {
-      projectId: 'moove-platform-testing-data',
-      datasetId: `${datasetModel.name}_galileo_analysis`,
-      tableId: `${datasetModel.name}_general_stats`,
-    },
-  });
-
   if (datasetModel.status === DatasetStatus.PROCESSING) {
     return (
       <Grid item className={classes.hintWrapper}>
@@ -47,15 +37,7 @@ const DatasetDetailsContent: React.FC<DatasetDetailsContentProps> = ({
 
   return (
     <>
-      {datasetColumns?.columnsTable?.length ? (
-        <Columns
-          datasetName={datasetModel.name}
-          columnModels={datasetColumns?.columnsTable ?? []}
-        />
-      ) : (
-        <div className={classes.columnsTableLoadingPlaceholder} />
-      )}
-
+      <Columns datasetModel={datasetModel} />
       <PreviewTable datasetModel={datasetModel} />
       <DatasetVisualization datasetModel={datasetModel} />
     </>

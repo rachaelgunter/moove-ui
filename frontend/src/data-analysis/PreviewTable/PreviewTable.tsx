@@ -1,6 +1,5 @@
 import React, { FC, useState } from 'react';
 import {
-  CircularProgress,
   Table,
   TableContainer,
   TableBody,
@@ -11,10 +10,10 @@ import {
   TablePagination,
   Typography,
   Grid,
-  Link,
   Theme,
 } from '@material-ui/core';
 import { useQuery } from '@apollo/client';
+import TableOverlay from 'src/shared/TableOverlay/TableOverlay';
 import { DatasetModel } from '../types';
 import { BIG_QUERY_PREVIEW_TABLE_QUERY } from '../queries';
 import PaginationActions from './PaginationActions';
@@ -68,6 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: FontFamily.POPPINS,
     color: '#fff',
     fontSize: '13px',
+    minHeight: '440px',
   },
 }));
 const useStylesTable = makeStyles((theme: Theme) => ({
@@ -228,37 +228,17 @@ const PreviewTable: FC<PreviewTableProps> = ({
         <Typography variant="subtitle1">Preview</Typography>
       </Grid>
       <Grid container item>
-        <div
-          className={
-            !loading && error ? classes.errorMessage : classes.overlayWrapper
-          }
-        >
-          {loading && (
-            <div className={classes.overlay}>
-              <CircularProgress />
-            </div>
-          )}
-          {error && (
-            <div>
-              Unable to load data, please try later. if the problem persists,
-              contact support:{' '}
-              <Link href="mailto:systems@moove.ai" color="inherit">
-                systems@moove.ai
-              </Link>
-            </div>
-          )}
-          {!error && data?.previewTable && (
-            <PreviewTableContent
-              {...{
-                ...data.previewTable,
-                handleChangePage,
-                handleChangeRowsPerPage,
-                rowsPerPage,
-                page,
-              }}
-            />
-          )}
-        </div>
+        <TableOverlay loading={loading} error={!!error} data={data}>
+          <PreviewTableContent
+            {...{
+              ...data?.previewTable,
+              handleChangePage,
+              handleChangeRowsPerPage,
+              rowsPerPage,
+              page,
+            }}
+          />
+        </TableOverlay>
       </Grid>
     </Grid>
   );
