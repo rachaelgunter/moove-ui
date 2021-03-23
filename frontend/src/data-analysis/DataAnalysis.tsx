@@ -12,6 +12,8 @@ import { DATASET_QUERY } from './queries';
 import { getDatasetModels } from './helpers';
 import { NoDatasetsHint } from './hints';
 
+const DELAY_TO_FETCH_DATASETS = 5_000;
+
 const DataAnalysis: React.FC = () => {
   const [selectedDataset, setSelectedDataset] = useState<DatasetModel | null>(
     null,
@@ -19,7 +21,7 @@ const DataAnalysis: React.FC = () => {
 
   const [isCreationDialogOpen, setIsCreationDialogOpen] = useState(false);
 
-  const { loading, data } = useQuery(DATASET_QUERY);
+  const { loading, data, refetch } = useQuery(DATASET_QUERY);
 
   const onAddDatasetClick = () => {
     setIsCreationDialogOpen(true);
@@ -31,6 +33,12 @@ const DataAnalysis: React.FC = () => {
 
   const onDatasetSelect = (dataset: DatasetModel) => {
     setSelectedDataset(dataset);
+  };
+
+  const onDatasetCreated = async () => {
+    setTimeout(async () => {
+      await refetch();
+    }, DELAY_TO_FETCH_DATASETS);
   };
 
   return (
@@ -68,6 +76,7 @@ const DataAnalysis: React.FC = () => {
       <CreateDatasetDialog
         open={isCreationDialogOpen}
         onClose={handleCreationDialogClose}
+        onComplete={onDatasetCreated}
       />
     </PageTemplate>
   );
