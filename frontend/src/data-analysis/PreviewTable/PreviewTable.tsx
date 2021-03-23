@@ -85,7 +85,6 @@ const useStylesTable = makeStyles((theme: Theme) => ({
     color: 'rgba(255, 255, 255, 0.5)',
     fontFamily: FontFamily.POPPINS,
     fontSize: '13px',
-    fontWeight: 'normal',
     lineHeight: 'normal',
     padding: '14px 24px 11px 24px',
     whiteSpace: 'nowrap',
@@ -146,7 +145,7 @@ const PreviewTableContent: FC<PreviewTableContentProps> = ({
           <TableHead>
             <TableRow>
               {headers.map((item: { name: string }) => (
-                <TableCell key={item.name} className={classes.cell}>
+                <TableCell key={item.name} className={classes.headerCell}>
                   {item.name}
                 </TableCell>
               ))}
