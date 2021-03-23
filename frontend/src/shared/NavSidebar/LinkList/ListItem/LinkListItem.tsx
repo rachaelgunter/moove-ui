@@ -72,7 +72,7 @@ const LinkListItem: <C extends React.ElementType>(
           {label}
           <br />
           <br />
-          Sign up for a paid account at
+          Sign up for a paid account at{' '}
           <a className={classes.link} href={BUY_PAID_ACCOUNT_URL}>
             {BUY_PAID_ACCOUNT_URL}
           </a>
