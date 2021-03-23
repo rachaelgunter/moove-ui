@@ -33,6 +33,9 @@ const useStyles = makeStyles<Theme, StyleProps, string>((theme: Theme) => ({
     minWidth: 0,
     marginRight: theme.spacing(isExpanded ? 2 : 3),
   }),
+  listItemWrapper: {
+    cursor: 'pointer',
+  },
   colorPrimaryIcon: {
     color: '#90a0b7',
   },
@@ -42,7 +45,12 @@ const useStyles = makeStyles<Theme, StyleProps, string>((theme: Theme) => ({
   colorSecondary: {
     color: theme.palette.secondary.main,
   },
+  link: {
+    color: theme.palette.secondary.main,
+  },
 }));
+
+const BUY_PAID_ACCOUNT_URL = 'http://moove.ai';
 
 const LinkListItem: <C extends React.ElementType>(
   props: LinkListItemProps<C, { component?: C }>,
@@ -50,45 +58,69 @@ const LinkListItem: <C extends React.ElementType>(
   label,
   Icon,
   selected,
+  disabled,
   ...other
 }: LinkListItemProps<C, { component?: C }>) => {
   const { isExpanded } = useContext(NavSidebarContext);
 
   const classes = useStyles({ isExpanded });
 
+  const getTooltipLabel = () => {
+    if (disabled) {
+      return (
+        <>
+          {label}
+          <br />
+          <br />
+          Sign up for a paid account at
+          <a className={classes.link} href={BUY_PAID_ACCOUNT_URL}>
+            {BUY_PAID_ACCOUNT_URL}
+          </a>
+        </>
+      );
+    }
+    if (!isExpanded && label) {
+      return label;
+    }
+    return '';
+  };
+
   return (
     <Tooltip
+      interactive
       data-testid="listItem-tooltip"
-      title={(!isExpanded && label) || ''}
+      title={getTooltipLabel()}
     >
-      <BaseListItem selected={selected} {...other}>
-        <ListItemIcon
-          classes={{
-            root: classes.listItemIcon,
-          }}
-        >
-          <Icon
+      <div className={classes.listItemWrapper}>
+        <BaseListItem selected={selected} disabled={disabled} {...other}>
+          <ListItemIcon
             classes={{
-              colorPrimary: classes.colorPrimaryIcon,
-              colorSecondary: classes.colorSecondary,
+              root: classes.listItemIcon,
             }}
-            color={selected ? 'secondary' : 'primary'}
-            fontSize="small"
-          />
-        </ListItemIcon>
-        <ListItemText disableTypography>
-          <Typography
-            className={classes.listItemText}
-            classes={{
-              colorPrimary: classes.colorPrimaryText,
-              colorSecondary: classes.colorSecondary,
-            }}
-            color={selected ? 'secondary' : 'primary'}
           >
-            {label}
-          </Typography>
-        </ListItemText>
-      </BaseListItem>
+            <Icon
+              classes={{
+                colorPrimary: classes.colorPrimaryIcon,
+                colorSecondary: classes.colorSecondary,
+              }}
+              color={selected ? 'secondary' : 'primary'}
+              fontSize="small"
+            />
+          </ListItemIcon>
+          <ListItemText disableTypography>
+            <Typography
+              className={classes.listItemText}
+              classes={{
+                colorPrimary: classes.colorPrimaryText,
+                colorSecondary: classes.colorSecondary,
+              }}
+              color={selected ? 'secondary' : 'primary'}
+            >
+              {label}
+            </Typography>
+          </ListItemText>
+        </BaseListItem>
+      </div>
     </Tooltip>
   );
 };
