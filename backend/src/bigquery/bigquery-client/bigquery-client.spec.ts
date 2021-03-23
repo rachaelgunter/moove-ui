@@ -1,4 +1,6 @@
-import { BigQueryClient } from './bigquery-client';
+import { BigqueryClientService } from './bigquery-client.service';
+import { Test, TestingModule } from '@nestjs/testing';
+import { UsersService } from 'src/users/users.service';
 
 const mockAPIProjects = [
   {
@@ -66,13 +68,22 @@ const mockAPITables = [
 ];
 
 describe('BigQueryClient', () => {
-  let client: BigQueryClient;
+  let client: BigqueryClientService;
 
-  beforeEach(() => {
-    client = new BigQueryClient({
-      accessToken: 'accessToken',
-      refreshToken: 'refreshToken',
-    });
+  beforeEach(async () => {
+    const moduleRef: TestingModule = await Test.createTestingModule({
+      providers: [
+        BigqueryClientService,
+        {
+          provide: UsersService,
+          useValue: {},
+        },
+      ],
+    }).compile();
+
+    client = await moduleRef.resolve<BigqueryClientService>(
+      BigqueryClientService,
+    );
   });
 
   describe('mapProjects', () => {

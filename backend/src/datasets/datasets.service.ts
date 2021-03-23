@@ -9,7 +9,6 @@ import {
   DatasetStatus,
 } from './datasets.types';
 import { google } from 'googleapis';
-import { UsersService } from 'src/users/users.service';
 import { UserTokenPayload } from 'src/users/users.types';
 import { GCSClient } from 'src/gcs/gcs-client';
 
@@ -21,7 +20,7 @@ export class DatasetsService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
-    private readonly usersService: UsersService,
+    private readonly storageClient: GCSClient,
   ) {}
 
   async createDataset(datasetParams: DatasetParamsInput): Promise<string> {
@@ -144,6 +143,7 @@ export class DatasetsService {
   }
 
   mapDatasets(datasetsResponse: DatasetListingResponse): Dataset[] {
+    const FINISHED_STATUS = 'finished';
     return Object.keys(datasetsResponse).map((key) => ({
       analysisName: key,
       bigQueryDatasetName: datasetsResponse[key].dataset_id,
@@ -151,7 +151,7 @@ export class DatasetsService {
       totalRows: datasetsResponse[key].total_rows,
       createdAt: datasetsResponse[key].created_at,
       status: Object.values(datasetsResponse[key].ingest_status).every(
-        (status) => status,
+        (status) => status === FINISHED_STATUS,
       )
         ? DatasetStatus.ACTIVE
         : DatasetStatus.PROCESSING,
@@ -164,9 +164,6 @@ export class DatasetsService {
     analysisName: string,
     columnName: string,
   ): Promise<string[]> {
-    const tokens = await this.usersService.getGoogleTokens(user.sub);
-    const client = new GCSClient(tokens);
-
-    return client.listObjects(bucketName, analysisName, columnName);
+    return this.storageClient.listObjects(bucketName, analysisName, columnName);
   }
 }

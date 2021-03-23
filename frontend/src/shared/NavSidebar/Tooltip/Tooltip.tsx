@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     boxShadow: '0 2px 9px 0 rgba(0, 0, 0, 0.23)',
     padding: theme.spacing(1, 1.5),
     borderRadius: 6,
+    maxWidth: 200,
   },
   arrow: {
     color: theme.palette.bg.lighter,

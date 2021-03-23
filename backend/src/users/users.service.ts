@@ -118,4 +118,16 @@ export class UsersService {
       select: { accessToken: true, refreshToken: true },
     });
   }
+
+  async updateGoogleTokens(
+    userId: string,
+    tokens: { accessToken?: string; refreshToken?: string },
+  ) {
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: tokens,
+    });
+  }
 }

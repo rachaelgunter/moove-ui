@@ -8,9 +8,8 @@ import {
 } from '@nestjs/graphql';
 import { GqlAuthGuard } from 'src/auth/graphql-auth.guard';
 import { CurrentUser } from 'src/auth/graphql-current-user.decorator';
-import { UsersService } from 'src/users/users.service';
 import { Role, UserTokenPayload } from 'src/users/users.types';
-import { BigQueryClient } from './bigquery-client/bigquery-client';
+import { BigqueryClientService } from './bigquery-client/bigquery-client.service';
 import {
   BigQueryDataset,
   BigQueryProject,
@@ -23,7 +22,7 @@ import { Roles } from 'src/auth/roles.decorator';
 export class BigQueryProjectsResolver {
   private readonly logger: Logger = new Logger(BigQueryProjectsResolver.name);
 
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly bigqueryClientService: BigqueryClientService) {}
 
   @Roles(Role.PAID_USER, Role.ADMIN)
   @UseGuards(GqlAuthGuard)
@@ -39,11 +38,8 @@ export class BigQueryProjectsResolver {
     );
 
     try {
-      const tokens = await this.usersService.getGoogleTokens(user.sub);
-      const bigQueryClient = new BigQueryClient(tokens);
-
-      context.bigQueryClient = bigQueryClient;
-      const projects = await bigQueryClient.getProjects();
+      context.bigQueryClient = this.bigqueryClientService;
+      const projects = await this.bigqueryClientService.getProjects();
       return projects;
     } catch (e) {
       handleGoogleError(this.logger, `Unable to get BigQuery projects`, e);
