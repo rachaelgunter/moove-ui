@@ -1,8 +1,62 @@
-import { convertTableDataRowsToArray } from './utils';
+import { getPreviewTableData } from './utils';
 
 describe('big query utils', () => {
-  describe('convertTableDataRowsToArray', () => {
+  describe('getPreviewTableData', () => {
     const data = {
+      fields: [
+        {
+          name: 'column1',
+          type: 'STRING',
+        },
+        {
+          name: 'column2',
+          type: 'RECORD',
+          fields: [
+            {
+              name: 'name1',
+              type: 'STRING',
+            },
+            {
+              name: 'name2',
+              type: 'STRING',
+            },
+            {
+              name: 'name3',
+              type: 'STRING',
+            },
+          ],
+        },
+        {
+          name: 'column3',
+          type: 'RECORD',
+          mode: 'REPEATED',
+          fields: [
+            {
+              name: 'name1',
+              type: 'STRING',
+            },
+            {
+              name: 'name2',
+              type: 'STRING',
+            },
+          ],
+        },
+        {
+          name: 'column4',
+          type: 'RECORD',
+          mode: 'REPEATED',
+          fields: [
+            {
+              name: 'name1',
+              type: 'STRING',
+            },
+            {
+              name: 'name2',
+              type: 'STRING',
+            },
+          ],
+        },
+      ],
       rows: [
         {
           f: [
@@ -65,18 +119,30 @@ describe('big query utils', () => {
               ],
             },
             {
-              v: '7',
+              v: [],
             },
           ],
         },
       ],
     };
     it('should return rows', () => {
-      expect(convertTableDataRowsToArray(data.rows)).toStrictEqual([
-        ['1', '2', '3', '4', '5', '6', '7'],
-        ['', '', '', '', '8', '9', ''],
-        ['', '', '', '', '10', '11', ''],
-      ]);
+      expect(getPreviewTableData(data.fields, data.rows)).toStrictEqual({
+        headers: [
+          { name: 'column1', type: 'STRING' },
+          { name: 'column2.name1', type: 'STRING' },
+          { name: 'column2.name2', type: 'STRING' },
+          { name: 'column2.name3', type: 'STRING' },
+          { name: 'column3.name1', type: 'STRING' },
+          { name: 'column3.name2', type: 'STRING' },
+          { name: 'column4.name1', type: 'STRING' },
+          { name: 'column4.name2', type: 'STRING' },
+        ],
+        rows: [
+          ['1', '2', '3', '4', '5', '6', '', ''],
+          ['', '', '', '', '8', '9', '', ''],
+          ['', '', '', '', '10', '11', '', ''],
+        ],
+      });
     });
   });
 });

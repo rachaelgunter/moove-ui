@@ -10,78 +10,121 @@ export function handleGoogleError(
   throw new InternalServerErrorException(errorMessage);
 }
 
-export const getPreviewTableHeaders = (
-  fields,
-  prefix = '',
-): { name: string; type: string }[] => {
-  const res = [];
-
-  const n = fields.length;
-  for (let i = 0; i < n; i++) {
-    if (!fields[i].fields) {
-      res.push({ name: `${prefix}${fields[i].name}`, type: fields[i].type });
-    } else {
-      res.push(
-        ...getPreviewTableHeaders(
-          fields[i].fields,
-          prefix + fields[i].name + '.',
-        ),
+export const getPreviewTableData = (fields, rows) => {
+  const getValuesForColumn = (idx, rows) => {
+    return rows.map((row) => {
+      return !!row.f ? [row.f[idx].v] : row.map((v) => v.f[idx].v);
+    });
+  };
+  const addEmptyValues = (res) => {
+    const maxCntRows = Math.max(...res.map(({ values }) => values.length));
+    for (let i = 0; i < maxCntRows; i++) {
+      const maxCntSubRows = Math.max(
+        ...res.map(({ values }) => values[i].length),
       );
-    }
-  }
+      res.forEach((column) => {
+        const cnt = column.values[i].length;
 
-  return res;
-};
-
-export const convertTableDataRowsToArray = (rows): string[][] => {
-  const getEmptyRow = (columnsCount) => Array(columnsCount).fill('');
-  const getFieldValues = (f) => {
-    const fieldsCount = f.length;
-    let maxColumnsCount = fieldsCount;
-    const res = [getEmptyRow(fieldsCount)];
-    const idx = 0;
-    let currIndex = 0;
-
-    for (let i = 0; i < fieldsCount; i++) {
-      if (
-        Array.isArray(f[i].v) ||
-        (typeof f[i].v === 'object' && f[i].v && f[i].v.f)
-      ) {
-        let addIndex = idx; // 0
-        const data = Array.isArray(f[i].v) ? f[i].v : [{ v: f[i].v }];
-        for (let j = 0; j < data.length; j++) {
-          const fRows = getFieldValues(data[j].v.f);
-
-          fRows.forEach((row) => {
-            if (typeof res[addIndex] === 'undefined') {
-              res[addIndex] = getEmptyRow(maxColumnsCount);
-            }
-
-            res[addIndex].splice(currIndex, 1, ...row);
-            addIndex++;
-          });
+        if (cnt < maxCntSubRows) {
+          column.values[i].push(...Array(maxCntSubRows - cnt).fill(''));
         }
+      });
+    }
 
-        currIndex =
-          currIndex + res[res.length - 1].length - maxColumnsCount + 1;
-        maxColumnsCount = res[res.length - 1].length;
-      } else {
-        res[idx][currIndex] = f[i].v;
-        currIndex++;
+    return res;
+  };
+  const generateEmptyResultArray = (results) => {
+    const cntFields = results.length;
+    const cntRows = results[0].values.reduce((result, rowValues) => {
+      return result + rowValues.length;
+    }, 0);
+
+    const tableData = [];
+    for (let i = 0; i < cntRows; i++) {
+      tableData[i] = Array(cntFields).fill('');
+    }
+    return tableData;
+  };
+  const formatResults = (results) => {
+    const resultsWithEmptyValues = addEmptyValues(results);
+    const tableData = generateEmptyResultArray(resultsWithEmptyValues);
+    const headers = [];
+
+    resultsWithEmptyValues.forEach((column, columnIndex) => {
+      headers.push({
+        name: column.name,
+        type: column.type,
+      });
+      [].concat(...column.values).forEach((value, valueIndex) => {
+        tableData[valueIndex][columnIndex] = value;
+      });
+    });
+
+    return {
+      rows: tableData,
+      headers,
+    };
+  };
+
+  let data = fields;
+  let i = 0;
+  const results = [];
+  const stack = [
+    {
+      prefix: '',
+      data,
+      i,
+      rows,
+    },
+  ];
+
+  let stackIdx = i;
+
+  while (stack.length !== 0) {
+    if (data[i] && data[i].type !== 'RECORD') {
+      const columnName = data[i].name;
+      results.push({
+        name: `${stack[stackIdx].prefix}${columnName}`,
+        type: data[i].type,
+        values: getValuesForColumn(i, stack[stackIdx].rows),
+      });
+      i++;
+    } else if (
+      data[i] &&
+      data[i].type === 'RECORD' &&
+      (data[i].mode === 'REPEATED' || !data[i].mode)
+    ) {
+      const stateRows = !data[i].mode
+        ? stack[stackIdx].rows.map((row) => row.f[i].v)
+        : stack[stackIdx].rows.map((row) => row.f[i].v.map((v) => v.v));
+      stack.push({
+        prefix: `${stack[stackIdx].prefix}${data[i].name}.`,
+        data: data[i].fields,
+        rows: stateRows,
+        i,
+      });
+      stackIdx = stack.length - 1;
+      data = stack[stackIdx].data;
+      i = 0;
+    } else {
+      if (!data[i] && data.length > i) {
+        throw new Error('unexpected error');
+      }
+      if (data[i]) {
+        throw new Error('new type');
       }
     }
 
-    return res;
-  };
-  const getRowsValue = (rows) => {
-    let res = [];
-    for (let i = 0; i < rows.length; i++) {
-      const rowsFieldValues = getFieldValues(rows[i].f);
-      res = [...res, ...rowsFieldValues];
+    if (data.length <= i) {
+      const resultStack = stack.pop();
+      stackIdx = stack.length - 1;
+
+      if (stack.length > 0) {
+        i = resultStack.i + 1;
+        data = stack[stackIdx].data;
+      }
     }
+  }
 
-    return res;
-  };
-
-  return getRowsValue(rows);
+  return formatResults(results);
 };
