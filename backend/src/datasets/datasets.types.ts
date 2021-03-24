@@ -23,6 +23,9 @@ export class DatasetParamsInput {
 
   @Field()
   tableId: string;
+
+  @Field()
+  organizationName: string;
 }
 
 @ArgsType()
@@ -35,6 +38,9 @@ export class ColumnVisualizationParams {
 
   @Field()
   columnName: string;
+
+  @Field()
+  organizationName: string;
 }
 
 export interface DatasetListingRequestPayload {

@@ -4,8 +4,9 @@ import { List } from '@material-ui/core';
 import { SvgIconComponent } from '@material-ui/icons';
 
 import { Role } from 'src/shared/types';
-import { haveAccess } from 'src/shared/authorization/utils';
+import { checkOrgMembership, haveAccess } from 'src/shared/authorization/utils';
 import { UserContext } from 'src/auth/UserProvider';
+import theme from 'src/app/styles';
 import { LinkListItem } from './ListItem';
 
 export interface NavLink {
@@ -14,11 +15,41 @@ export interface NavLink {
   onClick: () => void;
   Icon: SvgIconComponent;
   allowedRoles: Role[];
+  organizationMembershipRequired?: boolean;
 }
+
+const BUY_PAID_ACCOUNT_URL = 'http://moove.ai';
 
 interface LinkListProps {
   links: NavLink[];
 }
+
+const getDisabledTooltip = (
+  isOrganisationMember: boolean,
+  hasRoles: boolean,
+  label: string,
+) => {
+  if (!isOrganisationMember) {
+    return <>You have to be an organization member to view this section</>;
+  }
+  if (!hasRoles) {
+    return (
+      <>
+        {label}
+        <br />
+        <br />
+        Sign up for a paid account at{' '}
+        <a
+          style={{ color: theme.palette.secondary.main }}
+          href={BUY_PAID_ACCOUNT_URL}
+        >
+          {BUY_PAID_ACCOUNT_URL}
+        </a>
+      </>
+    );
+  }
+  return <></>;
+};
 
 const LinkList: React.FC<LinkListProps> = ({ links }: LinkListProps) => {
   const { pathname } = useLocation();
@@ -26,22 +57,41 @@ const LinkList: React.FC<LinkListProps> = ({ links }: LinkListProps) => {
 
   return (
     <List>
-      {links.map(({ label, onClick, path, Icon, allowedRoles }) => {
-        const isSelected = Boolean(path && pathname.startsWith(path));
-        const isDisabled = !haveAccess(user.roles, allowedRoles);
+      {links.map(
+        ({
+          label,
+          onClick,
+          path,
+          Icon,
+          allowedRoles,
+          organizationMembershipRequired,
+        }) => {
+          const isSelected = Boolean(path && pathname.startsWith(path));
+          const hasUserAccess = !haveAccess(user.roles, allowedRoles);
+          const isUserOrgMember = organizationMembershipRequired
+            ? checkOrgMembership(user)
+            : true;
 
-        return (
-          <LinkListItem
-            data-testid={`link-list-item__${label}`}
-            disabled={isDisabled}
-            onClick={onClick}
-            key={label}
-            selected={isSelected}
-            Icon={Icon}
-            label={label}
-          />
-        );
-      })}
+          const disabledLabel = getDisabledTooltip(
+            isUserOrgMember,
+            hasUserAccess,
+            label,
+          );
+
+          return (
+            <LinkListItem
+              disabledLabel={disabledLabel}
+              data-testid={`link-list-item__${label}`}
+              disabled={hasUserAccess || !isUserOrgMember}
+              onClick={onClick}
+              key={label}
+              selected={isSelected}
+              Icon={Icon}
+              label={label}
+            />
+          );
+        },
+      )}
     </List>
   );
 };

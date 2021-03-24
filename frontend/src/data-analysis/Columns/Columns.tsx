@@ -1,9 +1,10 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { Grid, Typography } from '@material-ui/core';
 
 import Table from 'src/shared/Table';
 import { useQuery } from '@apollo/client';
 import TableOverlay from 'src/shared/TableOverlay/TableOverlay';
+import { UserContext } from 'src/auth/UserProvider';
 import { ColumnModel, DatasetModel } from '../types';
 import ColumnsRow from './ColumnsRow';
 import { DATASET_COLUMNS_QUERY } from '../queries';
@@ -18,11 +19,12 @@ interface ColumnsProps {
 }
 
 const Columns: FC<ColumnsProps> = ({ datasetModel }: ColumnsProps) => {
+  const user = useContext(UserContext);
   const { data: datasetColumns, loading: columnsLoading, error } = useQuery(
     DATASET_COLUMNS_QUERY,
     {
       variables: {
-        projectId: 'moove-platform-testing-data',
+        projectId: user.GCPProjectName,
         datasetId: `${datasetModel.name}_galileo_analysis`,
         tableId: `${datasetModel.name}_general_stats`,
       },

@@ -44,8 +44,8 @@ export const KEPLER_DATA_QUERY = gql`
 `;
 
 export const DATASET_QUERY = gql`
-  query getDatasets {
-    getDatasets {
+  query getDatasets($GCPProjectName: String!) {
+    getDatasets(GCPProjectName: $GCPProjectName) {
       analysisName
       bigQueryDatasetName
       description
@@ -86,11 +86,13 @@ export const DATASET_COLUMN_VISUALIZATIONS_QUERY = gql`
     $bucketName: String!
     $analysisName: String!
     $columnName: String!
+    $organizationName: String!
   ) {
     datasetColumnVisualizations(
       bucketName: $bucketName
       analysisName: $analysisName
       columnName: $columnName
+      organizationName: $organizationName
     )
   }
 `;

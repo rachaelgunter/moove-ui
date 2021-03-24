@@ -24,9 +24,8 @@ type ChartsState = {
 };
 
 const VISUALIZATION_BLOCK_HEIGHT = 320;
-const DATASET_BUCKET = process.env.REACT_APP_DATASET_ASSETS_BUCKET;
 const GCS_URL = `
-  https://storage.cloud.google.com/${DATASET_BUCKET}/{dataset}/visual_artifacts/dataset/{filePath}?authuser={userEmail}
+  https://storage.cloud.google.com/{bucket}/{organization}/{dataset}/visual_artifacts/dataset/{filePath}?authuser={userEmail}
 `;
 
 const assetPaths = {
@@ -62,6 +61,8 @@ const DatasetVisualization: React.FC<DatasetVisualizationProps> = ({
   const generateAssetLink = (filePath: string) =>
     GCS_URL.replace('{dataset}', datasetModel.name)
       .replace('{filePath}', filePath)
+      .replace('{organization}', user.organization)
+      .replace('{bucket}', user.GCSBucketName ?? '')
       .replace('{userEmail}', user.email);
 
   const onChartLoadingError = (chart: ChartType) => {

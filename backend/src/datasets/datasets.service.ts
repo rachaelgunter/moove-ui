@@ -9,7 +9,6 @@ import {
   DatasetStatus,
 } from './datasets.types';
 import { google } from 'googleapis';
-import { UserTokenPayload } from 'src/users/users.types';
 import { GCSClient } from 'src/gcs/gcs-client';
 
 @Injectable()
@@ -24,7 +23,14 @@ export class DatasetsService {
   ) {}
 
   async createDataset(datasetParams: DatasetParamsInput): Promise<string> {
-    const { name, projectId, datasetId, tableId, description } = datasetParams;
+    const {
+      name,
+      projectId,
+      datasetId,
+      tableId,
+      description,
+      organizationName,
+    } = datasetParams;
     const ingestionTriggerURL = this.configService.get(
       'INGESTION_TRIGGER_CLOUD_FUNCTION_URL',
     );
@@ -46,7 +52,7 @@ export class DatasetsService {
           source_dataset: datasetId,
           source_project: projectId,
           analysis_description: description,
-          client: 'car_company', // hardcoded until user organizations are not implemented
+          client: organizationName,
           primary_id: 'uuid',
           primary_geography: 'geog',
           lat: 'latitude',
@@ -126,18 +132,14 @@ export class DatasetsService {
       .toPromise();
   }
 
-  async getDatasets(): Promise<Dataset[]> {
+  async getDatasets(GCPProjectName: string): Promise<Dataset[]> {
     const cloudFunctionUrl = process.env.GOOGLE_CLOUD_FUNCTION_URL_GET_DATASETS;
 
     const client = await this.auth.getIdTokenClient(cloudFunctionUrl);
     const headers = await client.getRequestHeaders(cloudFunctionUrl);
 
     return this.httpService
-      .post(
-        cloudFunctionUrl,
-        { analysis_project: 'moove-platform-testing-data' },
-        { headers },
-      )
+      .post(cloudFunctionUrl, { analysis_project: GCPProjectName }, { headers })
       .pipe(map(({ data }) => this.mapDatasets(data)))
       .toPromise();
   }
@@ -159,11 +161,16 @@ export class DatasetsService {
   }
 
   async getColumnVisualizations(
-    user: UserTokenPayload,
     bucketName: string,
+    organizationName: string,
     analysisName: string,
     columnName: string,
   ): Promise<string[]> {
-    return this.storageClient.listObjects(bucketName, analysisName, columnName);
+    return this.storageClient.listObjects(
+      bucketName,
+      organizationName,
+      analysisName,
+      columnName,
+    );
   }
 }
