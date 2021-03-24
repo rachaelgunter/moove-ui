@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/client';
 import { DATASET_COLUMN_VISUALIZATIONS_OF_JOINT_PLOTS_QUERY } from '../queries';
 import { ColumnModel } from '../types';
 import ColumnViewContent from './ColumnViewContent';
+import ColumnViewContainer from './ColumnViewContainer';
 
 interface ColumnViewRelationshipsProps {
   column: ColumnModel;
@@ -34,7 +35,11 @@ const ColumnViewRelationships: FC<ColumnViewRelationshipsProps> = ({
     },
   ];
 
-  return <ColumnViewContent sections={sections} />;
+  return (
+    <ColumnViewContainer>
+      <ColumnViewContent sections={sections} />
+    </ColumnViewContainer>
+  );
 };
 
 export default ColumnViewRelationships;

@@ -12,10 +12,7 @@ interface ColumnViewContentProps {
   }[];
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  gridContainer: {
-    margin: '14px 0',
-  },
+export const useColumnViewContentStyles = makeStyles((theme: Theme) => ({
   gridItem: {
     height: '100%',
     paddingRight: theme.spacing(1.5),
@@ -24,17 +21,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingRight: 0,
     },
   },
-  contentContainer: {
+  sectionContainer: {
     background: theme.palette.bg.dark,
     height: '100%',
     borderRadius: theme.spacing(0.5),
     padding: '10px',
     overflow: 'hidden',
   },
-  analyticalMetricsTitle: {
+  sectionTitle: {
     marginBottom: '10px',
   },
-  analyticalMetricsContent: {
+  sectionContent: {
     height: '100%',
     overflow: 'hidden',
     display: 'flex',
@@ -48,27 +45,25 @@ const useStyles = makeStyles((theme: Theme) => ({
 const ColumnViewContent: FC<ColumnViewContentProps> = ({
   sections,
 }: ColumnViewContentProps) => {
-  const classes = useStyles();
+  const classes = useColumnViewContentStyles();
   const user = useContext(UserContext);
 
   return (
-    <Grid className={classes.gridContainer} container>
-      <Grid className={classes.gridItem} item xs>
-        <Box className={classes.contentContainer}>
-          {sections.map(({ title, chartsUrls }) => (
-            <>
-              <Box className={classes.analyticalMetricsTitle}>title</Box>
-              <Box className={classes.analyticalMetricsContent}>
-                {chartsUrls ? (
-                  <ColumnViewCharts chartsUrls={chartsUrls} user={user} />
-                ) : (
-                  <CircularProgress className={classes.spinner} />
-                )}
-              </Box>
-            </>
-          ))}
-        </Box>
-      </Grid>
+    <Grid className={classes.gridItem} item xs>
+      <Box className={classes.sectionContainer}>
+        {sections.map(({ title, chartsUrls }) => (
+          <>
+            <Box className={classes.sectionTitle}>{title}</Box>
+            <Box className={classes.sectionContent}>
+              {chartsUrls ? (
+                <ColumnViewCharts chartsUrls={chartsUrls} user={user} />
+              ) : (
+                <CircularProgress className={classes.spinner} />
+              )}
+            </Box>
+          </>
+        ))}
+      </Box>
     </Grid>
   );
 };
