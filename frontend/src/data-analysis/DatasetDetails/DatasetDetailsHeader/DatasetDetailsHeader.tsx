@@ -88,9 +88,9 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
   const formatStringWithCommas = (str: string): string =>
     str.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-  const isProcessing = datasetModel.status === DatasetStatus.PROCESSING;
-  const createdOn = isProcessing ? '—' : datasetModel.createdAt;
-  const totalRows = isProcessing
+  const isActive = datasetModel.status === DatasetStatus.ACTIVE;
+  const createdOn = !isActive ? '—' : datasetModel.createdAt;
+  const totalRows = !isActive
     ? '—'
     : formatStringWithCommas(datasetModel.totalRows.toString());
 
@@ -132,7 +132,7 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
             </SpecificationColumn>
           </Grid>
           <Grid item className={classes.actions} id="dataset-actions">
-            {!isProcessing && (
+            {isActive && (
               <>
                 <Menu
                   id="simple-menu"
