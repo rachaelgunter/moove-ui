@@ -1,6 +1,5 @@
 import { bigquery_v2, google } from 'googleapis';
-
-import { convertTableDataRowsToArray, getPreviewTableHeaders } from '../utils';
+import { getPreviewTableData } from '../utils';
 import {
   BigQueryDataset,
   BigQueryPreviewTable,
@@ -165,7 +164,7 @@ export class BigqueryClientService extends GoogleClientService {
         selectedFields: selectedFieldsString ?? undefined,
       })
       .then(({ data }) => {
-        return convertTableDataRowsToArray(data.rows);
+        return data.rows;
       });
     const pHeaders = this.bigQuery.tables
       .get({
@@ -177,15 +176,18 @@ export class BigqueryClientService extends GoogleClientService {
       })
       .then(({ data }) => {
         return {
-          headers: getPreviewTableHeaders(data.schema.fields),
+          fields: data.schema.fields,
           tableMetadata: { totalRows: +data.numRows },
         };
       });
-    const [rows, headers] = await Promise.all([pRows, pHeaders]);
+    const [rows, { fields, tableMetadata }] = await Promise.all([
+      pRows,
+      pHeaders,
+    ]);
 
     return {
-      rows,
-      ...headers,
+      ...getPreviewTableData(fields, rows),
+      tableMetadata,
     };
   }
 }
