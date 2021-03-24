@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Theme, Typography } from '@material-ui/core';
 
 import { DatasetModel } from 'src/data-analysis/types';
 import { UserContext } from 'src/auth/UserProvider';
@@ -47,6 +47,19 @@ const InitialChartsState: ChartsState = [
   return acc;
 }, {} as ChartsState);
 
+const useStyles = makeStyles((theme: Theme) => ({
+  chartPlaceholderWrapper: {
+    width: '100%',
+  },
+  chartPlaceholder: {
+    background: theme.palette.bg.light,
+    height: VISUALIZATION_BLOCK_HEIGHT,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+}));
+
 const DatasetVisualization: React.FC<DatasetVisualizationProps> = ({
   datasetModel,
 }: DatasetVisualizationProps) => {
@@ -54,6 +67,7 @@ const DatasetVisualization: React.FC<DatasetVisualizationProps> = ({
     InitialChartsState,
   );
   const user = useContext(UserContext);
+  const classes = useStyles();
 
   useEffect(() => {
     setChartsState(InitialChartsState);
@@ -85,9 +99,8 @@ const DatasetVisualization: React.FC<DatasetVisualizationProps> = ({
   };
 
   const getMetricCharts = () => {
-    return [ChartType.CORRELATION_MATRIX, ChartType.TIME]
-      .filter((chart) => chartsState[chart].isVisible)
-      .map((chart) => (
+    return [ChartType.CORRELATION_MATRIX, ChartType.TIME].map((chart) =>
+      chartsState[chart].isVisible ? (
         <Chart
           key={chart}
           onLoad={() => onChartLoad(chart)}
@@ -96,7 +109,14 @@ const DatasetVisualization: React.FC<DatasetVisualizationProps> = ({
           height={VISUALIZATION_BLOCK_HEIGHT}
           loading={chartsState[chart].isLoading}
         />
-      ));
+      ) : (
+        <Grid className={classes.chartPlaceholderWrapper} item key={chart}>
+          <div className={classes.chartPlaceholder}>
+            Unable to display chart
+          </div>
+        </Grid>
+      ),
+    );
   };
 
   return (

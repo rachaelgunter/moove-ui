@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Theme } from '@material-ui/core';
 import VisualizationBlock, {
   VisualizationBlockParams,
 } from './VisualizationBlock';
@@ -11,13 +11,14 @@ interface HeatmapParams extends Omit<VisualizationBlockParams, 'children'> {
   height: number;
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   iframe: ({ height }: { height: number }) => ({
     height,
     border: 'none',
     width: '100%',
+    background: theme.palette.bg.light,
   }),
-});
+}));
 
 const Heatmap: React.FC<HeatmapParams> = ({
   onLoad,
