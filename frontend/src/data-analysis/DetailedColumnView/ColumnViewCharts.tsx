@@ -66,8 +66,13 @@ const ColumnViewCharts: FC<ColumnViewChartsProps> = ({
             className={classes.root}
             cols={GRID_COLUMNS_NUMBER}
           >
-            {authorizedChartsUrls?.map((chart) => (
-              <GridListTile key={chart} cols={1} rows={1}>
+            {authorizedChartsUrls?.map((chart, index) => (
+              <GridListTile
+                key={chart}
+                cols={1}
+                rows={1}
+                data-testid={`tile-${index}`}
+              >
                 <LightboxImage
                   imgUrl={chart}
                   imgStyles={{
