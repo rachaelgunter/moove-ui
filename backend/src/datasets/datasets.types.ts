@@ -49,7 +49,7 @@ export type DatasetListingResponse = Record<
     total_rows: string;
     created_at: string;
     ingest_status: {
-      dataset_status: string;
+      dataset_status: CloudFunctionDatasetStatus;
     };
   }
 >;
@@ -78,4 +78,11 @@ export class Dataset {
 export enum DatasetStatus {
   ACTIVE = 'active',
   PROCESSING = 'processing',
+  FAILED = 'failed',
+}
+
+export enum CloudFunctionDatasetStatus {
+  ACTIVE = 'finished',
+  PROCESSING = 'pending',
+  FAILED = 'failed',
 }

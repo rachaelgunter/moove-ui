@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import {
+  CloudFunctionDatasetStatus,
   Dataset,
   DatasetListingResponse,
   DatasetParamsInput,
@@ -143,18 +144,13 @@ export class DatasetsService {
   }
 
   mapDatasets(datasetsResponse: DatasetListingResponse): Dataset[] {
-    const FINISHED_STATUS = 'finished';
     return Object.keys(datasetsResponse).map((key) => ({
       analysisName: key,
       bigQueryDatasetName: datasetsResponse[key].dataset_id,
       description: datasetsResponse[key].description,
       totalRows: datasetsResponse[key].total_rows,
       createdAt: datasetsResponse[key].created_at,
-      status: Object.values(datasetsResponse[key].ingest_status).every(
-        (status) => status === FINISHED_STATUS,
-      )
-        ? DatasetStatus.ACTIVE
-        : DatasetStatus.PROCESSING,
+      status: this.getDatasetStatus(datasetsResponse[key].ingest_status),
     }));
   }
 
@@ -165,5 +161,25 @@ export class DatasetsService {
     columnName: string,
   ): Promise<string[]> {
     return this.storageClient.listObjects(bucketName, analysisName, columnName);
+  }
+
+  getDatasetStatus(
+    statuses: Record<string, CloudFunctionDatasetStatus>,
+  ): DatasetStatus {
+    if (
+      Object.values(statuses).every(
+        (status) => status === CloudFunctionDatasetStatus.ACTIVE,
+      )
+    ) {
+      return DatasetStatus.ACTIVE;
+    }
+    if (
+      Object.values(statuses).some(
+        (status) => status === CloudFunctionDatasetStatus.FAILED,
+      )
+    ) {
+      return DatasetStatus.FAILED;
+    }
+    return DatasetStatus.PROCESSING;
   }
 }
