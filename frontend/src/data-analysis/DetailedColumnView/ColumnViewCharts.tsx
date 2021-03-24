@@ -5,9 +5,14 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import React, { FC } from 'react';
-import { User } from 'src/auth/UserProvider';
 import AutoSizer from 'react-virtualized-auto-sizer';
+
+import { User } from 'src/auth/UserProvider';
 import LightboxImage from 'src/shared/LightboxImage/LightboxImage';
+import theme from 'src/app/styles';
+
+const GRID_COLUMNS_NUMBER = 3;
+const GRID_COLUMNS_SPACING = theme.spacing(2.75);
 
 interface ColumnViewChartsProps {
   chartsUrls: string[];
@@ -25,6 +30,10 @@ const useStyles = makeStyles(() =>
     chartImage: {
       height: '100%',
     },
+    wrapper: {
+      marginRight: -(GRID_COLUMNS_SPACING / 2),
+      paddingLeft: GRID_COLUMNS_SPACING / 2,
+    },
   }),
 );
 
@@ -33,9 +42,6 @@ const ColumnViewCharts: FC<ColumnViewChartsProps> = ({
   user,
 }: ColumnViewChartsProps) => {
   const classes = useStyles();
-
-  const GRID_COLUMNS_NUMBER = 3;
-  const GRID_COLUMNS_SPACING = 22;
 
   const authorizedChartsUrls = chartsUrls?.map(
     (url) => `${url}?authuser=${user.email}`,
@@ -51,7 +57,7 @@ const ColumnViewCharts: FC<ColumnViewChartsProps> = ({
 
   return (
     <>
-      <AutoSizer>
+      <AutoSizer className={classes.wrapper}>
         {({ height, width }) => (
           <GridList
             style={{ width, height }}
@@ -64,7 +70,11 @@ const ColumnViewCharts: FC<ColumnViewChartsProps> = ({
               <GridListTile key={chart} cols={1} rows={1}>
                 <LightboxImage
                   imgUrl={chart}
-                  imgStyles={{ height: '100%', cursor: 'pointer' }}
+                  imgStyles={{
+                    height: '100%',
+                    width: '100%',
+                    cursor: 'pointer',
+                  }}
                   alt=""
                 />
               </GridListTile>

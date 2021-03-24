@@ -25,11 +25,11 @@ export const useColumnViewContentStyles = makeStyles((theme: Theme) => ({
     background: theme.palette.bg.dark,
     height: '100%',
     borderRadius: theme.spacing(0.5),
-    padding: '10px',
+    padding: theme.spacing(1.25, 0, 1.25, 1.25),
     overflow: 'hidden',
   },
   sectionTitle: {
-    marginBottom: '10px',
+    marginBottom: theme.spacing(1.25),
   },
   sectionContent: {
     height: '100%',
@@ -53,8 +53,13 @@ const ColumnViewContent: FC<ColumnViewContentProps> = ({
       <Box className={classes.sectionContainer}>
         {sections.map(({ title, chartsUrls }) => (
           <>
-            <Box className={classes.sectionTitle}>{title}</Box>
-            <Box className={classes.sectionContent}>
+            <Box className={classes.sectionTitle} key={`section-${title}`}>
+              {title}
+            </Box>
+            <Box
+              className={classes.sectionContent}
+              key={`section-content-${title}`}
+            >
               {chartsUrls ? (
                 <ColumnViewCharts chartsUrls={chartsUrls} user={user} />
               ) : (
