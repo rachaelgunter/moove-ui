@@ -8,6 +8,7 @@ import {
   SHOW_LESS_BUTTON_TITLE,
 } from 'src/shared/Table';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
+import { User, UserContext } from 'src/auth/UserProvider';
 import Columns, { INIT_NUMBER_OF_ROWS, STEP } from './Columns';
 import { ColumnModel, DatasetModel, DatasetStatus } from '../types';
 import { DATASET_COLUMNS_QUERY } from '../queries';
@@ -61,11 +62,23 @@ const columnsMock: MockedResponse = {
   },
 };
 
+const userMock: User = {
+  GCPProjectName: 'moove-platform-testing-data',
+  name: '',
+  email: '',
+  picture: '',
+  roles: [],
+  sub: '',
+  organization: '',
+};
+
 const createWrapper = () =>
   render(
     <ThemeProvider theme={theme}>
       <MockedProvider mocks={[columnsMock]} addTypename={false}>
-        <Columns datasetModel={dataset} />
+        <UserContext.Provider value={userMock}>
+          <Columns datasetModel={dataset} />
+        </UserContext.Provider>
       </MockedProvider>
     </ThemeProvider>,
   );

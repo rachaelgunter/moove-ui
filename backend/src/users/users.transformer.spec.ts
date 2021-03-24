@@ -12,7 +12,15 @@ describe('UsersTransformer', () => {
 
   it('should handle the case when organization is absent', () => {
     const { organization, ...userWithoutOrg } = prismaUserMock;
-    const expected = { ...graphqlUserMock, organization: null };
+    const {
+      GCSBucketName,
+      GCPProjectName,
+      ...graphqlUserWithoutOrg
+    } = graphqlUserMock;
+    const expected = {
+      ...graphqlUserWithoutOrg,
+      organization: null,
+    };
     expect(
       usersTransformer.transformUserToGraphQLResponseObject(userWithoutOrg),
     ).toStrictEqual(expected);

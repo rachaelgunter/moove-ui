@@ -24,4 +24,6 @@ export const graphqlUserMock: User = {
   name: 'name',
   picture: 'http://picture.com',
   organization: 'test org',
+  GCPProjectName: 'test',
+  GCSBucketName: 'test',
 };
