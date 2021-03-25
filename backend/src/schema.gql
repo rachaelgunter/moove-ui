@@ -8,6 +8,8 @@ type User {
   picture: String
   name: String
   organization: String
+  GCSBucketName: String
+  GCPProjectName: String
 }
 
 type BigQueryTable {
@@ -99,8 +101,8 @@ type Query {
   tableInfo(projectId: String!, datasetId: String!, tableId: String!): BigQueryTableInfo!
   previewTable(projectId: String!, datasetId: String!, tableId: String!, offset: Int = 0, limit: Int = 5, selectedFields: [String]): BigQueryPreviewTable!
   columnsTable(projectId: String!, datasetId: String!, tableId: String!, offset: Int = 0, limit: Int = 5, selectedFields: [String]): [BigQueryColumnTable]
-  getDatasets: [Dataset]
-  datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!): [String]
+  getDatasets(GCPProjectName: String!): [Dataset]
+  datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!, organizationName: String!): [String]
 }
 
 input BigQueryTablesParams {
@@ -126,4 +128,5 @@ input DatasetParamsInput {
   projectId: String!
   datasetId: String!
   tableId: String!
+  organizationName: String!
 }

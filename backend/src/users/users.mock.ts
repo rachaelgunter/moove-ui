@@ -11,6 +11,8 @@ export const prismaUserMock: PrismaUser & { organization: Organization } = {
   organization: {
     id: 12,
     name: 'test org',
+    GCPProjectName: 'test',
+    GCSBucketName: 'test',
   },
   refreshToken: null,
   accessToken: null,
@@ -22,4 +24,6 @@ export const graphqlUserMock: User = {
   name: 'name',
   picture: 'http://picture.com',
   organization: 'test org',
+  GCPProjectName: 'test',
+  GCSBucketName: 'test',
 };

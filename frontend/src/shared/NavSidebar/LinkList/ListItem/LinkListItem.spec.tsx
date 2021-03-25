@@ -29,6 +29,7 @@ const createWrapper = (
             to="/"
             label={testLabel}
             Icon={SvgIcon}
+            disabledLabel={<>http://moove.ai</>}
             {...props}
           />
         </NavSidebarMock>

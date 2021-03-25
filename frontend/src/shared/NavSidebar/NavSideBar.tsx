@@ -69,6 +69,7 @@ const NavSidebar: React.FC = () => {
       onClick: () => history.push(routes.dataAnalysis.path),
       Icon: ViewAgendaIcon,
       allowedRoles: routes.dataAnalysis.allowedRoles,
+      organizationMembershipRequired: true,
     },
     {
       label: 'RoadIQ',

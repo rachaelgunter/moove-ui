@@ -32,6 +32,12 @@ export class User {
 
   @Field(() => String, { nullable: true })
   organization: string;
+
+  @Field(() => String, { nullable: true })
+  GCSBucketName?: string;
+
+  @Field(() => String, { nullable: true })
+  GCPProjectName?: string;
 }
 
 export interface UserTokenPayload {

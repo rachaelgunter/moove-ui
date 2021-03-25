@@ -1,10 +1,11 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { useQuery } from '@apollo/client';
 import { CircularProgress, makeStyles } from '@material-ui/core';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { KEPLER_DATA_QUERY } from '../queries';
 import KeplerWrapper from './KeplerWrapper';
 import { KeplerDataQueryResponse, KeplerDataset } from '../types';
+import { UserContext } from 'src/auth/UserProvider';
 
 interface ColumnViewMapProps {
   columnName: string;
@@ -46,7 +47,9 @@ const getData = (
 const ColumnViewMap: FC<ColumnViewMapProps> = ({
   columnName,
 }: ColumnViewMapProps) => {
-  const projectId = 'moove-platform-testing-data';
+  const user = useContext(UserContext);
+
+  const projectId = user.GCPProjectName;
   const datasetId = 'denver_friction_galileo_analysis';
   const tableId = 'denver_friction_contextualized_sample';
 

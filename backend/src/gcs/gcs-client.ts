@@ -6,6 +6,7 @@ export class GCSClient extends GoogleClientService {
 
   async listObjects(
     bucketName: string,
+    organizationName: string,
     analysisName: string,
     columnName: string,
   ): Promise<string[]> {
@@ -15,7 +16,7 @@ export class GCSClient extends GoogleClientService {
       .list({
         auth,
         bucket: bucketName,
-        prefix: `${analysisName}/visual_artifacts/columns/${columnName}`,
+        prefix: `${organizationName}/${analysisName}/visual_artifacts/columns/${columnName}`,
       })
       .then((response) =>
         response.data.items?.map(
