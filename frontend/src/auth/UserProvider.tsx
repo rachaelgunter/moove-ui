@@ -14,6 +14,8 @@ export type User = {
   name: string;
   roles: Role[];
   organization: string;
+  GCPProjectName?: string;
+  GCSBucketName?: string;
 };
 
 export const UserContext = React.createContext<User>({} as User);
@@ -30,6 +32,8 @@ const CURRENT_USER_QUERY = gql`
       organization
       email
       picture
+      GCSBucketName
+      GCPProjectName
     }
   }
 `;

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import {
   Table,
   TableContainer,
@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import { useQuery } from '@apollo/client';
 import TableOverlay from 'src/shared/TableOverlay/TableOverlay';
+import { UserContext } from 'src/auth/UserProvider';
 import { DatasetModel } from '../types';
 import { BIG_QUERY_PREVIEW_TABLE_QUERY } from '../queries';
 import PaginationActions from './PaginationActions';
@@ -39,7 +40,6 @@ interface PreviewTableData {
   tableMetadata: { totalRows: number };
 }
 
-const PROJECT_ID = 'moove-platform-testing-data';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     paddingBottom: theme.spacing(4),
@@ -85,7 +85,6 @@ const useStylesTable = makeStyles((theme: Theme) => ({
     color: 'rgba(255, 255, 255, 0.5)',
     fontFamily: FontFamily.POPPINS,
     fontSize: '13px',
-    fontWeight: 'normal',
     lineHeight: 'normal',
     padding: '14px 24px 11px 24px',
     whiteSpace: 'nowrap',
@@ -146,7 +145,7 @@ const PreviewTableContent: FC<PreviewTableContentProps> = ({
           <TableHead>
             <TableRow>
               {headers.map((item: { name: string }) => (
-                <TableCell key={item.name} className={classes.cell}>
+                <TableCell key={item.name} className={classes.headerCell}>
                   {item.name}
                 </TableCell>
               ))}
@@ -190,13 +189,15 @@ const PreviewTableContent: FC<PreviewTableContentProps> = ({
 const PreviewTable: FC<PreviewTableProps> = ({
   datasetModel,
 }: PreviewTableProps) => {
+  const user = useContext(UserContext);
+
   const classes = useStyles();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const { loading, data, error } = useQuery(BIG_QUERY_PREVIEW_TABLE_QUERY, {
     fetchPolicy: 'no-cache',
     variables: {
-      projectId: PROJECT_ID,
+      projectId: user.GCPProjectName,
       datasetId: `${datasetModel.name}_galileo_analysis`,
       tableId: `${datasetModel.name}_contextualized`,
       offset: page * rowsPerPage,

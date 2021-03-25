@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Theme, Typography } from '@material-ui/core';
 
 import { DatasetModel } from 'src/data-analysis/types';
 import { UserContext } from 'src/auth/UserProvider';
@@ -24,9 +24,8 @@ type ChartsState = {
 };
 
 const VISUALIZATION_BLOCK_HEIGHT = 320;
-const DATASET_BUCKET = process.env.REACT_APP_DATASET_ASSETS_BUCKET;
 const GCS_URL = `
-  https://storage.cloud.google.com/${DATASET_BUCKET}/{dataset}/visual_artifacts/dataset/{filePath}?authuser={userEmail}
+  https://storage.cloud.google.com/{bucket}/{organization}/{dataset}/visual_artifacts/dataset/{filePath}?authuser={userEmail}
 `;
 
 const assetPaths = {
@@ -47,6 +46,19 @@ const InitialChartsState: ChartsState = [
   return acc;
 }, {} as ChartsState);
 
+const useStyles = makeStyles((theme: Theme) => ({
+  chartPlaceholderWrapper: {
+    width: '100%',
+  },
+  chartPlaceholder: {
+    background: theme.palette.bg.light,
+    height: VISUALIZATION_BLOCK_HEIGHT,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+}));
+
 const DatasetVisualization: React.FC<DatasetVisualizationProps> = ({
   datasetModel,
 }: DatasetVisualizationProps) => {
@@ -54,6 +66,7 @@ const DatasetVisualization: React.FC<DatasetVisualizationProps> = ({
     InitialChartsState,
   );
   const user = useContext(UserContext);
+  const classes = useStyles();
 
   useEffect(() => {
     setChartsState(InitialChartsState);
@@ -62,6 +75,8 @@ const DatasetVisualization: React.FC<DatasetVisualizationProps> = ({
   const generateAssetLink = (filePath: string) =>
     GCS_URL.replace('{dataset}', datasetModel.name)
       .replace('{filePath}', filePath)
+      .replace('{organization}', user.organization)
+      .replace('{bucket}', user.GCSBucketName ?? '')
       .replace('{userEmail}', user.email);
 
   const onChartLoadingError = (chart: ChartType) => {
@@ -85,9 +100,8 @@ const DatasetVisualization: React.FC<DatasetVisualizationProps> = ({
   };
 
   const getMetricCharts = () => {
-    return [ChartType.CORRELATION_MATRIX, ChartType.TIME]
-      .filter((chart) => chartsState[chart].isVisible)
-      .map((chart) => (
+    return [ChartType.CORRELATION_MATRIX, ChartType.TIME].map((chart) =>
+      chartsState[chart].isVisible ? (
         <Chart
           key={chart}
           onLoad={() => onChartLoad(chart)}
@@ -96,7 +110,14 @@ const DatasetVisualization: React.FC<DatasetVisualizationProps> = ({
           height={VISUALIZATION_BLOCK_HEIGHT}
           loading={chartsState[chart].isLoading}
         />
-      ));
+      ) : (
+        <Grid className={classes.chartPlaceholderWrapper} item key={chart}>
+          <div className={classes.chartPlaceholder}>
+            Unable to display chart
+          </div>
+        </Grid>
+      ),
+    );
   };
 
   return (
@@ -109,7 +130,7 @@ const DatasetVisualization: React.FC<DatasetVisualizationProps> = ({
           onLoad={() => onChartLoad(ChartType.HEATMAP)}
           onError={() => onChartLoadingError(ChartType.HEATMAP)}
           src={generateAssetLink(assetPaths.heatmap)}
-          height={VISUALIZATION_BLOCK_HEIGHT}
+          height={VISUALIZATION_BLOCK_HEIGHT * 2}
           loading={chartsState[ChartType.HEATMAP].isLoading}
         />
       </Grid>

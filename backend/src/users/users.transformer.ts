@@ -14,6 +14,12 @@ export class UsersTransformer {
       name,
       picture,
       organization: organization?.name ?? null,
+      ...(organization?.GCPProjectName && {
+        GCPProjectName: organization.GCPProjectName,
+      }),
+      ...(organization?.GCPProjectName && {
+        GCSBucketName: organization.GCSBucketName,
+      }),
     };
   }
 }

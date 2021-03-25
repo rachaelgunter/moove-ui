@@ -7,6 +7,7 @@ import {
   DatasetListingResponse,
   DatasetParamsInput,
   DatasetStatus,
+  CloudFunctionDatasetStatus,
 } from './datasets.types';
 import { google } from 'googleapis';
 import { GCSClient } from 'src/gcs/gcs-client';
@@ -23,7 +24,14 @@ export class DatasetsService {
   ) {}
 
   async createDataset(datasetParams: DatasetParamsInput): Promise<string> {
-    const { name, projectId, datasetId, tableId, description } = datasetParams;
+    const {
+      name,
+      projectId,
+      datasetId,
+      tableId,
+      description,
+      organizationName,
+    } = datasetParams;
     const ingestionTriggerURL = this.configService.get(
       'INGESTION_TRIGGER_CLOUD_FUNCTION_URL',
     );
@@ -45,7 +53,7 @@ export class DatasetsService {
           source_dataset: datasetId,
           source_project: projectId,
           analysis_description: description,
-          client: 'car_company', // hardcoded until user organizations are not implemented
+          client: organizationName,
           primary_id: 'uuid',
           primary_geography: 'geog',
           lat: 'latitude',
@@ -125,49 +133,63 @@ export class DatasetsService {
       .toPromise();
   }
 
-  async getDatasets(): Promise<Dataset[]> {
+  async getDatasets(GCPProjectName: string): Promise<Dataset[]> {
     const cloudFunctionUrl = process.env.GOOGLE_CLOUD_FUNCTION_URL_GET_DATASETS;
 
     const client = await this.auth.getIdTokenClient(cloudFunctionUrl);
     const headers = await client.getRequestHeaders(cloudFunctionUrl);
 
     return this.httpService
-      .post(
-        cloudFunctionUrl,
-        { analysis_project: 'moove-platform-testing-data' },
-        { headers },
-      )
+      .post(cloudFunctionUrl, { analysis_project: GCPProjectName }, { headers })
       .pipe(map(({ data }) => this.mapDatasets(data)))
       .toPromise();
   }
 
   mapDatasets(datasetsResponse: DatasetListingResponse): Dataset[] {
-    const FINISHED_STATUS = 'finished';
     return Object.keys(datasetsResponse).map((key) => ({
       analysisName: key,
       bigQueryDatasetName: datasetsResponse[key].dataset_id,
       description: datasetsResponse[key].description,
       totalRows: datasetsResponse[key].total_rows,
       createdAt: datasetsResponse[key].created_at,
-      status: Object.values(datasetsResponse[key].ingest_status).every(
-        (status) => status === FINISHED_STATUS,
-      )
-        ? DatasetStatus.ACTIVE
-        : DatasetStatus.PROCESSING,
+      status: this.getDatasetStatus(datasetsResponse[key].ingest_status),
     }));
   }
 
   async getColumnVisualizations(
     bucketName: string,
+    organizationName: string,
     analysisName: string,
     columnName: string,
     subFolder?: string,
   ): Promise<string[]> {
     return this.storageClient.listObjects(
       bucketName,
+      organizationName,
       analysisName,
       columnName,
       subFolder,
     );
+  }
+
+  getDatasetStatus(
+    statuses: Record<string, CloudFunctionDatasetStatus>,
+  ): DatasetStatus {
+    statuses.choropleth = CloudFunctionDatasetStatus.ACTIVE;
+    if (
+      Object.values(statuses).every(
+        (status) => status === CloudFunctionDatasetStatus.ACTIVE,
+      )
+    ) {
+      return DatasetStatus.ACTIVE;
+    }
+    if (
+      Object.values(statuses).some(
+        (status) => status === CloudFunctionDatasetStatus.FAILED,
+      )
+    ) {
+      return DatasetStatus.FAILED;
+    }
+    return DatasetStatus.PROCESSING;
   }
 }

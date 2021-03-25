@@ -6,6 +6,7 @@ import { IngestionInProgressHint } from 'src/data-analysis/hints';
 import Columns from 'src/data-analysis/Columns';
 import DatasetVisualization from 'src/data-analysis/DatasetVisualization';
 import PreviewTable from 'src/data-analysis/PreviewTable';
+import IngestionFailureHint from 'src/data-analysis/hints/IngestionFailureHint';
 
 interface DatasetDetailsContentProps {
   datasetModel: DatasetModel;
@@ -14,6 +15,7 @@ interface DatasetDetailsContentProps {
 const useStyles = makeStyles({
   hintWrapper: {
     position: 'relative',
+    width: '100%',
   },
   columnsTableLoadingPlaceholder: {
     width: '100%',
@@ -27,10 +29,18 @@ const DatasetDetailsContent: React.FC<DatasetDetailsContentProps> = ({
 }: DatasetDetailsContentProps) => {
   const classes = useStyles();
 
-  if (datasetModel.status === DatasetStatus.PROCESSING) {
+  const hintsStatusesMap: { [key in DatasetStatus]: React.FC | null } = {
+    [DatasetStatus.ACTIVE]: null,
+    [DatasetStatus.PROCESSING]: IngestionInProgressHint,
+    [DatasetStatus.FAILED]: IngestionFailureHint,
+  };
+
+  const Hint = hintsStatusesMap[datasetModel.status];
+
+  if (Hint) {
     return (
       <Grid item className={classes.hintWrapper}>
-        <IngestionInProgressHint />
+        <Hint />
       </Grid>
     );
   }

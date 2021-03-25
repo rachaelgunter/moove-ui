@@ -1,7 +1,8 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { useQuery } from '@apollo/client';
 import { Box, Grid } from '@material-ui/core';
 
+import { UserContext } from 'src/auth/UserProvider';
 import { DATASET_COLUMN_VISUALIZATIONS_QUERY } from '../queries';
 import { ColumnModel } from '../types';
 import ColumnPropertiesList from './ColumnPropertiesList';
@@ -20,9 +21,12 @@ const ColumnViewAnalytics: FC<ColumnViewAnalyticsProps> = ({
   analysisName,
 }: ColumnViewAnalyticsProps) => {
   const classes = useColumnViewContentStyles();
+  const user = useContext(UserContext);
+
   const { data } = useQuery(DATASET_COLUMN_VISUALIZATIONS_QUERY, {
     variables: {
-      bucketName: process.env.REACT_APP_DATASET_ASSETS_BUCKET,
+      bucketName: user.GCSBucketName,
+      organizationName: user.organization,
       analysisName,
       columnName: column.name,
     },

@@ -8,8 +8,7 @@ import {
   DatasetParamsInput,
 } from './datasets.types';
 import { Roles } from 'src/auth/roles.decorator';
-import { Role, UserTokenPayload } from 'src/users/users.types';
-import { CurrentUser } from 'src/auth/graphql-current-user.decorator';
+import { Role } from 'src/users/users.types';
 
 @Resolver()
 export class DatasetsResolver {
@@ -33,22 +32,29 @@ export class DatasetsResolver {
   @Roles(Role.PAID_USER, Role.ADMIN)
   @UseGuards(GqlAuthGuard)
   @Query(() => [Dataset], { nullable: 'itemsAndList' })
-  async getDatasets(): Promise<Dataset[]> {
-    return this.datasetsService.getDatasets();
+  async getDatasets(
+    @Args('GCPProjectName') GCPProjectName: string,
+  ): Promise<Dataset[]> {
+    return this.datasetsService.getDatasets(GCPProjectName);
   }
 
   @Roles(Role.PAID_USER, Role.ADMIN)
   @UseGuards(GqlAuthGuard)
   @Query(() => [String], { nullable: 'itemsAndList' })
   async datasetColumnVisualizations(
-    @CurrentUser()
-    user: UserTokenPayload,
     @Args() args: ColumnVisualizationParams,
   ): Promise<string[]> {
-    const { bucketName, analysisName, columnName, subFolder } = args;
+    const {
+      bucketName,
+      analysisName,
+      columnName,
+      organizationName,
+      subFolder,
+    } = args;
 
     return this.datasetsService.getColumnVisualizations(
       bucketName,
+      organizationName,
       analysisName,
       columnName,
       subFolder,

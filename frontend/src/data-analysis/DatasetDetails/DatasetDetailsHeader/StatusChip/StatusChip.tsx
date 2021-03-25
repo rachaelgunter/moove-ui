@@ -3,18 +3,24 @@ import { Chip, makeStyles, Theme } from '@material-ui/core';
 
 import { DatasetStatus } from 'src/data-analysis/types';
 import { FontFamily } from 'src/app/styles/fonts';
+import theme from 'src/app/styles';
 
 interface StatusChipProps {
   status: DatasetStatus;
 }
 
-interface StyleProps {
-  isProcessing: boolean;
+interface StatusChipUI {
+  statusLabel: string;
+  statusColor: string;
 }
 
-const useStyles = makeStyles<Theme, StyleProps, string>((theme: Theme) => ({
-  root: ({ isProcessing }: StyleProps) => ({
-    background: isProcessing ? theme.palette.notice : theme.palette.positive,
+interface StyleProps {
+  statusColor: string;
+}
+
+const useStyles = makeStyles<Theme, StyleProps, string>(() => ({
+  root: ({ statusColor }: StyleProps) => ({
+    background: statusColor,
     color: theme.palette.text.primary,
     fontSize: theme.typography.pxToRem(12),
     borderRadius: 8,
@@ -24,14 +30,24 @@ const useStyles = makeStyles<Theme, StyleProps, string>((theme: Theme) => ({
 }));
 
 const StatusChip: React.FC<StatusChipProps> = ({ status }: StatusChipProps) => {
-  const isProcessing = status === DatasetStatus.PROCESSING;
-  const uiStatusesMap: { [key in DatasetStatus]: string } = {
-    [DatasetStatus.ACTIVE]: 'Active',
-    [DatasetStatus.PROCESSING]: 'Processing',
+  const uiStatusesMap: { [key in DatasetStatus]: StatusChipUI } = {
+    [DatasetStatus.ACTIVE]: {
+      statusLabel: 'Active',
+      statusColor: theme.palette.positive,
+    },
+    [DatasetStatus.PROCESSING]: {
+      statusLabel: 'Processing',
+      statusColor: theme.palette.notice,
+    },
+    [DatasetStatus.FAILED]: {
+      statusLabel: 'Failed',
+      statusColor: theme.palette.error.light,
+    },
   };
 
-  const classes = useStyles({ isProcessing });
-  const label = uiStatusesMap[status];
+  const statusUI = uiStatusesMap[status];
+  const classes = useStyles({ statusColor: statusUI.statusColor });
+  const label = statusUI.statusLabel;
 
   return <Chip label={label} size="small" className={classes.root} />;
 };

@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import { withStyles, createStyles } from '@material-ui/styles';
 
+import FailureIcon from 'src/data-analysis/icons/FailureIcon';
 import { DatasetStatus } from '../../types';
 import { ActiveIcon, ProcessingIcon } from '../../icons';
 
@@ -52,8 +53,13 @@ const ListItem: React.FC<ListItemProps> = ({
 }: ListItemProps) => {
   const classes = useStyles();
 
-  const Icon =
-    status === DatasetStatus.PROCESSING ? ProcessingIcon : ActiveIcon;
+  const statusIconsMap: { [key in DatasetStatus]: React.FC } = {
+    [DatasetStatus.PROCESSING]: ProcessingIcon,
+    [DatasetStatus.ACTIVE]: ActiveIcon,
+    [DatasetStatus.FAILED]: FailureIcon,
+  };
+
+  const Icon = statusIconsMap[status];
 
   return (
     <MuiListItem

@@ -1,6 +1,7 @@
 export enum DatasetStatus {
   ACTIVE = 'active',
   PROCESSING = 'processing',
+  FAILED = 'failed',
 }
 
 export type DatasetModel = {

@@ -10,8 +10,9 @@ import {
   makeStyles,
   Theme,
 } from '@material-ui/core';
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { FontFamily } from 'src/app/styles/fonts';
+import { UserContext } from 'src/auth/UserProvider';
 import TextField from 'src/shared/TextField';
 import Typography from 'src/shared/Typography';
 import { CREATE_DATASET_MUTATION } from '../mutations';
@@ -91,6 +92,7 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
     null,
   );
   const [creationCompleted, setCreationCompleted] = useState(false);
+  const user = useContext(UserContext);
 
   const [createDataset, { loading }] = useMutation(CREATE_DATASET_MUTATION, {
     onCompleted: () => {
@@ -161,7 +163,13 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   const handleDatasetCreation = () => {
     createDataset({
       variables: {
-        datasetParams: { name, description, ...selectedTable },
+        datasetParams: {
+          name,
+          description,
+          projectId: user.GCPProjectName,
+          organizationName: user.organization,
+          ...selectedTable,
+        },
       },
     });
   };

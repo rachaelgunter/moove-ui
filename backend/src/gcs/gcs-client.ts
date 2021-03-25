@@ -6,12 +6,13 @@ export class GCSClient extends GoogleClientService {
 
   async listObjects(
     bucketName: string,
+    organizationName: string,
     analysisName: string,
     columnName: string,
     subFolder?: string,
   ): Promise<string[]> {
     const auth = await this.getAuthClient();
-    let prefix = `${analysisName}/visual_artifacts/columns/${columnName}`;
+    let prefix = `${organizationName}/${analysisName}/visual_artifacts/columns/${columnName}`;
 
     if (subFolder) prefix = `${prefix}/${subFolder}`;
 
