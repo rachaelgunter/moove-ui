@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Grid, Typography, CircularProgress } from '@material-ui/core';
 import { useQuery } from '@apollo/client';
 
 import PageTemplate from 'src/shared/PageTemplate';
 import { DatasetModel } from 'src/data-analysis/types';
+import { UserContext } from 'src/auth/UserProvider';
 import AddDatasetButton from './AddDatasetButton';
 import DatasetList from './DatasetList';
 import DatasetDetails from './DatasetDetails';
@@ -21,7 +22,13 @@ const DataAnalysis: React.FC = () => {
 
   const [isCreationDialogOpen, setIsCreationDialogOpen] = useState(false);
 
-  const { loading, data, refetch } = useQuery(DATASET_QUERY);
+  const user = useContext(UserContext);
+
+  const { loading, data, refetch } = useQuery(DATASET_QUERY, {
+    variables: {
+      GCPProjectName: user.GCPProjectName,
+    },
+  });
 
   const onAddDatasetClick = () => {
     setIsCreationDialogOpen(true);

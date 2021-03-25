@@ -51,14 +51,16 @@ const ColumnViewAnalytics: FC<ColumnViewAnalyticsProps> = ({
   analysisName,
 }: ColumnViewAnalyticsProps) => {
   const classes = useStyles();
+  const user = useContext(UserContext);
+
   const { data } = useQuery(DATASET_COLUMN_VISUALIZATIONS_QUERY, {
     variables: {
-      bucketName: process.env.REACT_APP_DATASET_ASSETS_BUCKET,
+      bucketName: user.GCSBucketName,
+      organizationName: user.organization,
       analysisName,
       columnName: column.name,
     },
   });
-  const user = useContext(UserContext);
 
   return (
     <Grid className={classes.gridContainer} container>

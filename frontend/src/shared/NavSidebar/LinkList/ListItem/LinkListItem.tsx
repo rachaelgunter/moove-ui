@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { ReactChild, useContext } from 'react';
 import {
   ListItemIcon,
   ListItemText,
@@ -17,6 +17,8 @@ type LinkListItemProps<C extends React.ElementType, D> = BaseListItemProps<
   D
 > & {
   label: string;
+  // eslint-disable-next-line react/require-default-props
+  disabledLabel?: ReactChild;
   Icon: SvgIconComponent;
 };
 
@@ -50,8 +52,6 @@ const useStyles = makeStyles<Theme, StyleProps, string>((theme: Theme) => ({
   },
 }));
 
-const BUY_PAID_ACCOUNT_URL = 'http://moove.ai';
-
 const LinkListItem: <C extends React.ElementType>(
   props: LinkListItemProps<C, { component?: C }>,
 ) => JSX.Element = <C extends React.ElementType>({
@@ -59,6 +59,7 @@ const LinkListItem: <C extends React.ElementType>(
   Icon,
   selected,
   disabled,
+  disabledLabel = <></>,
   ...other
 }: LinkListItemProps<C, { component?: C }>) => {
   const { isExpanded } = useContext(NavSidebarContext);
@@ -67,17 +68,7 @@ const LinkListItem: <C extends React.ElementType>(
 
   const getTooltipLabel = () => {
     if (disabled) {
-      return (
-        <>
-          {label}
-          <br />
-          <br />
-          Sign up for a paid account at{' '}
-          <a className={classes.link} href={BUY_PAID_ACCOUNT_URL}>
-            {BUY_PAID_ACCOUNT_URL}
-          </a>
-        </>
-      );
+      return disabledLabel;
     }
     if (!isExpanded && label) {
       return label;
