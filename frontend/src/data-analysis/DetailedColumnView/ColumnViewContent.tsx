@@ -25,7 +25,7 @@ export const useColumnViewContentStyles = makeStyles((theme: Theme) => ({
     background: theme.palette.bg.dark,
     height: '100%',
     borderRadius: theme.spacing(0.5),
-    padding: theme.spacing(1.25, 0, 1.25, 1.25),
+    padding: theme.spacing(1.25),
     overflow: 'hidden',
   },
   sectionTitle: {
@@ -35,6 +35,7 @@ export const useColumnViewContentStyles = makeStyles((theme: Theme) => ({
     height: '100%',
     overflow: 'hidden',
     display: 'flex',
+    marginRight: -10,
   },
   spinner: {
     alignSelf: 'center',

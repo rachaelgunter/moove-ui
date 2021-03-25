@@ -26,6 +26,7 @@ const useStyles = makeStyles(() =>
       flexWrap: 'wrap',
       justifyContent: 'space-around',
       overflow: 'auto',
+      paddingRight: GRID_COLUMNS_SPACING / 2,
     },
     chartImage: {
       height: '100%',
