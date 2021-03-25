@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { useQuery } from '@apollo/client';
 
 import { DATASET_COLUMN_VISUALIZATIONS_OF_JOINT_PLOTS_QUERY } from '../queries';
-import { ColumnModel } from '../types';
+import { ColumnModel, ColumnVisualizationSubFolder } from '../types';
 import ColumnViewContent from './ColumnViewContent';
 import ColumnViewContainer from './ColumnViewContainer';
 
@@ -22,6 +22,7 @@ const ColumnViewRelationships: FC<ColumnViewRelationshipsProps> = ({
         bucketName: process.env.REACT_APP_DATASET_ASSETS_BUCKET,
         analysisName,
         columnName: column.name,
+        subFolder: ColumnVisualizationSubFolder.JOINT_PLOTS,
       },
     },
   );
@@ -29,9 +30,7 @@ const ColumnViewRelationships: FC<ColumnViewRelationshipsProps> = ({
   const sections = [
     {
       title: 'All Joint Plots',
-      chartsUrls: data
-        ? data.datasetColumnVisualizationsOfJointPlots
-        : undefined,
+      chartsUrls: data ? data.datasetColumnVisualizations : undefined,
     },
   ];
 

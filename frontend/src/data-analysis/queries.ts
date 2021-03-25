@@ -96,15 +96,17 @@ export const DATASET_COLUMN_VISUALIZATIONS_QUERY = gql`
 `;
 
 export const DATASET_COLUMN_VISUALIZATIONS_OF_JOINT_PLOTS_QUERY = gql`
-  query datasetColumnVisualizationsOfJointPlots(
+  query datasetColumnVisualizations(
     $bucketName: String!
     $analysisName: String!
     $columnName: String!
+    $subFolder: String!
   ) {
-    datasetColumnVisualizationsOfJointPlots(
+    datasetColumnVisualizations(
       bucketName: $bucketName
       analysisName: $analysisName
       columnName: $columnName
+      subFolder: $subFolder
     )
   }
 `;

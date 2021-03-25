@@ -45,30 +45,13 @@ export class DatasetsResolver {
     user: UserTokenPayload,
     @Args() args: ColumnVisualizationParams,
   ): Promise<string[]> {
-    const { bucketName, analysisName, columnName } = args;
+    const { bucketName, analysisName, columnName, subFolder } = args;
 
     return this.datasetsService.getColumnVisualizations(
       bucketName,
       analysisName,
       columnName,
-    );
-  }
-
-  @Roles(Role.PAID_USER, Role.ADMIN)
-  @UseGuards(GqlAuthGuard)
-  @Query(() => [String], { nullable: 'itemsAndList' })
-  async datasetColumnVisualizationsOfJointPlots(
-    @CurrentUser()
-    user: UserTokenPayload,
-    @Args() args: ColumnVisualizationParams,
-  ): Promise<string[]> {
-    const { bucketName, analysisName, columnName } = args;
-
-    return this.datasetsService.getColumnVisualizations(
-      bucketName,
-      analysisName,
-      columnName,
-      'joint_plots',
+      subFolder,
     );
   }
 }

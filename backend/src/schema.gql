@@ -100,8 +100,7 @@ type Query {
   previewTable(projectId: String!, datasetId: String!, tableId: String!, offset: Int = 0, limit: Int = 5, selectedFields: [String]): BigQueryPreviewTable!
   columnsTable(projectId: String!, datasetId: String!, tableId: String!, offset: Int = 0, limit: Int = 5, selectedFields: [String]): [BigQueryColumnTable]
   getDatasets: [Dataset]
-  datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!): [String]
-  datasetColumnVisualizationsOfJointPlots(bucketName: String!, analysisName: String!, columnName: String!): [String]
+  datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!, subFolder: String!): [String]
 }
 
 input BigQueryTablesParams {

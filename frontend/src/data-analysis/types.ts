@@ -70,3 +70,7 @@ export type KeplerDataset = {
     rows: unknown[];
   };
 };
+
+export enum ColumnVisualizationSubFolder {
+  JOINT_PLOTS = 'joint_plots',
+}

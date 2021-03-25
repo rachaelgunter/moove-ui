@@ -35,6 +35,13 @@ export class ColumnVisualizationParams {
 
   @Field()
   columnName: string;
+
+  @Field()
+  subFolder?: ColumnVisualizationSubFolder;
+}
+
+enum ColumnVisualizationSubFolder {
+  JOINT_PLOTS = 'joint_plots',
 }
 
 export interface DatasetListingRequestPayload {
