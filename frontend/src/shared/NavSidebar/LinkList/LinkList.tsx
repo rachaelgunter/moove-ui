@@ -29,9 +29,6 @@ const getDisabledTooltip = (
   hasRoles: boolean,
   label: string,
 ) => {
-  if (!isOrganisationMember) {
-    return <>You have to be an organization member to view this section</>;
-  }
   if (!hasRoles) {
     return (
       <>
@@ -48,6 +45,10 @@ const getDisabledTooltip = (
       </>
     );
   }
+  if (!isOrganisationMember) {
+    return <>You have to be an organization member to view this section</>;
+  }
+
   return <></>;
 };
 
@@ -67,7 +68,7 @@ const LinkList: React.FC<LinkListProps> = ({ links }: LinkListProps) => {
           organizationMembershipRequired,
         }) => {
           const isSelected = Boolean(path && pathname.startsWith(path));
-          const hasUserAccess = !haveAccess(user.roles, allowedRoles);
+          const hasUserAccess = haveAccess(user.roles, allowedRoles);
           const isUserOrgMember = organizationMembershipRequired
             ? checkOrgMembership(user)
             : true;
@@ -82,7 +83,7 @@ const LinkList: React.FC<LinkListProps> = ({ links }: LinkListProps) => {
             <LinkListItem
               disabledLabel={disabledLabel}
               data-testid={`link-list-item__${label}`}
-              disabled={hasUserAccess || !isUserOrgMember}
+              disabled={!hasUserAccess || !isUserOrgMember}
               onClick={onClick}
               key={label}
               selected={isSelected}
