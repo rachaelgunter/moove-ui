@@ -12,6 +12,9 @@ import {
 import { google } from 'googleapis';
 import { GCSClient } from 'src/gcs/gcs-client';
 
+// List of folders which have own request
+const BLACK_LIST_OF_VISUALIZATIONS_FOLDERS = ['/joint_plot'];
+
 @Injectable()
 export class DatasetsService {
   private readonly logger = new Logger(DatasetsService.name);
@@ -163,19 +166,30 @@ export class DatasetsService {
     columnName: string,
     subFolder?: string,
   ): Promise<string[]> {
-    return this.storageClient.listObjects(
+    const visualizationsUrls = await this.storageClient.listObjects(
       bucketName,
       organizationName,
       analysisName,
       columnName,
       subFolder,
     );
+
+    if (subFolder) return visualizationsUrls;
+
+    return this.filterVisualizationsUrls(visualizationsUrls);
+  }
+
+  filterVisualizationsUrls(visualizationsUrls: string[]) {
+    return visualizationsUrls.filter((url) =>
+      BLACK_LIST_OF_VISUALIZATIONS_FOLDERS.some(
+        (folder) => !url.includes(folder),
+      ),
+    );
   }
 
   getDatasetStatus(
     statuses: Record<string, CloudFunctionDatasetStatus>,
   ): DatasetStatus {
-    statuses.choropleth = CloudFunctionDatasetStatus.ACTIVE;
     if (
       Object.values(statuses).every(
         (status) => status === CloudFunctionDatasetStatus.ACTIVE,
