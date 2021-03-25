@@ -2,10 +2,10 @@ import React, { FC, useContext } from 'react';
 import { useQuery } from '@apollo/client';
 import { CircularProgress, makeStyles } from '@material-ui/core';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import { UserContext } from 'src/auth/UserProvider';
 import { KEPLER_DATA_QUERY } from '../queries';
 import KeplerWrapper from './KeplerWrapper';
 import { KeplerDataQueryResponse, KeplerDataset } from '../types';
-import { UserContext } from 'src/auth/UserProvider';
 
 interface ColumnViewMapProps {
   columnName: string;
