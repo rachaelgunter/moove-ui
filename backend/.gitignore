@@ -32,3 +32,5 @@ lerna-debug.log*
 # env files
 .env*
 !.env.example
+
+application_default_credentials.json
