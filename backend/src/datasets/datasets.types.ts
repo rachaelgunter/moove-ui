@@ -42,7 +42,7 @@ export class ColumnVisualizationParams {
   @Field()
   organizationName: string;
 
-  @Field()
+  @Field({ nullable: true })
   subFolder?: ColumnVisualizationSubFolder;
 }
 
