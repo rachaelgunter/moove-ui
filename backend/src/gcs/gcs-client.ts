@@ -9,14 +9,18 @@ export class GCSClient extends GoogleClientService {
     organizationName: string,
     analysisName: string,
     columnName: string,
+    subFolder?: string,
   ): Promise<string[]> {
     const auth = await this.getAuthClient();
+    let prefix = `${organizationName}/${analysisName}/visual_artifacts/columns/${columnName}`;
+
+    if (subFolder) prefix = `${prefix}/${subFolder}`;
 
     return this.storage.objects
       .list({
         auth,
         bucket: bucketName,
-        prefix: `${organizationName}/${analysisName}/visual_artifacts/columns/${columnName}`,
+        prefix,
       })
       .then((response) =>
         response.data.items?.map(
