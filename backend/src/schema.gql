@@ -102,7 +102,7 @@ type Query {
   previewTable(projectId: String!, datasetId: String!, tableId: String!, offset: Int = 0, limit: Int = 5, selectedFields: [String]): BigQueryPreviewTable!
   columnsTable(projectId: String!, datasetId: String!, tableId: String!, offset: Int = 0, limit: Int = 5, selectedFields: [String]): [BigQueryColumnTable]
   getDatasets(GCPProjectName: String!): [Dataset]
-  datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!, organizationName: String!): [String]
+  datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!, organizationName: String!, subFolder: String): [String]
 }
 
 input BigQueryTablesParams {

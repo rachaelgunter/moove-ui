@@ -97,6 +97,24 @@ export const DATASET_COLUMN_VISUALIZATIONS_QUERY = gql`
   }
 `;
 
+export const DATASET_COLUMN_VISUALIZATIONS_OF_JOINT_PLOTS_QUERY = gql`
+  query datasetColumnVisualizations(
+    $bucketName: String!
+    $analysisName: String!
+    $columnName: String!
+    $organizationName: String!
+    $subFolder: String!
+  ) {
+    datasetColumnVisualizations(
+      bucketName: $bucketName
+      analysisName: $analysisName
+      columnName: $columnName
+      organizationName: $organizationName
+      subFolder: $subFolder
+    )
+  }
+`;
+
 export const BIG_QUERY_PREVIEW_TABLE_QUERY = gql`
   query getPreviewTable(
     $projectId: String!
