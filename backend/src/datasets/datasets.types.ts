@@ -26,6 +26,12 @@ export class DatasetParamsInput {
 
   @Field()
   organizationName: string;
+
+  @Field()
+  analysisProject: string;
+
+  @Field()
+  assetsBucket: string;
 }
 
 @ArgsType()
