@@ -92,7 +92,9 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
     null,
   );
   const [creationCompleted, setCreationCompleted] = useState(false);
-  const user = useContext(UserContext);
+  const { GCPProjectName, GCSBucketName, organization } = useContext(
+    UserContext,
+  );
 
   const [createDataset, { loading }] = useMutation(CREATE_DATASET_MUTATION, {
     onCompleted: () => {
@@ -166,8 +168,10 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
         datasetParams: {
           name,
           description,
-          projectId: user.GCPProjectName,
-          organizationName: user.organization,
+          projectId: GCPProjectName,
+          organizationName: organization,
+          analysisProject: GCPProjectName,
+          assetsBucket: GCSBucketName,
           ...selectedTable,
         },
       },
