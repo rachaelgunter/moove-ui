@@ -129,4 +129,6 @@ input DatasetParamsInput {
   datasetId: String!
   tableId: String!
   organizationName: String!
+  analysisProject: String!
+  assetsBucket: String!
 }
