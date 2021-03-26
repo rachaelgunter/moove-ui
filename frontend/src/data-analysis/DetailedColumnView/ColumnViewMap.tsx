@@ -9,6 +9,7 @@ import { KeplerDataQueryResponse, KeplerDataset } from '../types';
 
 interface ColumnViewMapProps {
   columnName: string;
+  analysisName: string;
 }
 
 const KEPLER_DATASET_SIZE = 20000;
@@ -46,12 +47,13 @@ const getData = (
 
 const ColumnViewMap: FC<ColumnViewMapProps> = ({
   columnName,
+  analysisName,
 }: ColumnViewMapProps) => {
   const user = useContext(UserContext);
 
   const projectId = user.GCPProjectName;
-  const datasetId = 'denver_friction_galileo_analysis';
-  const tableId = 'denver_friction_contextualized_sample';
+  const datasetId = `${analysisName}_galileo_analysis`;
+  const tableId = `${analysisName}_contextualized_sample`;
 
   const selectedFields = ['source_geom', columnName];
 
