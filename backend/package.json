@@ -25,6 +25,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "docker:db": "docker-compose -f docker-compose.db.yml up",
     "docker:start:dev": "MODE=dev docker-compose up --remove-orphans",
     "docker:start:debug": "MODE=debug docker-compose up",
     "docker:migrate:create": "docker exec -it api npm run migrate:dev:create",
@@ -32,6 +33,7 @@
     "docker:rebuild-volumes": "MODE=dev docker-compose up --build -V && docker exec -it api npx prisma generate"
   },
   "dependencies": {
+    "@google-cloud/bigquery": "^5.5.0",
     "@nestjs/common": "^7.6.11",
     "@nestjs/config": "^0.6.3",
     "@nestjs/core": "^7.6.11",
@@ -88,7 +90,9 @@
       "json",
       "ts"
     ],
-    "modulePaths": ["<rootDir>"],
+    "modulePaths": [
+      "<rootDir>"
+    ],
     "rootDir": "./",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
