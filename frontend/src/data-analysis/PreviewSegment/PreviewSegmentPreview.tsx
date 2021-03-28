@@ -4,6 +4,7 @@ import React, { FC } from 'react';
 import { useQuery } from '@apollo/client';
 import { BIG_QUERY_PREVIEW_SEGMENT_QUERY } from '../queries';
 import { PreviewSegmentModel } from '../types';
+import PreviewSegmentChart from './PreviewSegmentChart';
 
 interface PreviewSegmentPreviewProps {
   segmentId: string;
@@ -52,16 +53,54 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
     );
   }
 
-  const formatData = (responseData: {
+  const getChartData = (responseData: {
     previewSegment: PreviewSegmentModel;
-  }): string => {
-    return responseData?.previewSegment?.rawData ? 'test' : '';
+  }): [string | number, string | number][] => {
+    const input: [number, number][] = [];
+
+    try {
+      const jsonObject = JSON.parse(
+        responseData?.previewSegment?.rawData || '{}',
+      )[0];
+      input.push(
+        ...jsonObject?.slope_offset_cln.map(
+          (item: { km_in_seg: string; value: string }) => [
+            parseFloat(item.km_in_seg),
+            parseInt(item.value, 10),
+          ],
+        ),
+      );
+    } catch (e) {
+      return [];
+    }
+
+    const result: [string | number, string | number][] = [['KM', 'Elev']];
+    const arrayLength = input.length;
+    let prev = 0;
+    const reverse = 1;
+
+    for (let i = 1; i < arrayLength; i += 1) {
+      let yValue: number = (input[i][0] - input[i - 1][0]) * input[i][1] + prev;
+      prev = yValue;
+      yValue *= 0.019;
+      result.push([input[i][0] * reverse, yValue]);
+    }
+
+    return result;
   };
+
+  const chartData = getChartData(data);
 
   return (
     <Grid className={classes.gridContainer} container spacing={1}>
       <Grid item container xs={12}>
-        <Box>{loading ? <CircularProgress /> : formatData(data)}</Box>
+        {loading ? (
+          <Box>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <PreviewSegmentChart data={chartData} segmentId={segmentId} />
+        )}
       </Grid>
       <Grid item container xs={9}>
         <Box>{loading && <CircularProgress />}</Box>
