@@ -9,6 +9,7 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import React, { FC } from 'react';
 import { useQuery } from '@apollo/client';
+import ReactJson from 'react-json-view';
 import { BIG_QUERY_PREVIEW_SEGMENT_QUERY } from '../queries';
 import { PreviewSegmentModel } from '../types';
 import { PreviewSegmentStatistics } from './PreviewSegmentStatistics';
@@ -62,15 +63,17 @@ const PreviewSegmentData: FC<PreviewSegmentDataProps> = ({
   }): PreviewSegmentModel => {
     return responseData?.previewSegment || {};
   };
-  const formatRawData = (rawData: string | undefined): string => {
+  const formatRawData = (
+    rawData: string | undefined,
+  ): { [key: string]: string } => {
     if (rawData === undefined) {
-      return '';
+      return {};
     }
 
     try {
-      return JSON.stringify(JSON.parse(rawData), null, 2);
+      return JSON.parse(rawData)[0];
     } catch (e) {
-      return rawData;
+      return {};
     }
   };
 
@@ -115,7 +118,16 @@ const PreviewSegmentData: FC<PreviewSegmentDataProps> = ({
             <CircularProgress />
           ) : (
             <div className={classes.rawData}>
-              <pre>{formatRawData(rawData)}</pre>
+              <ReactJson
+                name={null}
+                style={{ background: 'none' }}
+                theme="monokai"
+                displayDataTypes={false}
+                enableClipboard={false}
+                iconStyle="circle"
+                collapsed={1}
+                src={formatRawData(rawData)}
+              />
             </div>
           )}
         </Grid>
