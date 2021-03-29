@@ -152,6 +152,30 @@ export class BigQueryPreviewTable {
   tableMetadata?: BigQueryTableMetadata;
 }
 
+@ArgsType()
+export class BigQueryPreviewSegmentParams {
+  @Field()
+  segmentId: string;
+}
+
+@ObjectType()
+export class BigQueryPreviewSegmentStatistics {
+  @Field()
+  name: string;
+
+  @Field({ nullable: true })
+  value?: string;
+}
+
+@ObjectType()
+export class BigQueryPreviewSegment {
+  @Field()
+  rawData: string;
+
+  @Field(() => [BigQueryPreviewSegmentStatistics], { nullable: 'itemsAndList' })
+  statistics: BigQueryPreviewSegmentStatistics[];
+}
+
 @ObjectType()
 export class BigQueryColumnTable {
   @Field()

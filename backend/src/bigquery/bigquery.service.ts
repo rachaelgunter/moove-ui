@@ -8,6 +8,7 @@ import {
   BigQueryTableData,
   BigQueryTableInfo,
   BigQueryColumnTable,
+  BigQueryPreviewSegment,
 } from './bigquery.types';
 
 @Injectable()
@@ -168,5 +169,9 @@ export class BigQueryService {
     }
 
     return Math.round((percentage + Number.EPSILON) * 100) / 100;
+  }
+
+  async getPreviewSegment(segmentId: string): Promise<BigQueryPreviewSegment> {
+    return await this.bigqueryClientService.getPreviewSegment(segmentId);
   }
 }

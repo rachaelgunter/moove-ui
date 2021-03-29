@@ -140,3 +140,15 @@ export const BIG_QUERY_PREVIEW_TABLE_QUERY = gql`
     }
   }
 `;
+
+export const BIG_QUERY_PREVIEW_SEGMENT_QUERY = gql`
+  query previewSegment($segmentId: String!) {
+    previewSegment(segmentId: $segmentId) {
+      statistics {
+        name
+        value
+      }
+      rawData
+    }
+  }
+`;

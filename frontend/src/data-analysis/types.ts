@@ -75,3 +75,13 @@ export type KeplerDataset = {
 export enum ColumnVisualizationSubFolder {
   JOINT_PLOTS = 'joint_plots',
 }
+
+export type PreviewSegmentModelStatistic = {
+  name: string;
+  value: string;
+};
+
+export type PreviewSegmentModel = {
+  statistics?: PreviewSegmentModelStatistic[];
+  rawData?: string;
+};
