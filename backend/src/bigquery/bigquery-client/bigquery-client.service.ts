@@ -194,12 +194,7 @@ export class BigqueryClientService extends GoogleClientService {
   }
 
   async getPreviewSegment(segmentId: string): Promise<BigQueryPreviewSegment> {
-    const options = {
-      keyFilename: './application_default_credentials-new.json',
-      projectId: 'moove-platform-staging',
-    };
-
-    const bigquery = new BigQuery(options);
+    const bigquery = new BigQuery();
     const query = `SELECT *
         from \`moove-platform-staging.here.road_segments_id_lookup\`
         where id = "${segmentId}"
