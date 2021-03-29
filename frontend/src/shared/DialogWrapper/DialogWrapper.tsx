@@ -19,6 +19,7 @@ interface DialogWrapperProps {
   dialogContent: JSX.Element;
   dialogControls?: JSX.Element;
   onClose: () => void;
+  onResize?: (isFullScreen: boolean) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -68,12 +69,19 @@ const useStyles = makeStyles((theme: Theme) => ({
 const DialogWrapper: FC<DialogWrapperProps> = ({
   open,
   onClose,
+  onResize,
   dialogTitle,
   dialogContent,
   dialogControls,
 }: DialogWrapperProps) => {
   const classes = useStyles();
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const onChangeSize = (value: boolean): void => {
+    setIsFullScreen(value);
+    if (onResize) {
+      onResize(value);
+    }
+  };
 
   return (
     <Dialog
@@ -91,7 +99,7 @@ const DialogWrapper: FC<DialogWrapperProps> = ({
           >
             {dialogTitle}
           </Typography>
-          <IconButton onClick={() => setIsFullScreen(!isFullScreen)}>
+          <IconButton onClick={() => onChangeSize(!isFullScreen)}>
             <MaximizeIcon />
           </IconButton>
         </Box>
@@ -107,6 +115,7 @@ const DialogWrapper: FC<DialogWrapperProps> = ({
 
 DialogWrapper.defaultProps = {
   dialogControls: <></>,
+  onResize: () => {},
 };
 
 export default DialogWrapper;

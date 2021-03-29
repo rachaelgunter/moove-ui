@@ -1,11 +1,4 @@
-import {
-  Grid,
-  Box,
-  Theme,
-  CircularProgress,
-  Link,
-  Typography,
-} from '@material-ui/core';
+import { Grid, Box, Theme, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React, { FC } from 'react';
 import { useQuery } from '@apollo/client';
@@ -14,6 +7,7 @@ import { BIG_QUERY_PREVIEW_SEGMENT_QUERY } from '../queries';
 import { PreviewSegmentModel } from '../types';
 import { PreviewSegmentStatistics } from './PreviewSegmentStatistics';
 import { FontFamily } from '../../app/styles/fonts';
+import PreviewSegmentGridItem from './PreviewSegmentGridItem';
 
 interface PreviewSegmentDataProps {
   segmentId: string;
@@ -27,12 +21,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       flex: '1 0 100%',
       display: 'flex',
     },
-    '&> div > div': {
+    '&> div > div1': {
       flex: '1 0 100%',
       backgroundColor: theme.palette.bg.dark,
       width: '100%',
       height: '100%',
-      overflow: 'auto',
     },
   },
   title: {
@@ -40,8 +33,28 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: FontFamily.ROBOTO,
     letterSpacing: '0.11px',
     margin: theme.spacing(1),
+    flex: '0 0 auto',
+  },
+  column: {
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: theme.palette.bg.dark,
+    width: '100%',
+  },
+  scrollContentWrapper: {
+    position: 'relative',
+    flex: '1 0 auto',
+    width: '100%',
   },
   rawData: {
+    overflow: 'auto',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    right: 0,
+    height: '100%',
+    weight: '100%',
     padding: '0 7px',
     fontSize: 12,
     fontFamily: FontFamily.ROBOTO,
@@ -53,16 +66,18 @@ const PreviewSegmentData: FC<PreviewSegmentDataProps> = ({
   segmentId,
 }: PreviewSegmentDataProps) => {
   const classes = useStyles();
-  const { loading, data, error } = useQuery(BIG_QUERY_PREVIEW_SEGMENT_QUERY, {
-    variables: {
-      segmentId,
-    },
-  });
-  const getPreviewData = (responseData: {
+  type Segment = {
     previewSegment: PreviewSegmentModel;
-  }): PreviewSegmentModel => {
-    return responseData?.previewSegment || {};
   };
+  const { loading, data, error } = useQuery<Segment>(
+    BIG_QUERY_PREVIEW_SEGMENT_QUERY,
+    {
+      variables: {
+        segmentId,
+      },
+    },
+  );
+
   const formatRawData = (
     rawData: string | undefined,
   ): { [key: string]: string } => {
@@ -77,7 +92,7 @@ const PreviewSegmentData: FC<PreviewSegmentDataProps> = ({
     }
   };
 
-  const { statistics, rawData } = getPreviewData(data);
+  const { statistics, rawData } = data?.previewSegment || {};
 
   if (!loading && error) {
     return (
@@ -98,39 +113,23 @@ const PreviewSegmentData: FC<PreviewSegmentDataProps> = ({
   return (
     <Grid className={classes.gridContainer} container spacing={1}>
       <Grid item container xs={4}>
-        <Grid item>
-          <Typography className={classes.title} variant="subtitle1">
-            Statistics
-          </Typography>
-          {loading ? (
-            <CircularProgress />
-          ) : (
-            <PreviewSegmentStatistics statistics={statistics} />
-          )}
-        </Grid>
+        <PreviewSegmentGridItem title="Statistics" loading={loading}>
+          <PreviewSegmentStatistics statistics={statistics} />
+        </PreviewSegmentGridItem>
       </Grid>
       <Grid item container xs={8}>
-        <Grid item>
-          <Typography className={classes.title} variant="subtitle1">
-            Raw Data
-          </Typography>
-          {loading ? (
-            <CircularProgress />
-          ) : (
-            <div className={classes.rawData}>
-              <ReactJson
-                name={null}
-                style={{ background: 'none' }}
-                theme="monokai"
-                displayDataTypes={false}
-                enableClipboard={false}
-                iconStyle="circle"
-                collapsed={1}
-                src={formatRawData(rawData)}
-              />
-            </div>
-          )}
-        </Grid>
+        <PreviewSegmentGridItem title="Raw Data" loading={loading}>
+          <ReactJson
+            name={null}
+            style={{ background: 'none' }}
+            theme="monokai"
+            displayDataTypes={false}
+            enableClipboard={false}
+            iconStyle="circle"
+            collapsed={1}
+            src={formatRawData(rawData)}
+          />
+        </PreviewSegmentGridItem>
       </Grid>
     </Grid>
   );

@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 
 import { Breadcrumbs, makeStyles, Theme, Typography } from '@material-ui/core';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 interface PreviewSegmentBreadcrumbsProps {
   segment: string;
@@ -14,6 +13,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   breadcrumbsItem: {
     lineHeight: '39px',
   },
+  id: {
+    color: 'rgba(255, 255, 255, 0.5)',
+    opacity: '0.7',
+  },
 }));
 
 const PreviewSegmentBreadcrumbs: FC<PreviewSegmentBreadcrumbsProps> = ({
@@ -22,10 +25,8 @@ const PreviewSegmentBreadcrumbs: FC<PreviewSegmentBreadcrumbsProps> = ({
   const classes = useStyles();
 
   return (
-    <Breadcrumbs
-      className={classes.breadcrumbs}
-      separator={<NavigateNextIcon fontSize="small" />}
-    >
+    <Breadcrumbs className={classes.breadcrumbs} separator="">
+      <Typography className={classes.id}>ID</Typography>
       <Typography className={classes.breadcrumbsItem} color="textPrimary">
         {segment}
       </Typography>

@@ -50,6 +50,7 @@ const PreviewSegment: FC<PreviewSegmentProps> = ({
 }: PreviewSegmentProps) => {
   const classes = useStyles();
   const [value, setValue] = useState(0);
+  const [isFullScreen, setFullScreen] = useState(false);
 
   const handleChange = (
     _: React.ChangeEvent<Record<string, string>>,
@@ -66,12 +67,12 @@ const PreviewSegment: FC<PreviewSegmentProps> = ({
 
   const Content = () => (
     <>
-      <Box className={classes.header}>
+      <Box className={classes.header} data-fullscrean={isFullScreen}>
         <PreviewSegmentBreadcrumbs segment={segment} />
         <Tabs
           value={value}
           onChange={handleChange}
-          aria-label="simple tabs example"
+          aria-label="segment preview tabs"
           className={classes.tabs}
         >
           <Tab className={classes.tab} label="Preview" />
@@ -89,6 +90,9 @@ const PreviewSegment: FC<PreviewSegmentProps> = ({
 
   return (
     <DialogWrapper
+      onResize={(isFullScreenValue) => {
+        setFullScreen(isFullScreenValue);
+      }}
       open={open}
       onClose={onClose}
       dialogTitle="Segment Preview"

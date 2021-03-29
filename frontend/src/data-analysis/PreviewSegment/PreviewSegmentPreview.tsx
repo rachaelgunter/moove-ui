@@ -1,28 +1,22 @@
-import { Box, CircularProgress, Grid, Link, Theme } from '@material-ui/core';
+import { Box, Grid, Link, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React, { FC } from 'react';
 import { useQuery } from '@apollo/client';
 import { BIG_QUERY_PREVIEW_SEGMENT_QUERY } from '../queries';
 import { PreviewSegmentModel } from '../types';
 import PreviewSegmentChart from './PreviewSegmentChart';
+import PreviewSegmentGridItem from './PreviewSegmentGridItem';
 
 interface PreviewSegmentPreviewProps {
   segmentId: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  gridContainer: {
+  container: {
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
-    '&> div': {
-      flex: '1 0 100%',
-      display: 'flex',
-    },
-    '&> div > div': {
-      flex: '1 0 100%',
-      backgroundColor: theme.palette.bg.dark,
-      width: '100%',
-      overflow: 'auto',
+    '& > div': {
+      height: '50%',
     },
   },
 }));
@@ -39,7 +33,7 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
 
   if (!loading && error) {
     return (
-      <Grid className={classes.gridContainer} container spacing={1}>
+      <Grid className={classes.container} container spacing={1}>
         <Grid item container xs={12}>
           <Box>
             Unable to load data, please try later. if the problem persists,
@@ -77,13 +71,12 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
     const result: [string | number, string | number][] = [['KM', 'Elev']];
     const arrayLength = input.length;
     let prev = 0;
-    const reverse = 1;
 
     for (let i = 1; i < arrayLength; i += 1) {
       let yValue: number = (input[i][0] - input[i - 1][0]) * input[i][1] + prev;
       prev = yValue;
       yValue *= 0.019;
-      result.push([input[i][0] * reverse, yValue]);
+      result.push([input[i][0], yValue]);
     }
 
     return result;
@@ -92,21 +85,21 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
   const chartData = getChartData(data);
 
   return (
-    <Grid className={classes.gridContainer} container spacing={1}>
+    <Grid className={classes.container} container spacing={1}>
       <Grid item container xs={12}>
-        {loading ? (
-          <Box>
-            <CircularProgress />
-          </Box>
-        ) : (
+        <PreviewSegmentGridItem title="Elevation Profile" loading={loading}>
           <PreviewSegmentChart data={chartData} segmentId={segmentId} />
-        )}
+        </PreviewSegmentGridItem>
       </Grid>
       <Grid item container xs={9}>
-        <Box>{loading && <CircularProgress />}</Box>
+        <PreviewSegmentGridItem title="Terrain Preview" loading={loading}>
+          <div />
+        </PreviewSegmentGridItem>
       </Grid>
       <Grid item container xs={3}>
-        <Box>{loading && <CircularProgress />}</Box>
+        <PreviewSegmentGridItem title="Street View" loading={loading}>
+          <div />
+        </PreviewSegmentGridItem>
       </Grid>
     </Grid>
   );
