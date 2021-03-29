@@ -217,7 +217,6 @@ export class BigqueryClientService extends GoogleClientService {
       });
     };
     return bigquery.query(query).then(function (data) {
-      console.log(data);
       const rows = data[0];
 
       return {
