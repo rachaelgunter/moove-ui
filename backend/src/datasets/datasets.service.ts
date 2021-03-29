@@ -153,6 +153,8 @@ export class DatasetsService {
   getDatasetStatus(
     statuses: Record<string, CloudFunctionDatasetStatus>,
   ): DatasetStatus {
+    // Mocked for now since cloud function always returns failed for this
+    statuses.choropleth = CloudFunctionDatasetStatus.ACTIVE;
     if (
       Object.values(statuses).every(
         (status) => status === CloudFunctionDatasetStatus.ACTIVE,
