@@ -137,16 +137,18 @@ export class DatasetsService {
       subFolder,
     );
 
-    if (subFolder) return visualizationsUrls;
+    if (subFolder) return visualizationsUrls ?? [];
 
     return this.filterVisualizationsUrls(visualizationsUrls);
   }
 
-  filterVisualizationsUrls(visualizationsUrls: string[]) {
-    return visualizationsUrls.filter((url) =>
-      BLACK_LIST_OF_VISUALIZATIONS_FOLDERS.some(
-        (folder) => !url.includes(folder),
-      ),
+  filterVisualizationsUrls(visualizationsUrls: string[]): string[] {
+    return (
+      visualizationsUrls?.filter((url) =>
+        BLACK_LIST_OF_VISUALIZATIONS_FOLDERS.some(
+          (folder) => !url.includes(folder),
+        ),
+      ) ?? []
     );
   }
 
