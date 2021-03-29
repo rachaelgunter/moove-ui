@@ -40,3 +40,14 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+## .env.* files policy
+
+We have different .env files for different environments to simplify deploy process:
+
+- `.env.local` - use to define variables for local env.
+- `.env.lineate-dev` - use to define variables for development env.
+- `.env.staging` - use to define variables for staging env.
+- `.env.production` - use to define variables for production env.
+
+To add new environment variable you have to add it to all this files and to ./config-overrides.js.
