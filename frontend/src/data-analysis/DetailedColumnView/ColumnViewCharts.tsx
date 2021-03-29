@@ -52,7 +52,7 @@ const ColumnViewCharts: FC<ColumnViewChartsProps> = ({
     return totalWidth / GRID_COLUMNS_NUMBER - GRID_COLUMNS_SPACING;
   };
 
-  if (!authorizedChartsUrls) {
+  if (!authorizedChartsUrls.length) {
     return <>No charts available for this column</>;
   }
 

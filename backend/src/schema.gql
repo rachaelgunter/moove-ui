@@ -71,6 +71,16 @@ type BigQueryPreviewTable {
   tableMetadata: BigQueryTableMetadata
 }
 
+type BigQueryPreviewSegmentStatistics {
+  name: String!
+  value: String
+}
+
+type BigQueryPreviewSegment {
+  rawData: String!
+  statistics: [BigQueryPreviewSegmentStatistics]
+}
+
 type BigQueryColumnTable {
   name: String!
   type: String!
@@ -101,6 +111,7 @@ type Query {
   tableInfo(projectId: String!, datasetId: String!, tableId: String!): BigQueryTableInfo!
   previewTable(projectId: String!, datasetId: String!, tableId: String!, offset: Int = 0, limit: Int = 5, selectedFields: [String]): BigQueryPreviewTable!
   columnsTable(projectId: String!, datasetId: String!, tableId: String!, offset: Int = 0, limit: Int = 5, selectedFields: [String]): [BigQueryColumnTable]
+  previewSegment(segmentId: String!): BigQueryPreviewSegment!
   getDatasets(GCPProjectName: String!): [Dataset]
   datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!, organizationName: String!, subFolder: String): [String]
 }
