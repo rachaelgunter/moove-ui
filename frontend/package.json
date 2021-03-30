@@ -33,8 +33,8 @@
     "styled-components": "^5.2.1"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired --max-old-space-size=8192 build",
+    "start": "ENV_FILE=local react-app-rewired start",
+    "build": "sh -ac '. .env.${ENV_FILE}; react-app-rewired --max-old-space-size=8192 build'",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "format": "prettier --write src/**/*.ts{,x}",
@@ -71,6 +71,7 @@
     "@types/react-virtualized-auto-sizer": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "^4.15.0",
     "@typescript-eslint/parser": "^4.15.0",
+    "dotenv": "^8.2.0",
     "eslint": "^7.19.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-airbnb-typescript": "^12.3.1",
@@ -88,7 +89,8 @@
     "react-app-rewired": "^2.1.8",
     "react-scripts": "4.0.2",
     "typescript": "^4.1.3",
-    "umd-compat-loader": "^2.1.2"
+    "umd-compat-loader": "^2.1.2",
+    "webpack": "4.44.2"
   },
   "husky": {
     "hooks": {

@@ -5,17 +5,6 @@ substitutions:
   _DEPLOY_BRANCH: "master"
   _ENVIRONMENT: ""
   _GITHUB_SSH_KEY_NAME: ""
-  _REACT_APP_AUTH0_DOMAIN: ""
-  _REACT_APP_AUTH0_CLIENT_ID: ""
-  _REACT_APP_AUTH0_AUDIENCE: ""
-  _REACT_APP_AUTH0_REDIRECT_URI: ""
-  _REACT_APP_GRAPHQL_API: ""
-  _REACT_APP_AUTH0_LOGOUT_REDIRECT_URI: ""
-  _REACT_APP_JUPYTERHUB_URL: ""
-  _REACT_APP_ROAD_IQ_URL: ""
-  _REACT_APP_AUTH0_CLAIMS_NAMESPACE: ""
-  _REACT_APP_DATASET_ASSETS_BUCKET: ""
-  _REACT_APP_MAPBOX_TOKEN: ""
   _GENERATE_SOURCEMAP: ""
   _DISABLE_ESLINT_PLUGIN: ""
 
@@ -23,19 +12,9 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build container (no cache)'
     args: ['build', 'frontend',
-          '--build-arg', 'REACT_APP_AUTH0_DOMAIN=$_REACT_APP_AUTH0_DOMAIN',
-          '--build-arg', 'REACT_APP_AUTH0_CLIENT_ID=$_REACT_APP_AUTH0_CLIENT_ID',
-          '--build-arg', 'REACT_APP_AUTH0_AUDIENCE=$_REACT_APP_AUTH0_AUDIENCE',
-          '--build-arg', 'REACT_APP_AUTH0_REDIRECT_URI=$_REACT_APP_AUTH0_REDIRECT_URI',
-          '--build-arg', 'REACT_APP_GRAPHQL_API=$_REACT_APP_GRAPHQL_API',
-          '--build-arg', 'REACT_APP_AUTH0_LOGOUT_REDIRECT_URI=$_REACT_APP_AUTH0_LOGOUT_REDIRECT_URI',
-          '--build-arg', 'REACT_APP_JUPYTERHUB_URL=$_REACT_APP_JUPYTERHUB_URL',
-          '--build-arg', 'REACT_APP_ROAD_IQ_URL=$_REACT_APP_ROAD_IQ_URL',
-          '--build-arg', 'REACT_APP_AUTH0_CLAIMS_NAMESPACE=$_REACT_APP_AUTH0_CLAIMS_NAMESPACE',
-          '--build-arg', 'REACT_APP_DATASET_ASSETS_BUCKET=$_REACT_APP_DATASET_ASSETS_BUCKET',
-          '--build-arg', 'REACT_APP_MAPBOX_TOKEN=$_REACT_APP_MAPBOX_TOKEN',
           '--build-arg', 'DISABLE_ESLINT_PLUGIN=$_DISABLE_ESLINT_PLUGIN',
           '--build-arg', 'GENERATE_SOURCEMAP=$_GENERATE_SOURCEMAP',
+          '--build-arg', 'ENV_FILE=$_ENVIRONMENT',
            '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-frontend:latest',
            '-t', 'gcr.io/$PROJECT_ID/moove-unified-ui-frontend:$COMMIT_SHA',
            '-f', 'frontend/Dockerfile.ci' ]
