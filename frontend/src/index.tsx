@@ -54,7 +54,7 @@ createAuth0Client({
     }
 
     token = await auth0.getTokenSilently({ audience });
-  } catch (err) {
+  } catch (_) {
     return auth0.loginWithRedirect();
   }
 
