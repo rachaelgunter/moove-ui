@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const env = require('dotenv');
 
 env.config({
-  path: `./.env.${process.env.NODE_ENV}`,
+  path: `./.env.${process.env.ENV_FILE}`,
 });
 
 module.exports = function override(config) {
