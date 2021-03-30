@@ -62,7 +62,7 @@ const GoogleAuth: FC<GoogleAuthProps> = ({
         'https://www.googleapis.com/auth/bigquery.readonly',
         'https://www.googleapis.com/auth/devstorage.read_only',
       ],
-      approvalPrompt: 'force',
+      approvalPrompt: 'consent',
       state: undefined,
     });
   };
