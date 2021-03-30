@@ -137,23 +137,26 @@ export class DatasetsService {
       subFolder,
     );
 
-    if (subFolder) return visualizationsUrls;
+    if (subFolder) return visualizationsUrls ?? [];
 
     return this.filterVisualizationsUrls(visualizationsUrls);
   }
 
-  filterVisualizationsUrls(visualizationsUrls: string[]) {
-    return visualizationsUrls.filter((url) =>
-      BLACK_LIST_OF_VISUALIZATIONS_FOLDERS.some(
-        (folder) => !url.includes(folder),
-      ),
+  filterVisualizationsUrls(visualizationsUrls: string[]): string[] {
+    return (
+      visualizationsUrls?.filter((url) =>
+        BLACK_LIST_OF_VISUALIZATIONS_FOLDERS.some(
+          (folder) => !url.includes(folder),
+        ),
+      ) ?? []
     );
   }
 
   getDatasetStatus(
     statuses: Record<string, CloudFunctionDatasetStatus>,
   ): DatasetStatus {
-    return DatasetStatus.ACTIVE;
+    // Mocked for now since cloud function always returns failed for this
+    statuses.choropleth = CloudFunctionDatasetStatus.ACTIVE;
     if (
       Object.values(statuses).every(
         (status) => status === CloudFunctionDatasetStatus.ACTIVE,

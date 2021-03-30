@@ -35,7 +35,7 @@ const ColumnViewAnalytics: FC<ColumnViewAnalyticsProps> = ({
   const sections = [
     {
       title: 'Analytical Metrics',
-      chartsUrls: data ? data.datasetColumnVisualizations : undefined,
+      chartsUrls: data?.datasetColumnVisualizations,
     },
   ];
 
