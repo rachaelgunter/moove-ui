@@ -149,6 +149,10 @@ export const BIG_QUERY_PREVIEW_SEGMENT_QUERY = gql`
         value
       }
       rawData
+      streetViewCoordinates {
+        latitude
+        longitude
+      }
     }
   }
 `;

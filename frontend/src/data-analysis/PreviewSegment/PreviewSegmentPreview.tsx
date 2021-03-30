@@ -2,10 +2,12 @@ import { Box, Grid, Link, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React, { FC } from 'react';
 import { useQuery } from '@apollo/client';
+import AutoSizer from 'react-virtualized-auto-sizer';
 import { BIG_QUERY_PREVIEW_SEGMENT_QUERY } from '../queries';
 import { PreviewSegmentModel } from '../types';
 import PreviewSegmentChart from './PreviewSegmentChart';
 import PreviewSegmentGridItem from './PreviewSegmentGridItem';
+import GoogleStreetView from './GoogleStreetView';
 
 interface PreviewSegmentPreviewProps {
   segmentId: string;
@@ -25,7 +27,9 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
   segmentId,
 }: PreviewSegmentPreviewProps) => {
   const classes = useStyles();
-  const { loading, data, error } = useQuery(BIG_QUERY_PREVIEW_SEGMENT_QUERY, {
+  const { loading, data, error } = useQuery<{
+    previewSegment: PreviewSegmentModel;
+  }>(BIG_QUERY_PREVIEW_SEGMENT_QUERY, {
     variables: {
       segmentId,
     },
@@ -47,9 +51,13 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
     );
   }
 
-  const getChartData = (responseData: {
-    previewSegment: PreviewSegmentModel;
-  }): [string | number, string | number][] => {
+  const getChartData = (
+    responseData:
+      | {
+          previewSegment: PreviewSegmentModel;
+        }
+      | undefined,
+  ): [string | number, string | number][] => {
     const input: [number, number][] = [];
 
     try {
@@ -84,6 +92,9 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
 
   const chartData = getChartData(data);
 
+  const { latitude: streetViewLatitiude, longitude: streetViewLongitude } = data
+    ?.previewSegment.streetViewCoordinates ?? { latitude: 0, longitude: 0 };
+
   return (
     <Grid className={classes.container} container spacing={1}>
       <Grid item container xs={12}>
@@ -91,14 +102,25 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
           <PreviewSegmentChart data={chartData} segmentId={segmentId} />
         </PreviewSegmentGridItem>
       </Grid>
-      <Grid item container xs={9}>
+      <Grid item container xs={7}>
         <PreviewSegmentGridItem title="Terrain Preview" loading={loading}>
           <div />
         </PreviewSegmentGridItem>
       </Grid>
-      <Grid item container xs={3}>
+      <Grid item container xs={5}>
         <PreviewSegmentGridItem title="Street View" loading={loading}>
-          <div />
+          <AutoSizer>
+            {({ height, width }) => (
+              <GoogleStreetView
+                height={height}
+                width={width}
+                position={{
+                  lat: streetViewLatitiude,
+                  lng: streetViewLongitude,
+                }}
+              />
+            )}
+          </AutoSizer>
         </PreviewSegmentGridItem>
       </Grid>
     </Grid>

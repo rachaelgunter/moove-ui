@@ -153,6 +153,7 @@ export class DatasetsService {
   getDatasetStatus(
     statuses: Record<string, CloudFunctionDatasetStatus>,
   ): DatasetStatus {
+    return DatasetStatus.ACTIVE;
     if (
       Object.values(statuses).every(
         (status) => status === CloudFunctionDatasetStatus.ACTIVE,

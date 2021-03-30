@@ -8,7 +8,7 @@ import {
   BigQueryPreviewTable,
   BigQueryTableDataParams,
   BigQueryColumnTable,
-  BigQueryPreviewSegment,
+  PreviewSegment,
   BigQueryPreviewSegmentParams,
 } from './bigquery.types';
 import { handleGoogleError } from './utils';
@@ -79,10 +79,10 @@ export class BigQueryPreviewResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query(() => BigQueryPreviewSegment)
+  @Query(() => PreviewSegment)
   async previewSegment(
     @Args() args: BigQueryPreviewSegmentParams,
-  ): Promise<BigQueryPreviewSegment> {
+  ): Promise<PreviewSegment> {
     const { segmentId } = args;
     try {
       return await this.bigQueryService.getPreviewSegment(segmentId);
