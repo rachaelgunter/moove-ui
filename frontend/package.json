@@ -30,7 +30,7 @@
   },
   "scripts": {
     "start": "ENV_FILE=local react-app-rewired start",
-    "build": "react-app-rewired --max-old-space-size=8192 build",
+    "build": "sh -ac '. .env.${ENV_FILE}; react-app-rewired --max-old-space-size=8192 build'",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "format": "prettier --write src/**/*.ts{,x}",
