@@ -97,6 +97,24 @@ export const DATASET_COLUMN_VISUALIZATIONS_QUERY = gql`
   }
 `;
 
+export const DATASET_COLUMN_VISUALIZATIONS_OF_JOINT_PLOTS_QUERY = gql`
+  query datasetColumnVisualizations(
+    $bucketName: String!
+    $analysisName: String!
+    $columnName: String!
+    $organizationName: String!
+    $subFolder: String!
+  ) {
+    datasetColumnVisualizations(
+      bucketName: $bucketName
+      analysisName: $analysisName
+      columnName: $columnName
+      organizationName: $organizationName
+      subFolder: $subFolder
+    )
+  }
+`;
+
 export const BIG_QUERY_PREVIEW_TABLE_QUERY = gql`
   query getPreviewTable(
     $projectId: String!
@@ -119,6 +137,22 @@ export const BIG_QUERY_PREVIEW_TABLE_QUERY = gql`
         name
       }
       rows
+    }
+  }
+`;
+
+export const BIG_QUERY_PREVIEW_SEGMENT_QUERY = gql`
+  query previewSegment($segmentId: String!) {
+    previewSegment(segmentId: $segmentId) {
+      statistics {
+        name
+        value
+      }
+      rawData
+      streetViewCoordinates {
+        latitude
+        longitude
+      }
     }
   }
 `;

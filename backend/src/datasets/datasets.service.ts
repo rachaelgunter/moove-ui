@@ -3,14 +3,17 @@ import { ConfigService } from '@nestjs/config';
 import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import {
-  CloudFunctionDatasetStatus,
   Dataset,
   DatasetListingResponse,
   DatasetParamsInput,
   DatasetStatus,
+  CloudFunctionDatasetStatus,
 } from './datasets.types';
 import { google } from 'googleapis';
 import { GCSClient } from 'src/gcs/gcs-client';
+
+// List of folders which have own request
+const BLACK_LIST_OF_VISUALIZATIONS_FOLDERS = ['/joint_plot'];
 
 @Injectable()
 export class DatasetsService {
@@ -124,18 +127,36 @@ export class DatasetsService {
     organizationName: string,
     analysisName: string,
     columnName: string,
+    subFolder?: string,
   ): Promise<string[]> {
-    return this.storageClient.listObjects(
+    const visualizationsUrls = await this.storageClient.listObjects(
       bucketName,
       organizationName,
       analysisName,
       columnName,
+      subFolder,
+    );
+
+    if (subFolder) return visualizationsUrls ?? [];
+
+    return this.filterVisualizationsUrls(visualizationsUrls);
+  }
+
+  filterVisualizationsUrls(visualizationsUrls: string[]): string[] {
+    return (
+      visualizationsUrls?.filter((url) =>
+        BLACK_LIST_OF_VISUALIZATIONS_FOLDERS.some(
+          (folder) => !url.includes(folder),
+        ),
+      ) ?? []
     );
   }
 
   getDatasetStatus(
     statuses: Record<string, CloudFunctionDatasetStatus>,
   ): DatasetStatus {
+    // Mocked for now since cloud function always returns failed for this
+    statuses.choropleth = CloudFunctionDatasetStatus.ACTIVE;
     if (
       Object.values(statuses).every(
         (status) => status === CloudFunctionDatasetStatus.ACTIVE,

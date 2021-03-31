@@ -16,6 +16,7 @@ import NavSidebarProvider from 'src/shared/NavSidebar/NavSidebarProvider';
 import AuthCallBackHandler from 'src/auth/AuthCallbackHandler';
 import PrivateRoute from 'src/app/PrivateRoute';
 import UserProvider from 'src/auth/UserProvider';
+import { LoadScript } from '@react-google-maps/api';
 
 const useStyles = makeStyles({
   root: {
@@ -29,53 +30,57 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <CssBaseline />
-        <Switch>
-          <Route path={routes.callback.path}>
-            <AuthCallBackHandler />
-          </Route>
-          <Route exact path={routes.roadIQ.path}>
-            <RoadIQ />
-          </Route>
-          <UserProvider>
-            <Route>
-              <div className={classes.root}>
-                <NavSidebarProvider>
-                  <NavSidebar />
-                </NavSidebarProvider>
-                <Switch>
-                  <Redirect exact from="/" to={routes.dashboard.path} />
-                  <Route exact path={routes.dashboard.path}>
-                    <Dashboard />
-                  </Route>
-                  <PrivateRoute
-                    exact
-                    path={routes.dataAnalysis.path}
-                    allowedRoles={routes.dataAnalysis.allowedRoles}
-                  >
-                    <DataAnalysis />
-                  </PrivateRoute>
-                  <PrivateRoute
-                    exact
-                    path={routes.users.path}
-                    allowedRoles={routes.users.allowedRoles}
-                  >
-                    <Users />
-                  </PrivateRoute>
-                  <PrivateRoute
-                    exact
-                    path={routes.settings.path}
-                    allowedRoles={routes.settings.allowedRoles}
-                  >
-                    <Settings />
-                  </PrivateRoute>
-                </Switch>
-              </div>
+      <LoadScript
+        googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_KEY || ''}
+      >
+        <BrowserRouter>
+          <CssBaseline />
+          <Switch>
+            <Route path={routes.callback.path}>
+              <AuthCallBackHandler />
             </Route>
-          </UserProvider>
-        </Switch>
-      </BrowserRouter>
+            <Route exact path={routes.roadIQ.path}>
+              <RoadIQ />
+            </Route>
+            <UserProvider>
+              <Route>
+                <div className={classes.root}>
+                  <NavSidebarProvider>
+                    <NavSidebar />
+                  </NavSidebarProvider>
+                  <Switch>
+                    <Redirect exact from="/" to={routes.dashboard.path} />
+                    <Route exact path={routes.dashboard.path}>
+                      <Dashboard />
+                    </Route>
+                    <PrivateRoute
+                      exact
+                      path={routes.dataAnalysis.path}
+                      allowedRoles={routes.dataAnalysis.allowedRoles}
+                    >
+                      <DataAnalysis />
+                    </PrivateRoute>
+                    <PrivateRoute
+                      exact
+                      path={routes.users.path}
+                      allowedRoles={routes.users.allowedRoles}
+                    >
+                      <Users />
+                    </PrivateRoute>
+                    <PrivateRoute
+                      exact
+                      path={routes.settings.path}
+                      allowedRoles={routes.settings.allowedRoles}
+                    >
+                      <Settings />
+                    </PrivateRoute>
+                  </Switch>
+                </div>
+              </Route>
+            </UserProvider>
+          </Switch>
+        </BrowserRouter>
+      </LoadScript>
     </ThemeProvider>
   );
 };

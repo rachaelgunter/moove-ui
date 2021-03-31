@@ -1,9 +1,11 @@
 import { bigquery_v2, google } from 'googleapis';
+import { BigQuery } from '@google-cloud/bigquery';
 import { getPreviewTableData } from '../utils';
 import {
   BigQueryDataset,
   BigQueryPreviewTable,
   BigQueryProject,
+  BigQuerySegment,
   BigQueryTable,
   BigQueryTableData,
   BigQueryTableInfo,
@@ -189,5 +191,19 @@ export class BigqueryClientService extends GoogleClientService {
       ...getPreviewTableData(fields, rows),
       tableMetadata,
     };
+  }
+
+  async getPreviewSegment(segmentId: string): Promise<BigQuerySegment[]> {
+    const bigquery = new BigQuery();
+
+    const query = `SELECT *
+        from \`moove-platform-staging.here.road_segments_id_lookup\`
+        where id = "${segmentId}"
+          and id_partition = mod(FARM_FINGERPRINT("${segmentId}"), 4000)
+        LIMIT 100`;
+
+    return bigquery.query(query).then((data) => {
+      return data[0];
+    });
   }
 }

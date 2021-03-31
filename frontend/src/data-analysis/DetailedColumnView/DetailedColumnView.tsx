@@ -6,6 +6,7 @@ import ColumnViewBreadcrumbs from './ColumnViewBreadcrumbs';
 import ColumnViewTabPanel from './ColumnViewTabPanel';
 import ColumnViewMap from './ColumnViewMap';
 import ColumnViewAnalytics from './ColumnViewAnalytics';
+import ColumnViewRelationships from './ColumnViewRelationships';
 import { ColumnModel } from '../types';
 
 interface DetailedColumnViewProps {
@@ -62,7 +63,11 @@ const DetailedColumnView: FC<DetailedColumnViewProps> = ({
   };
 
   const Controls = () => (
-    <Button onClick={onClose} className={classes.dialogButton}>
+    <Button
+      onClick={onClose}
+      className={classes.dialogButton}
+      data-testid="dialog-close-button"
+    >
       Close
     </Button>
   );
@@ -79,9 +84,21 @@ const DetailedColumnView: FC<DetailedColumnViewProps> = ({
           aria-label="simple tabs example"
           className={classes.tabs}
         >
-          <Tab className={classes.tab} label="Analytics" />
-          <Tab className={classes.tab} label="Map" />
-          <Tab className={classes.tab} disabled label="Relationships" />
+          <Tab
+            className={classes.tab}
+            label="Analytics"
+            data-testid="dialog-analytics-tab"
+          />
+          <Tab
+            className={classes.tab}
+            label="Map"
+            data-testid="dialog-map-tab"
+          />
+          <Tab
+            className={classes.tab}
+            label="Relationships"
+            data-testid="dialog-relationships-tab"
+          />
         </Tabs>
       </Box>
       <ColumnViewTabPanel value={value} index={0}>
@@ -91,7 +108,7 @@ const DetailedColumnView: FC<DetailedColumnViewProps> = ({
         <ColumnViewMap columnName={column.name} analysisName={datasetName} />
       </ColumnViewTabPanel>
       <ColumnViewTabPanel value={value} index={2}>
-        Relationships
+        <ColumnViewRelationships column={column} analysisName={datasetName} />
       </ColumnViewTabPanel>
     </>
   );

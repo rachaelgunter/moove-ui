@@ -71,3 +71,21 @@ export type KeplerDataset = {
     rows: unknown[];
   };
 };
+
+export enum ColumnVisualizationSubFolder {
+  JOINT_PLOTS = 'joint_plots',
+}
+
+export type PreviewSegmentModelStatistic = {
+  name: string;
+  value: string;
+};
+
+export type PreviewSegmentModel = {
+  statistics?: PreviewSegmentModelStatistic[];
+  rawData?: string;
+  streetViewCoordinates?: {
+    latitude: number;
+    longitude: number;
+  };
+};

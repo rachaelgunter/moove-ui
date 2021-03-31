@@ -44,13 +44,20 @@ export class DatasetsResolver {
   async datasetColumnVisualizations(
     @Args() args: ColumnVisualizationParams,
   ): Promise<string[]> {
-    const { bucketName, analysisName, columnName, organizationName } = args;
+    const {
+      bucketName,
+      analysisName,
+      columnName,
+      organizationName,
+      subFolder,
+    } = args;
 
     return this.datasetsService.getColumnVisualizations(
       bucketName,
       organizationName,
       analysisName,
       columnName,
+      subFolder,
     );
   }
 }

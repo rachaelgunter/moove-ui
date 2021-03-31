@@ -71,6 +71,22 @@ type BigQueryPreviewTable {
   tableMetadata: BigQueryTableMetadata
 }
 
+type BigQueryPreviewSegmentStatistics {
+  name: String!
+  value: String
+}
+
+type StreetViewCoordinates {
+  latitude: Float!
+  longitude: Float!
+}
+
+type PreviewSegment {
+  rawData: String!
+  statistics: [BigQueryPreviewSegmentStatistics]
+  streetViewCoordinates: StreetViewCoordinates!
+}
+
 type BigQueryColumnTable {
   name: String!
   type: String!
@@ -101,8 +117,9 @@ type Query {
   tableInfo(projectId: String!, datasetId: String!, tableId: String!): BigQueryTableInfo!
   previewTable(projectId: String!, datasetId: String!, tableId: String!, offset: Int = 0, limit: Int = 5, selectedFields: [String]): BigQueryPreviewTable!
   columnsTable(projectId: String!, datasetId: String!, tableId: String!, offset: Int = 0, limit: Int = 5, selectedFields: [String]): [BigQueryColumnTable]
+  previewSegment(segmentId: String!): PreviewSegment!
   getDatasets(GCPProjectName: String!): [Dataset]
-  datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!, organizationName: String!): [String]
+  datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!, organizationName: String!, subFolder: String): [String]
 }
 
 input BigQueryTablesParams {
