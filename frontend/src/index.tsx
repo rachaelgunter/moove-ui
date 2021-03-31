@@ -42,7 +42,6 @@ createAuth0Client({
   redirect_uri: redirectUri,
   responseType: 'code',
   useRefreshTokens: true,
-  cacheLocation: 'localstorage',
   audience,
 }).then(async (auth0) => {
   let token = '';
