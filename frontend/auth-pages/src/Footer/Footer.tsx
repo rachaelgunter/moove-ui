@@ -1,14 +1,22 @@
 import React, { ReactElement } from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, GridJustification } from '@material-ui/core';
 
 interface FooterProps {
-  children: ReactElement[];
+  children: ReactElement | ReactElement[];
+  justify?: GridJustification;
 }
 
-const Footer = ({ children }: FooterProps): ReactElement => (
-  <Grid container item justify="center" xs={12}>
+const Footer = ({
+  children,
+  justify = 'center',
+}: FooterProps): ReactElement => (
+  <Grid container item justify={justify} xs={12}>
     {children}
   </Grid>
 );
+
+Footer.defaultProps = {
+  justify: 'center',
+};
 
 export default Footer;
