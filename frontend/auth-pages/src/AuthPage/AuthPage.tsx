@@ -9,6 +9,10 @@ import {
   backgroundMap3x,
 } from '../constants';
 
+interface AuthPageStyleProps {
+  size: 'small' | 'large';
+}
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: '#5291a8',
@@ -23,11 +27,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     zIndex: 0,
   },
-  card: {
+  card: ({ size }: AuthPageStyleProps) => ({
     backgroundColor: 'transparent',
-    maxWidth: 423,
-    width: '100%',
-  },
+    width: size === 'small' ? 423 : 870,
+    maxWidth: '100%',
+  }),
   content: {
     backgroundColor: theme.palette.bg.dark,
     zIndex: 1,
@@ -38,10 +42,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface AuthPageProps {
   children: ReactElement[];
+  size?: 'small' | 'large';
 }
 
-const AuthPage = ({ children }: AuthPageProps): ReactElement => {
-  const classes = useStyles();
+const AuthPage = ({
+  children,
+  size = 'small',
+}: AuthPageProps): ReactElement => {
+  const classes = useStyles({ size });
 
   return (
     <div className={classes.root}>
@@ -51,16 +59,18 @@ const AuthPage = ({ children }: AuthPageProps): ReactElement => {
         src={backgroundMap1x}
         srcSet={`${backgroundMap2x} 2x, ${backgroundMap3x} 3x`}
       />
-      <Grid container justify="center" alignItems="center">
-        <Grid item>
-          <Card className={classes.card}>
-            <CardHeader component={Header} />
-            <CardContent className={classes.content}>{children}</CardContent>
-          </Card>
-        </Grid>
+      <Grid container item justify="center" alignItems="center">
+        <Card className={classes.card}>
+          <CardHeader component={Header} />
+          <CardContent className={classes.content}>{children}</CardContent>
+        </Card>
       </Grid>
     </div>
   );
+};
+
+AuthPage.defaultProps = {
+  size: 'small',
 };
 
 export default AuthPage;

@@ -6,6 +6,7 @@ import { HashRouter, Route, Switch } from 'react-router-dom';
 import theme from './app/styles';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
+import Terms from './Terms';
 import WebAuthProvider from './WebAuthProvider';
 
 function getAuthOptions() {
@@ -68,6 +69,9 @@ ReactDOM.render(
           </Route>
           <Route path="/sign-up">
             <SignUp />
+          </Route>
+          <Route path="/terms">
+            <Terms />
           </Route>
         </Switch>
       </HashRouter>
