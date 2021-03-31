@@ -84,4 +84,8 @@ export type PreviewSegmentModelStatistic = {
 export type PreviewSegmentModel = {
   statistics?: PreviewSegmentModelStatistic[];
   rawData?: string;
+  streetViewCoordinates?: {
+    latitude: number;
+    longitude: number;
+  };
 };

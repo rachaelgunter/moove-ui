@@ -1,23 +1,30 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpService, Injectable, Logger } from '@nestjs/common';
 
 import { BigqueryClientService } from './bigquery-client/bigquery-client.service';
-import { UsersService } from 'src/users/users.service';
 import { UserTokenPayload } from 'src/users/users.types';
 import {
   BigQueryPreviewTable,
   BigQueryTableData,
   BigQueryTableInfo,
   BigQueryColumnTable,
-  BigQueryPreviewSegment,
+  PreviewSegment,
+  StreetViewCoordinates,
+  BigQueryPreviewSegmentStatistics,
+  BigQuerySegment,
+  SegmentStatisticsFields,
 } from './bigquery.types';
+import { ConfigService } from '@nestjs/config';
+
+const GOOGLE_ROADS_API_URL = 'https://roads.googleapis.com/v1/snapToRoads';
 
 @Injectable()
 export class BigQueryService {
   private readonly logger = new Logger(BigQueryService.name);
 
   constructor(
-    private readonly usersService: UsersService,
     private readonly bigqueryClientService: BigqueryClientService,
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
   ) {}
 
   async getTableDataList(
@@ -171,7 +178,44 @@ export class BigQueryService {
     return Math.round((percentage + Number.EPSILON) * 100) / 100;
   }
 
-  async getPreviewSegment(segmentId: string): Promise<BigQueryPreviewSegment> {
-    return await this.bigqueryClientService.getPreviewSegment(segmentId);
+  async getPreviewSegment(segmentId: string): Promise<PreviewSegment> {
+    const segments = await this.bigqueryClientService.getPreviewSegment(
+      segmentId,
+    );
+    const streetViewCoordinates = await this.snapSegmentToRoad(segments[0]);
+    return {
+      rawData: JSON.stringify(segments),
+      statistics: this.getSegmentStatistics(segments[0]),
+      streetViewCoordinates,
+    };
+  }
+
+  async snapSegmentToRoad(
+    segment: BigQuerySegment,
+  ): Promise<StreetViewCoordinates> {
+    const segmentgeojson = JSON.parse(segment.geometry_geojson);
+    const [startLon, startLat] = segmentgeojson.coordinates[0];
+    const [endLon, endLat] = segmentgeojson.coordinates[1];
+
+    return this.httpService
+      .get(GOOGLE_ROADS_API_URL, {
+        params: {
+          interpolate: true,
+          key: this.configService.get('GOOGLE_ROADS_API_KEY'),
+          path: `${startLat},${startLon}|${endLat},${endLon}`,
+        },
+      })
+      .toPromise()
+      .then((response) => response.data.snappedPoints[0]?.location);
+  }
+
+  getSegmentStatistics(
+    segment: BigQuerySegment,
+  ): BigQueryPreviewSegmentStatistics[] {
+    const fields = Object.keys(SegmentStatisticsFields);
+
+    return fields.map((field) => {
+      return { name: field, value: segment && segment[field] };
+    });
   }
 }

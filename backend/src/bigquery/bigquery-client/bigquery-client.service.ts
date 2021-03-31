@@ -3,9 +3,9 @@ import { BigQuery } from '@google-cloud/bigquery';
 import { getPreviewTableData } from '../utils';
 import {
   BigQueryDataset,
-  BigQueryPreviewSegment,
   BigQueryPreviewTable,
   BigQueryProject,
+  BigQuerySegment,
   BigQueryTable,
   BigQueryTableData,
   BigQueryTableInfo,
@@ -193,36 +193,17 @@ export class BigqueryClientService extends GoogleClientService {
     };
   }
 
-  async getPreviewSegment(segmentId: string): Promise<BigQueryPreviewSegment> {
+  async getPreviewSegment(segmentId: string): Promise<BigQuerySegment[]> {
     const bigquery = new BigQuery();
+
     const query = `SELECT *
         from \`moove-platform-staging.here.road_segments_id_lookup\`
         where id = "${segmentId}"
           and id_partition = mod(FARM_FINGERPRINT("${segmentId}"), 4000)
         LIMIT 100`;
-    const getStatistics = (rows) => {
-      const fields = [
-        'max_slope',
-        'slope',
-        'slope_boosted_wt_avg',
-        'slope_boosted_wt_avg_0_1',
-        'slope_wt_avg',
-        'slope_wt_avg_0_1',
-        'slopes_bumpiness_nobc',
-        'slopes_bumpiness',
-      ];
 
-      return fields.map((field) => {
-        return { name: field, value: rows && rows[field] };
-      });
-    };
-    return bigquery.query(query).then(function (data) {
-      const rows = data[0];
-
-      return {
-        statistics: getStatistics(rows && rows[0]),
-        rawData: JSON.stringify(rows),
-      };
+    return bigquery.query(query).then((data) => {
+      return data[0];
     });
   }
 }
