@@ -46,7 +46,7 @@ const useStylesTable = makeStyles(() => ({
     color: '#fff',
     fontSize: '13px',
     whiteSpace: 'nowrap',
-    verticalAlign: 'top',
+    verticalAlign: 'middle',
     padding: '11px 24px 11px 24px',
   },
   pagination: {
@@ -56,6 +56,9 @@ const useStylesTable = makeStyles(() => ({
   },
   selectIcon: {
     color: '#fff',
+  },
+  button: {
+    fontSize: '13px',
   },
 }));
 
@@ -136,6 +139,7 @@ const PreviewTableContent: FC<PreviewTableContentProps> = ({
                   <TableCell key={id} className={classes.cell}>
                     {isSegmentValue(value) ? (
                       <Button
+                        className={classes.button}
                         variant="text"
                         onClick={() => openPreviewSegment(value || '')}
                       >
