@@ -195,9 +195,10 @@ export class BigqueryClientService extends GoogleClientService {
 
   async getPreviewSegment(segmentId: string): Promise<BigQuerySegment[]> {
     const bigquery = new BigQuery();
+    const GCP_SEGMENT_DATA_PROJECT = process.env.GCP_SEGMENT_DATA_PROJECT;
 
     const query = `SELECT *
-        from \`moove-platform-staging.here.road_segments_id_lookup\`
+        from \`${GCP_SEGMENT_DATA_PROJECT}.here.road_segments_id_lookup\`
         where id = "${segmentId}"
           and id_partition = mod(FARM_FINGERPRINT("${segmentId}"), 4000)
         LIMIT 100`;
