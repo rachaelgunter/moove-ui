@@ -31,7 +31,10 @@ const SignIn: FC = () => {
           </Link>
         </Typography>
         <Typography variant="body2" component="p">
-          By signing up, you agree to our terms
+          By signing up, you agree to our&nbsp;
+          <Link href="/terms" variant="body2">
+            terms
+          </Link>
         </Typography>
       </Footer>
     </AuthPage>
