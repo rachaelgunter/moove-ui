@@ -40,13 +40,19 @@ createAuth0Client({
   domain,
   client_id: clientId,
   redirect_uri: redirectUri,
-  responseType: 'token id_token',
+  responseType: 'code',
+  useRefreshTokens: true,
+  cacheLocation: 'localstorage',
   audience,
 }).then(async (auth0) => {
   let token = '';
 
   // Check if the token is present on page reload
   try {
+    if (window.location.search.includes('code=')) {
+      await auth0.handleRedirectCallback();
+    }
+
     token = await auth0.getTokenSilently({ audience });
   } catch (_) {
     return auth0.loginWithRedirect();

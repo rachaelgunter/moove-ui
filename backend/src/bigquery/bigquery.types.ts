@@ -168,13 +168,40 @@ export class BigQueryPreviewSegmentStatistics {
 }
 
 @ObjectType()
-export class BigQueryPreviewSegment {
+export class StreetViewCoordinates {
+  @Field()
+  latitude: number;
+
+  @Field()
+  longitude: number;
+}
+
+@ObjectType()
+export class PreviewSegment {
   @Field()
   rawData: string;
 
   @Field(() => [BigQueryPreviewSegmentStatistics], { nullable: 'itemsAndList' })
   statistics: BigQueryPreviewSegmentStatistics[];
+
+  @Field(() => StreetViewCoordinates)
+  streetViewCoordinates: StreetViewCoordinates;
 }
+
+export enum SegmentStatisticsFields {
+  max_slope = 'max_slope',
+  slope = 'slope',
+  slope_boosted_wt_avg = 'slope_boosted_wt_avg',
+  slope_boosted_wt_avg_0_1 = 'slope_boosted_wt_avg_0_1',
+  slope_wt_avg = 'slope_wt_avg',
+  slope_wt_avg_0_1 = 'slope_wt_avg_0_1',
+  slopes_bumpiness_nobc = 'slopes_bumpiness_nobc',
+  slopes_bumpiness = 'slopes_bumpiness',
+}
+
+export type BigQuerySegment = {
+  [key in SegmentStatisticsFields]: string;
+} & { geometry_geojson: string };
 
 @ObjectType()
 export class BigQueryColumnTable {
