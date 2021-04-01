@@ -200,7 +200,7 @@ export class BigqueryClientService extends GoogleClientService {
     const query = `SELECT *
         from \`${GCP_SEGMENT_DATA_PROJECT}.here.road_segments_id_lookup\`
         where id = "${segmentId}"
-          and id_partition = mod(FARM_FINGERPRINT("${segmentId}"), 4000)
+          and id_partition = mod(ABS(FARM_FINGERPRINT("${segmentId}")), 4000)
         LIMIT 100`;
 
     return bigquery.query(query).then((data) => {
