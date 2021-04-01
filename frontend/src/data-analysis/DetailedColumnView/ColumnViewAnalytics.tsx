@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client';
 import { Box, Grid } from '@material-ui/core';
 
 import { UserContext } from 'src/auth/UserProvider';
-import { DATASET_COLUMN_VISUALIZATIONS_QUERY } from '../queries';
+import { DATASET_COLUMN_ANALYSIS_VISUALIZATIONS_QUERY } from '../queries';
 import { ColumnModel } from '../types';
 import ColumnPropertiesList from './ColumnPropertiesList';
 import ColumnViewContent, {
@@ -23,7 +23,7 @@ const ColumnViewAnalytics: FC<ColumnViewAnalyticsProps> = ({
   const classes = useColumnViewContentStyles();
   const user = useContext(UserContext);
 
-  const { data } = useQuery(DATASET_COLUMN_VISUALIZATIONS_QUERY, {
+  const { data } = useQuery(DATASET_COLUMN_ANALYSIS_VISUALIZATIONS_QUERY, {
     variables: {
       bucketName: user.GCSBucketName,
       organizationName: user.organization,
@@ -35,7 +35,7 @@ const ColumnViewAnalytics: FC<ColumnViewAnalyticsProps> = ({
   const sections = [
     {
       title: 'Analytical Metrics',
-      chartsUrls: data?.datasetColumnVisualizations,
+      chartsUrls: data?.datasetColumnVisualizations.analyticsVisualizations,
     },
   ];
 

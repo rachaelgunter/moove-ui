@@ -81,7 +81,7 @@ export const DATASET_COLUMNS_QUERY = gql`
   }
 `;
 
-export const DATASET_COLUMN_VISUALIZATIONS_QUERY = gql`
+export const DATASET_COLUMN_ANALYSIS_VISUALIZATIONS_QUERY = gql`
   query datasetsVisualizations(
     $bucketName: String!
     $analysisName: String!
@@ -93,25 +93,29 @@ export const DATASET_COLUMN_VISUALIZATIONS_QUERY = gql`
       analysisName: $analysisName
       columnName: $columnName
       organizationName: $organizationName
-    )
+    ) {
+      id
+      analyticsVisualizations
+    }
   }
 `;
 
-export const DATASET_COLUMN_VISUALIZATIONS_OF_JOINT_PLOTS_QUERY = gql`
+export const DATASET_COLUMN_RELATIONSHIPS_VISUALIZATIONS_QUERY = gql`
   query datasetColumnVisualizations(
     $bucketName: String!
     $analysisName: String!
     $columnName: String!
     $organizationName: String!
-    $subFolder: String!
   ) {
     datasetColumnVisualizations(
       bucketName: $bucketName
       analysisName: $analysisName
       columnName: $columnName
       organizationName: $organizationName
-      subFolder: $subFolder
-    )
+    ) {
+      id
+      relationshipsVisualizations
+    }
   }
 `;
 

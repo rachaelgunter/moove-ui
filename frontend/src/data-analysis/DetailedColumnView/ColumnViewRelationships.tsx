@@ -2,8 +2,8 @@ import React, { FC, useContext } from 'react';
 import { useQuery } from '@apollo/client';
 
 import { UserContext } from 'src/auth/UserProvider';
-import { DATASET_COLUMN_VISUALIZATIONS_OF_JOINT_PLOTS_QUERY } from '../queries';
-import { ColumnModel, ColumnVisualizationSubFolder } from '../types';
+import { DATASET_COLUMN_RELATIONSHIPS_VISUALIZATIONS_QUERY } from '../queries';
+import { ColumnModel } from '../types';
 import ColumnViewContent from './ColumnViewContent';
 import ColumnViewContainer from './ColumnViewContainer';
 
@@ -18,23 +18,21 @@ const ColumnViewRelationships: FC<ColumnViewRelationshipsProps> = ({
 }: ColumnViewRelationshipsProps) => {
   const user = useContext(UserContext);
 
-  const { data } = useQuery(
-    DATASET_COLUMN_VISUALIZATIONS_OF_JOINT_PLOTS_QUERY,
-    {
-      variables: {
-        bucketName: process.env.REACT_APP_DATASET_ASSETS_BUCKET,
-        analysisName,
-        columnName: column.name,
-        organizationName: user.organization,
-        subFolder: ColumnVisualizationSubFolder.JOINT_PLOTS,
-      },
+  const { data } = useQuery(DATASET_COLUMN_RELATIONSHIPS_VISUALIZATIONS_QUERY, {
+    variables: {
+      bucketName: process.env.REACT_APP_DATASET_ASSETS_BUCKET,
+      analysisName,
+      columnName: column.name,
+      organizationName: user.organization,
     },
-  );
+  });
 
   const sections = [
     {
-      title: 'All Joint Plots',
-      chartsUrls: data ? data.datasetColumnVisualizations : undefined,
+      title: 'All Joint and Scatter Plots',
+      chartsUrls: data
+        ? data.datasetColumnVisualizations.relationshipsVisualizations
+        : undefined,
     },
   ];
 
