@@ -4,6 +4,7 @@ import { GqlAuthGuard } from 'src/auth/graphql-auth.guard';
 import { DatasetsService } from './datasets.service';
 import {
   ColumnVisualizationParams,
+  ColumnVisualizations,
   Dataset,
   DatasetParamsInput,
 } from './datasets.types';
@@ -40,24 +41,17 @@ export class DatasetsResolver {
 
   @Roles(Role.PAID_USER, Role.ADMIN)
   @UseGuards(GqlAuthGuard)
-  @Query(() => [String], { nullable: 'itemsAndList' })
+  @Query(() => ColumnVisualizations)
   async datasetColumnVisualizations(
     @Args() args: ColumnVisualizationParams,
-  ): Promise<string[]> {
-    const {
-      bucketName,
-      analysisName,
-      columnName,
-      organizationName,
-      subFolder,
-    } = args;
+  ): Promise<ColumnVisualizations> {
+    const { bucketName, analysisName, columnName, organizationName } = args;
 
     return this.datasetsService.getColumnVisualizations(
       bucketName,
       organizationName,
       analysisName,
       columnName,
-      subFolder,
     );
   }
 }

@@ -8,12 +8,13 @@ import {
   DatasetParamsInput,
   DatasetStatus,
   CloudFunctionDatasetStatus,
+  ColumnVisualizations,
 } from './datasets.types';
 import { google } from 'googleapis';
 import { GCSClient } from 'src/gcs/gcs-client';
 
 // List of folders which have own request
-const BLACK_LIST_OF_VISUALIZATIONS_FOLDERS = ['/joint_plot'];
+const RELATIONSHIPS_VISUALIZATIONS_FOLDERS = ['/joint_plot', '/scatter_plot'];
 
 @Injectable()
 export class DatasetsService {
@@ -127,29 +128,43 @@ export class DatasetsService {
     organizationName: string,
     analysisName: string,
     columnName: string,
-    subFolder?: string,
-  ): Promise<string[]> {
+  ): Promise<ColumnVisualizations> {
     const visualizationsUrls = await this.storageClient.listObjects(
       bucketName,
       organizationName,
       analysisName,
       columnName,
-      subFolder,
     );
-
-    if (subFolder) return visualizationsUrls ?? [];
-
-    return this.filterVisualizationsUrls(visualizationsUrls);
+    if (!visualizationsUrls) {
+      return {
+        id: analysisName + columnName,
+        analyticsVisualizations: [],
+        relationshipsVisualizations: [],
+      };
+    }
+    return {
+      id: analysisName + columnName,
+      analyticsVisualizations: visualizationsUrls.filter(
+        (url) =>
+          !this.filterVisualizationsUrlsPredicate(
+            url,
+            RELATIONSHIPS_VISUALIZATIONS_FOLDERS,
+          ),
+      ),
+      relationshipsVisualizations: visualizationsUrls.filter((url) =>
+        this.filterVisualizationsUrlsPredicate(
+          url,
+          RELATIONSHIPS_VISUALIZATIONS_FOLDERS,
+        ),
+      ),
+    };
   }
 
-  filterVisualizationsUrls(visualizationsUrls: string[]): string[] {
-    return (
-      visualizationsUrls?.filter((url) =>
-        BLACK_LIST_OF_VISUALIZATIONS_FOLDERS.some(
-          (folder) => !url.includes(folder),
-        ),
-      ) ?? []
-    );
+  filterVisualizationsUrlsPredicate(
+    url: string,
+    subfolders: string[],
+  ): boolean {
+    return subfolders.some((subfolder) => url.includes(subfolder));
   }
 
   getDatasetStatus(
