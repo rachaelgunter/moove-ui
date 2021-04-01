@@ -76,7 +76,7 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
       return [];
     }
 
-    const result: [string | number, string | number][] = [['KM', 'Elev']];
+    const result: [string | number, string | number][] = [['KM', 'Elevation']];
     const arrayLength = input.length;
     let prev = 0;
 
@@ -98,8 +98,12 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
   return (
     <Grid className={classes.container} container spacing={1}>
       <Grid item container xs={12}>
-        <PreviewSegmentGridItem title="Elevation Profile" loading={loading}>
-          <PreviewSegmentChart data={chartData} segmentId={segmentId} />
+        <PreviewSegmentGridItem
+          backgroundColor="#182327"
+          title="Elevation Profile"
+          loading={loading}
+        >
+          <PreviewSegmentChart data={chartData} />
         </PreviewSegmentGridItem>
       </Grid>
       <Grid item container xs={7}>

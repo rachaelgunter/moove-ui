@@ -122,7 +122,7 @@ const PreviewSegmentData: FC<PreviewSegmentDataProps> = ({
           <ReactJson
             name={null}
             style={{ background: 'none' }}
-            theme="monokai"
+            theme="ashes"
             displayDataTypes={false}
             enableClipboard={false}
             iconStyle="circle"

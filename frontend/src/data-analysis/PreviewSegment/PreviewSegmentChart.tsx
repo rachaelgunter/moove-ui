@@ -1,15 +1,15 @@
-import { Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React, { FC } from 'react';
 import { Chart } from 'react-google-charts';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import theme from 'src/app/styles';
+import { FontFamily } from 'src/app/styles/fonts';
 
 interface PreviewSegmentChartProps {
   data: [string | number, string | number][];
-  segmentId: string;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   chart: {
     margin: 0,
     '&> div > div': {
@@ -20,33 +20,39 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const PreviewSegmentChart: FC<PreviewSegmentChartProps> = ({
   data,
-  segmentId,
 }: PreviewSegmentChartProps) => {
   const classes = useStyles();
 
   const options = {
-    title: `Elevation Profile, segment ${segmentId}`,
     curveType: 'function',
+    fontName: FontFamily.ROBOTO,
     hAxis: {
       title: 'Distance Along Segment (KM)',
       textStyle: { color: '#ffffff' },
-      titleTextStyle: { color: '#ffffff' },
+      titleTextStyle: {
+        color: '#ffffff',
+        fontName: FontFamily.ROBOTO,
+        italic: false,
+      },
       gridlines: {
-        // color: '#fff',
-        opacity: 0.3,
+        color: theme.palette.bg.light,
       },
     },
     vAxis: {
       title: 'Change in elevation (M)',
       textStyle: { color: '#ffffff' },
-      titleTextStyle: { color: '#ffffff' },
+      titleTextStyle: {
+        color: '#ffffff',
+        fontName: FontFamily.ROBOTO,
+        italic: false,
+      },
       gridlines: {
-        // color: '#fff',
-        opacity: 0.3,
+        color: theme.palette.bg.light,
       },
     },
     legend: {
-      position: 'bottom',
+      position: 'top',
+      alignment: 'center',
       textStyle: {
         color: '#fff',
       },
@@ -55,18 +61,21 @@ const PreviewSegmentChart: FC<PreviewSegmentChartProps> = ({
       0: {
         pointSize: 10,
         visibleInLegend: true,
+        color: theme.palette.positive,
+        tooltip: JSON.parse(
+          process.env.REACT_APP_ELEVATION_TOOLTIPS_VISIBLE || 'false',
+        ),
       },
     },
     trendlines: {
       0: {
-        showR2: true,
-        title: 'Elev Trend',
+        title: 'Elevation Trend',
         visibleInLegend: true,
-        color: '#ff0000',
+        color: theme.palette.error.light,
         titleTextStyle: { color: '#ffffff' },
       },
     },
-    backgroundColor: '#000000',
+    backgroundColor: '#182327',
   };
 
   return (

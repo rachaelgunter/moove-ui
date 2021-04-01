@@ -20,7 +20,7 @@ const ColumnViewRelationships: FC<ColumnViewRelationshipsProps> = ({
 
   const { data } = useQuery(DATASET_COLUMN_RELATIONSHIPS_VISUALIZATIONS_QUERY, {
     variables: {
-      bucketName: process.env.REACT_APP_DATASET_ASSETS_BUCKET,
+      bucketName: user.GCSBucketName,
       analysisName,
       columnName: column.name,
       organizationName: user.organization,
