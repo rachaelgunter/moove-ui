@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client';
 
 import { UserContext } from 'src/auth/UserProvider';
 import { DATASET_COLUMN_RELATIONSHIPS_VISUALIZATIONS_QUERY } from '../queries';
-import { ColumnModel, ColumnVisualizationSubFolder } from '../types';
+import { ColumnModel } from '../types';
 import ColumnViewContent from './ColumnViewContent';
 import ColumnViewContainer from './ColumnViewContainer';
 
@@ -29,7 +29,7 @@ const ColumnViewRelationships: FC<ColumnViewRelationshipsProps> = ({
 
   const sections = [
     {
-      title: 'All Joint Plots',
+      title: 'All Joint and Scatter Plots',
       chartsUrls: data
         ? data.datasetColumnVisualizations.relationshipsVisualizations
         : undefined,
