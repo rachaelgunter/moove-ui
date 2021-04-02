@@ -1,31 +1,88 @@
 const webpack = require('webpack');
 const env = require('dotenv');
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const path = require('path');
 
 env.config({
   path: `./.env.${process.env.ENV_FILE}`,
 });
 
-module.exports = function override(config) {
+module.exports = function override(config, env) {
   config.module.rules.push({
     test: /node_modules[\\|/]colorbrewer/,
     use: { loader: 'umd-compat-loader?amd=true' },
   });
 
   config.plugins.push(
-    new webpack.EnvironmentPlugin([
-      'REACT_APP_AUTH0_DOMAIN',
-      'REACT_APP_AUTH0_CLIENT_ID',
-      'REACT_APP_AUTH0_AUDIENCE',
-      'REACT_APP_ROAD_IQ_URL',
-      'REACT_APP_AUTH0_CLAIMS_NAMESPACE',
-      'REACT_APP_MAPBOX_TOKEN',
-      'REACT_APP_GRAPHQL_API',
-      'REACT_APP_AUTH0_REDIRECT_URI',
-      'REACT_APP_AUTH0_LOGOUT_REDIRECT_URI',
-      'REACT_APP_JUPYTERHUB_URL',
-      'REACT_APP_DATASET_ASSETS_BUCKET',
-    ]),
+    new webpack.EnvironmentPlugin(Object.keys(process.env).filter(key => key.indexOf('REACT_APP_') === 0)),
   );
+
+  config.resolve = {
+    ...config.resolve,
+    alias: {
+      ...config.resolve.alias,
+      cesium$: 'cesium/Cesium',
+      cesium: 'cesium/Source'
+    }
+  }
+  //
+  const cesiumSource = "node_modules/cesium/Source";
+  const cesiumWorkers = "../Build/Cesium/Workers";
+  const prod = env === "production";
+
+  config.plugins.push(new CopyWebpackPlugin({
+    patterns: [
+      {
+        from: path.join(cesiumSource, cesiumWorkers),
+        to: "static/cesium/Workers",
+      },
+      {
+        from: path.join(cesiumSource, "Assets"),
+        to: "static/cesium/Assets",
+      },
+      {
+        from: path.join(cesiumSource, "Widgets"),
+        to: "static/cesium/Widgets",
+      },
+    ],
+  }));
+
+  config.plugins.push(
+    new webpack.DefinePlugin({
+      CESIUM_BASE_URL: JSON.stringify(process.env.CESIUM_BASE_URL),
+    }),
+  )
+
+  config.module.rules = [
+    ...config.module.rules,
+    ...[
+      prod
+        ? {
+          // Strip cesium pragmas
+          test: /\.js$/,
+          enforce: "pre",
+          include: path.resolve(__dirname, cesiumSource),
+          use: [
+            {
+              loader: "strip-pragma-loader",
+              options: {
+                pragmas: {
+                  debug: false,
+                },
+              },
+            },
+          ],
+        }
+        : {},
+    ]
+  ];
+
+  // https://github.com/CesiumGS/cesium/issues/4876
+  config.output = {
+    ...config.output,
+    ...{sourcePrefix: ''}
+  };
+  config.module['unknownContextCritical'] = false;
 
   return config;
 };

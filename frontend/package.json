@@ -31,6 +31,7 @@
     "react-virtualized-auto-sizer": "^1.0.5",
     "redux": "^4.0.5",
     "resium": "^1.13.1",
+    "strip-pragma-loader": "^1.0.0",
     "styled-components": "^5.2.1"
   },
   "scripts": {
@@ -74,6 +75,7 @@
     "@typescript-eslint/eslint-plugin": "^4.15.0",
     "@typescript-eslint/parser": "^4.15.0",
     "dotenv": "^8.2.0",
+    "copy-webpack-plugin": "^6.4.1",
     "eslint": "^7.19.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-airbnb-typescript": "^12.3.1",
