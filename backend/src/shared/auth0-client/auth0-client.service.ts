@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AppMetadata, ManagementClient, User, UserMetadata } from 'auth0';
+import {
+  AppMetadata,
+  ManagementClient,
+  User as Auth0User,
+  UserMetadata,
+  UserPage,
+} from 'auth0';
 
 @Injectable()
 export class Auth0ClientService {
@@ -17,7 +23,7 @@ export class Auth0ClientService {
 
   async getUsersByEmail(
     email: string,
-  ): Promise<User<AppMetadata, UserMetadata>[]> {
+  ): Promise<Auth0User<AppMetadata, UserMetadata>[]> {
     return this.client.getUsersByEmail(email);
   }
 
@@ -26,14 +32,27 @@ export class Auth0ClientService {
   }
 
   async linkUsersAccounts(
-    primaryAccount: User<AppMetadata, UserMetadata>,
-    secondaryAccount: User<AppMetadata, UserMetadata>,
+    primaryAccount: Auth0User<AppMetadata, UserMetadata>,
+    secondaryAccount: Auth0User<AppMetadata, UserMetadata>,
   ) {
     const { provider } = secondaryAccount.identities?.[0];
 
     return this.client.linkUsers(primaryAccount.user_id, {
       user_id: secondaryAccount.user_id,
       provider,
+    });
+  }
+
+  async searchUsers(
+    query: string,
+    page: number,
+    perPage: number,
+  ): Promise<UserPage> {
+    return this.client.getUsers({
+      q: query,
+      include_totals: true,
+      page,
+      per_page: perPage,
     });
   }
 }
