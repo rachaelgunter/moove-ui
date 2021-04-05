@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "cesium$/*": ["node_modules/cesium/Cesium/*"],
+      "cesium/*": ["node_modules/cesium/Source/*"]
+    }
+  }
+}
