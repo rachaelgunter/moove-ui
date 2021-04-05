@@ -17,7 +17,6 @@ interface PreviewSegmentPreviewProps {
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
   },
   col1: {
     width: '60%',
@@ -25,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   col2: {
     width: '40%',
     '& > div': {
-      height: `calc(50% - ${theme.spacing(1) / 2} )`,
+      flex: '1 0 auto',
     },
   },
 }));
@@ -138,7 +137,7 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
           <PreviewSegmentCesium data={cesiumData} />
         </PreviewSegmentGridItem>
       </Grid>
-      <Grid item container className={classes.col2}>
+      <Grid item container className={classes.col2} direction="column">
         <PreviewSegmentGridItem
           backgroundColor="#182327"
           title="Elevation Profile"
