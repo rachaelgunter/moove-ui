@@ -84,7 +84,7 @@ const PreviewSegmentCesium: FC<PreviewSegmentChartProps> = ({
       viewer = refViewer.current.cesiumElement;
     }
   }, []);
-  // const viewerComponent = useMemo(() => {
+
   const { coordinates } = data.geometryGeojson;
   const startLat = coordinates[0][0];
   const startLon = coordinates[0][1];
@@ -199,7 +199,7 @@ const PreviewSegmentCesium: FC<PreviewSegmentChartProps> = ({
       >
         <CameraFlyTo
           destination={Cartesian3.fromDegrees(startLat, startLon, 5000)}
-          duration={10}
+          duration={5}
         />
         <GeoJsonDataSource
           data={segmentGeoJson}
