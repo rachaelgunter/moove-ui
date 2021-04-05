@@ -18,7 +18,6 @@ const useStyles = (backgroundColor: string) =>
       flexDirection: 'column',
       backgroundColor,
       width: '100%',
-      marginBottom: theme.spacing(1),
     },
     title: {
       fontSize: 12,

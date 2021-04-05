@@ -17,14 +17,15 @@ interface PreviewSegmentPreviewProps {
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
   },
   col1: {
     width: '60%',
   },
   col2: {
     width: '40%',
-    '& > div': {
-      flex: '1 0 auto',
+    '&> div': {
+      flexGrow: 1,
     },
   },
 }));
@@ -137,29 +138,38 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
           <PreviewSegmentCesium data={cesiumData} />
         </PreviewSegmentGridItem>
       </Grid>
-      <Grid item container className={classes.col2} direction="column">
-        <PreviewSegmentGridItem
-          backgroundColor="#182327"
-          title="Elevation Profile"
-          loading={loading}
-        >
-          <PreviewSegmentChart data={chartData} />
-        </PreviewSegmentGridItem>
-
-        <PreviewSegmentGridItem title="Street View" loading={loading}>
-          <AutoSizer>
-            {({ height, width }) => (
-              <GoogleStreetView
-                height={height}
-                width={width}
-                position={{
-                  lat: streetViewLatitiude,
-                  lng: streetViewLongitude,
-                }}
-              />
-            )}
-          </AutoSizer>
-        </PreviewSegmentGridItem>
+      <Grid
+        item
+        container
+        className={classes.col2}
+        direction="column"
+        spacing={1}
+      >
+        <Grid item container>
+          <PreviewSegmentGridItem
+            backgroundColor="#182327"
+            title="Elevation Profile"
+            loading={loading}
+          >
+            <PreviewSegmentChart data={chartData} />
+          </PreviewSegmentGridItem>
+        </Grid>
+        <Grid item container>
+          <PreviewSegmentGridItem title="Street View" loading={loading}>
+            <AutoSizer>
+              {({ height, width }) => (
+                <GoogleStreetView
+                  height={height}
+                  width={width}
+                  position={{
+                    lat: streetViewLatitiude,
+                    lng: streetViewLongitude,
+                  }}
+                />
+              )}
+            </AutoSizer>
+          </PreviewSegmentGridItem>
+        </Grid>
       </Grid>
     </Grid>
   );
