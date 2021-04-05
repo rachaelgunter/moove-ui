@@ -8,6 +8,7 @@ import { PreviewSegmentModel } from '../types';
 import PreviewSegmentChart from './PreviewSegmentChart';
 import PreviewSegmentGridItem from './PreviewSegmentGridItem';
 import GoogleStreetView from './GoogleStreetView';
+import PreviewSegmentCesium from './PreviewSegmentCesium';
 
 interface PreviewSegmentPreviewProps {
   segmentId: string;
@@ -90,8 +91,37 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
     return result;
   };
 
-  const chartData = getChartData(data);
+  const getCesiumData = (
+    responseData:
+      | {
+          previewSegment: PreviewSegmentModel;
+        }
+      | undefined,
+  ) => {
+    try {
+      const jsonObject = JSON.parse(
+        responseData?.previewSegment?.rawData || '{}',
+      )[0];
+      const geometryGeojson =
+        (jsonObject?.geometry_geojson &&
+          JSON.parse(jsonObject.geometry_geojson)) ||
+        {};
+      const trafficSignOffset = jsonObject?.traffic_sign_offset || [];
 
+      return {
+        geometryGeojson,
+        trafficSignOffset,
+      };
+    } catch (e) {
+      return {
+        geometryGeojson: {},
+        trafficSignOffset: [],
+      };
+    }
+  };
+
+  const chartData = getChartData(data);
+  const cesiumData = getCesiumData(data);
   const { latitude: streetViewLatitiude, longitude: streetViewLongitude } = data
     ?.previewSegment.streetViewCoordinates ?? { latitude: 0, longitude: 0 };
 
@@ -108,7 +138,7 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
       </Grid>
       <Grid item container xs={7}>
         <PreviewSegmentGridItem title="Terrain Preview" loading={loading}>
-          <div />
+          <PreviewSegmentCesium data={cesiumData} />
         </PreviewSegmentGridItem>
       </Grid>
       <Grid item container xs={5}>
