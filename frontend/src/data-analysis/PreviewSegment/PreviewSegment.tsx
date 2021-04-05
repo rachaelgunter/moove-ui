@@ -1,11 +1,8 @@
-import React, { FC, useState } from 'react';
-import { Box, Button, makeStyles, Tabs, Tab, Theme } from '@material-ui/core';
+import React, { FC } from 'react';
+import { Button, makeStyles, Theme } from '@material-ui/core';
 import { FontFamily } from 'src/app/styles/fonts';
 import DialogWrapper from 'src/shared/DialogWrapper/DialogWrapper';
-import PreviewSegmentTabPanel from './PreviewSegmentTabPanel';
-import PreviewSegmentBreadcrumbs from './PreviewSegmentBreadcrumbs';
-import PreviewSegmentPreview from './PreviewSegmentPreview';
-import PreviewSegmentData from './PreviewSegmentData';
+import PreviewSegmentContent from './PreviewSegmentContent';
 
 interface PreviewSegmentProps {
   open: boolean;
@@ -49,55 +46,19 @@ const PreviewSegment: FC<PreviewSegmentProps> = ({
   segment,
 }: PreviewSegmentProps) => {
   const classes = useStyles();
-  const [value, setValue] = useState(0);
-  const [isFullScreen, setFullScreen] = useState(false);
-
-  const handleChange = (
-    _: React.ChangeEvent<Record<string, string>>,
-    newValue: number,
-  ) => {
-    setValue(newValue);
-  };
-
   const Controls = () => (
     <Button onClick={onClose} className={classes.dialogButton}>
       Close
     </Button>
   );
 
-  const Content = () => (
-    <>
-      <Box className={classes.header} data-fullscrean={isFullScreen}>
-        <PreviewSegmentBreadcrumbs segment={segment} />
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="segment preview tabs"
-          className={classes.tabs}
-        >
-          <Tab className={classes.tab} label="Preview" />
-          <Tab className={classes.tab} label="Data" />
-        </Tabs>
-      </Box>
-      <PreviewSegmentTabPanel value={value} index={0}>
-        <PreviewSegmentPreview segmentId={segment} />
-      </PreviewSegmentTabPanel>
-      <PreviewSegmentTabPanel value={value} index={1}>
-        <PreviewSegmentData segmentId={segment} />
-      </PreviewSegmentTabPanel>
-    </>
-  );
-
   return (
     <DialogWrapper
-      onResize={(isFullScreenValue) => {
-        setFullScreen(isFullScreenValue);
-      }}
       open={open}
       onClose={onClose}
       dialogTitle="Segment Preview"
       dialogControls={<Controls />}
-      dialogContent={<Content />}
+      dialogContent={<PreviewSegmentContent segmentId={segment} />}
     />
   );
 };
