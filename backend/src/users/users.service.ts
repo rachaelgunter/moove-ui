@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { AppMetadata, UserMetadata, User } from 'auth0';
 import { Auth0ClientService } from '../shared/auth0-client/auth0-client.service';
-import { TokenPair, UserInput } from './users.types';
+import { Role, TokenPair, UserInput } from './users.types';
 
 @Injectable()
 export class UsersService {
@@ -39,7 +39,7 @@ export class UsersService {
         );
       }
 
-      const { refreshToken, accessToken } = this.isGoogleUser(freshUser.user_id)
+      const { refreshToken, accessToken } = this.isPaidUser(freshUser)
         ? this.getGoogleTokensFromAuth0User(freshUser)
         : { accessToken: null, refreshToken: null };
 
@@ -108,8 +108,8 @@ export class UsersService {
     };
   }
 
-  isGoogleUser(userId: string): boolean {
-    return userId.includes('google');
+  isPaidUser(user: User<AppMetadata, UserMetadata>): boolean {
+    return user?.app_metadata?.roles?.includes(Role.PAID_USER) ?? false;
   }
 
   async getGoogleTokens(userId: string): Promise<TokenPair> {
