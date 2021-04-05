@@ -40,7 +40,7 @@ const PreviewSegmentChart: FC<PreviewSegmentChartProps> = ({
     },
     vAxis: {
       title: 'Change in elevation (M)',
-      textStyle: { color: '#ffffff' },
+      textStyle: { color: '#182327', fontSize: 1 },
       titleTextStyle: {
         color: '#ffffff',
         fontName: FontFamily.ROBOTO,
@@ -73,6 +73,9 @@ const PreviewSegmentChart: FC<PreviewSegmentChartProps> = ({
         visibleInLegend: true,
         color: theme.palette.error.light,
         titleTextStyle: { color: '#ffffff' },
+        tooltip: JSON.parse(
+          process.env.REACT_APP_ELEVATION_TOOLTIPS_VISIBLE || 'false',
+        ),
       },
     },
     backgroundColor: '#182327',
