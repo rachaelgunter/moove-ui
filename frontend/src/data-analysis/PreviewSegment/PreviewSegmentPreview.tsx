@@ -18,8 +18,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
+  },
+  col1: {
+    width: '60%',
+  },
+  col2: {
+    width: '40%',
     '& > div': {
-      height: '50%',
+      height: `calc(50% - ${theme.spacing(1) / 2} )`,
     },
   },
 }));
@@ -127,7 +133,12 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
 
   return (
     <Grid className={classes.container} container spacing={1}>
-      <Grid item container xs={12}>
+      <Grid item container className={classes.col1}>
+        <PreviewSegmentGridItem title="Terrain Preview" loading={loading}>
+          <PreviewSegmentCesium data={cesiumData} />
+        </PreviewSegmentGridItem>
+      </Grid>
+      <Grid item container className={classes.col2}>
         <PreviewSegmentGridItem
           backgroundColor="#182327"
           title="Elevation Profile"
@@ -135,13 +146,7 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
         >
           <PreviewSegmentChart data={chartData} />
         </PreviewSegmentGridItem>
-      </Grid>
-      <Grid item container xs={7}>
-        <PreviewSegmentGridItem title="Terrain Preview" loading={loading}>
-          <PreviewSegmentCesium data={cesiumData} />
-        </PreviewSegmentGridItem>
-      </Grid>
-      <Grid item container xs={5}>
+
         <PreviewSegmentGridItem title="Street View" loading={loading}>
           <AutoSizer>
             {({ height, width }) => (
