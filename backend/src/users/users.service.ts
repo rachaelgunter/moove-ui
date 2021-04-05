@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { AppMetadata, UserMetadata, User as Auth0User } from 'auth0';
 import { matchRoles } from 'src/shared/users/roles-matcher';
@@ -11,8 +12,6 @@ import {
   PaginatedUsers,
 } from './users.types';
 
-const claimsNamespace = process.env.AUTH0_CLAIMS_NAMESPACE;
-
 @Injectable()
 export class UsersService {
   private readonly logger = new Logger(UsersService.name);
@@ -20,6 +19,7 @@ export class UsersService {
   constructor(
     private readonly prisma: PrismaClient,
     private readonly auth0ClientService: Auth0ClientService,
+    private readonly configService: ConfigService,
   ) {}
 
   async syncUserInfo(
@@ -154,7 +154,7 @@ export class UsersService {
         nodes: users.users.map((user: Auth0User) => ({
           sub: user.user_id,
           email: user.email,
-          organization: user.app_metadata?.organization ?? '',
+          organization: user.app_metadata?.organization?.name ?? '',
           createdAt: user.created_at,
           lastLogin: user.last_login,
           name: user.name,
@@ -164,6 +164,7 @@ export class UsersService {
   }
 
   async getUsersSearchQuery(user: UserTokenPayload): Promise<string> {
+    const claimsNamespace = this.configService.get('AUTH0_CLAIMS_NAMESPACE');
     if (matchRoles(user[`${claimsNamespace}/roles`], [Role.SUPER_ADMIN])) {
       return '';
     }
