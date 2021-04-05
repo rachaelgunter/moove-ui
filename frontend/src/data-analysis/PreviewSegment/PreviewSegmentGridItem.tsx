@@ -39,7 +39,7 @@ const useStyles = (backgroundColor: string) =>
       bottom: 0,
       right: 0,
       height: '100%',
-      weight: '100%',
+      width: '100%',
       padding: '0 7px',
       fontSize: 12,
       fontFamily: FontFamily.ROBOTO,
