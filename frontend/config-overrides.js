@@ -2,6 +2,9 @@ const webpack = require('webpack');
 const env = require('dotenv');
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require('path');
+const { aliasJest, configPaths } = require('react-app-rewire-alias');
+
+const aliasMap = configPaths('./tsconfig.paths.json')
 
 env.config({
   path: `./.env.${process.env.ENV_FILE}`,
@@ -25,7 +28,7 @@ module.exports = function override(config, env) {
       cesium: 'cesium/Source'
     }
   }
-  //
+  // //
   const cesiumSource = "node_modules/cesium/Source";
   const cesiumWorkers = "../Build/Cesium/Workers";
   const prod = env === "production";
@@ -86,3 +89,5 @@ module.exports = function override(config, env) {
 
   return config;
 };
+
+module.exports.jest = aliasJest(aliasMap)
