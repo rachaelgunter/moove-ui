@@ -64,7 +64,7 @@ const DataAnalysis: React.FC = () => {
             <CircularProgress />
           </Grid>
         )}
-        {!loading && data.getDatasets.length && (
+        {!loading && !!data.getDatasets.length && (
           <Grid item container spacing={2} wrap="nowrap">
             <Grid item xs={3}>
               <DatasetList
