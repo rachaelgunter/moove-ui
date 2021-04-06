@@ -30,7 +30,7 @@ const PreviewSegmentChart: FC<PreviewSegmentChartProps> = ({
   const [fakeControls, setFakeControls] = useState([]);
 
   useEffect(() => {
-    // change reference to trigger chart rerender
+    // https://github.com/rakannimer/react-google-charts/issues/209#issuecomment-618827308
     setFakeControls([]);
   }, [width, height]);
 
