@@ -23,7 +23,7 @@ const columnPropertiesUI: { [key in ColumnProperties]: string } = {
   [ColumnProperties.MIN]: 'Minimum',
   [ColumnProperties.MAX]: 'Maximum',
   [ColumnProperties.AVERAGE]: 'Average',
-  [ColumnProperties.POPULATED]: 'Populated',
+  [ColumnProperties.POPULATED]: 'Populated %',
   [ColumnProperties.STDDEV]: 'Standard Deviation',
   [ColumnProperties.COUNT]: 'Count',
   [ColumnProperties.SUM]: 'Sum',
