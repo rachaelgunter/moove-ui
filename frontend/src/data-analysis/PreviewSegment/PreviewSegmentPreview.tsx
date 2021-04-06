@@ -151,7 +151,15 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
             title="Elevation Profile"
             loading={loading}
           >
-            <PreviewSegmentChart data={chartData} />
+            <AutoSizer>
+              {({ height, width }) => (
+                <PreviewSegmentChart
+                  height={height}
+                  width={width}
+                  data={chartData}
+                />
+              )}
+            </AutoSizer>
           </PreviewSegmentGridItem>
         </Grid>
         <Grid item container>

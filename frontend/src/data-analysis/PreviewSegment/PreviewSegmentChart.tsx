@@ -1,17 +1,20 @@
 import { makeStyles } from '@material-ui/styles';
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Chart } from 'react-google-charts';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import theme from 'src/app/styles';
 import { FontFamily } from 'src/app/styles/fonts';
 
 interface PreviewSegmentChartProps {
   data: [string | number, string | number][];
+  height: number;
+  width: number;
 }
 
 const useStyles = makeStyles(() => ({
   chart: {
     margin: 0,
+    width: '100%',
+    height: '100%',
     '&> div > div': {
       height: '100%',
     },
@@ -20,8 +23,16 @@ const useStyles = makeStyles(() => ({
 
 const PreviewSegmentChart: FC<PreviewSegmentChartProps> = ({
   data,
+  height,
+  width,
 }: PreviewSegmentChartProps) => {
   const classes = useStyles();
+  const [fakeControls, setFakeControls] = useState([]);
+
+  useEffect(() => {
+    // https://github.com/rakannimer/react-google-charts/issues/209#issuecomment-618827308
+    setFakeControls([]);
+  }, [width, height]);
 
   const options = {
     curveType: 'function',
@@ -82,20 +93,19 @@ const PreviewSegmentChart: FC<PreviewSegmentChartProps> = ({
   };
 
   return (
-    <AutoSizer>
-      {({ width, height }) => (
-        <Chart
-          width={width}
-          height={height - 10}
-          className={classes.chart}
-          chartType="LineChart"
-          loader={<div>Loading Chart</div>}
-          data={data}
-          options={options}
-          rootProps={{ 'data-testid': '1' }}
-        />
-      )}
-    </AutoSizer>
+    <Chart
+      controls={fakeControls}
+      width={width}
+      height={height - 10}
+      className={classes.chart}
+      chartType="LineChart"
+      loader={<div>Loading Chart</div>}
+      data={data}
+      options={options}
+      rootProps={{
+        'data-testid': '1',
+      }}
+    />
   );
 };
 
