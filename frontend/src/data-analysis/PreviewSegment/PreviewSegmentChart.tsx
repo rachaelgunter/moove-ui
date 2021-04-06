@@ -1,17 +1,20 @@
 import { makeStyles } from '@material-ui/styles';
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Chart } from 'react-google-charts';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import theme from 'src/app/styles';
 import { FontFamily } from 'src/app/styles/fonts';
 
 interface PreviewSegmentChartProps {
   data: [string | number, string | number][];
+  height: number;
+  width: number;
 }
 
 const useStyles = makeStyles(() => ({
   chart: {
     margin: 0,
+    width: '100%',
+    height: '100%',
     '&> div > div': {
       height: '100%',
     },
@@ -20,8 +23,16 @@ const useStyles = makeStyles(() => ({
 
 const PreviewSegmentChart: FC<PreviewSegmentChartProps> = ({
   data,
+  height,
+  width,
 }: PreviewSegmentChartProps) => {
   const classes = useStyles();
+  const [fakeControls, setFakeControls] = useState([]);
+
+  useEffect(() => {
+    // https://github.com/rakannimer/react-google-charts/issues/209#issuecomment-618827308
+    setFakeControls([]);
+  }, [width, height]);
 
   const options = {
     curveType: 'function',
@@ -40,7 +51,7 @@ const PreviewSegmentChart: FC<PreviewSegmentChartProps> = ({
     },
     vAxis: {
       title: 'Change in elevation (M)',
-      textStyle: { color: '#ffffff' },
+      textStyle: { color: '#182327', fontSize: 1 },
       titleTextStyle: {
         color: '#ffffff',
         fontName: FontFamily.ROBOTO,
@@ -73,26 +84,28 @@ const PreviewSegmentChart: FC<PreviewSegmentChartProps> = ({
         visibleInLegend: true,
         color: theme.palette.error.light,
         titleTextStyle: { color: '#ffffff' },
+        tooltip: JSON.parse(
+          process.env.REACT_APP_ELEVATION_TOOLTIPS_VISIBLE || 'false',
+        ),
       },
     },
     backgroundColor: '#182327',
   };
 
   return (
-    <AutoSizer>
-      {({ width, height }) => (
-        <Chart
-          width={width}
-          height={height - 10}
-          className={classes.chart}
-          chartType="LineChart"
-          loader={<div>Loading Chart</div>}
-          data={data}
-          options={options}
-          rootProps={{ 'data-testid': '1' }}
-        />
-      )}
-    </AutoSizer>
+    <Chart
+      controls={fakeControls}
+      width={width}
+      height={height - 10}
+      className={classes.chart}
+      chartType="LineChart"
+      loader={<div>Loading Chart</div>}
+      data={data}
+      options={options}
+      rootProps={{
+        'data-testid': '1',
+      }}
+    />
   );
 };
 

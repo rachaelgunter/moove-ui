@@ -10,6 +10,14 @@ type User {
   organization: String
   GCSBucketName: String
   GCPProjectName: String
+  roles: [String]
+  createdAt: String
+  lastLogin: String
+}
+
+type PaginatedUsers {
+  nodes: [User!]
+  totalCount: Int!
 }
 
 type BigQueryTable {
@@ -117,12 +125,13 @@ type Dataset {
 
 type Query {
   getCurrentUser: User!
+  users(offset: Int = 0, limit: Int = 5): PaginatedUsers!
   getUsersProjects: [BigQueryProject!]!
   tables(tablesParams: BigQueryTablesParams!): [BigQueryTable]
-  tableData(projectId: String!, datasetId: String!, tableId: String!, offset: Int = 0, limit: Int = 5, selectedFields: [String]): BigQueryTableData!
+  tableData(offset: Int = 0, limit: Int = 5, projectId: String!, datasetId: String!, tableId: String!, selectedFields: [String]): BigQueryTableData!
   tableInfo(projectId: String!, datasetId: String!, tableId: String!): BigQueryTableInfo!
-  previewTable(projectId: String!, datasetId: String!, tableId: String!, offset: Int = 0, limit: Int = 5, selectedFields: [String]): BigQueryPreviewTable!
-  columnsTable(projectId: String!, datasetId: String!, tableId: String!, offset: Int = 0, limit: Int = 5, selectedFields: [String]): [BigQueryColumnTable]
+  previewTable(offset: Int = 0, limit: Int = 5, projectId: String!, datasetId: String!, tableId: String!, selectedFields: [String]): BigQueryPreviewTable!
+  columnsTable(offset: Int = 0, limit: Int = 5, projectId: String!, datasetId: String!, tableId: String!, selectedFields: [String]): [BigQueryColumnTable]
   previewSegment(segmentId: String!): PreviewSegment!
   getDatasets(GCPProjectName: String!): [Dataset]
   datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!, organizationName: String!): ColumnVisualizations!

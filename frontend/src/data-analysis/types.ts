@@ -55,7 +55,8 @@ export type TableIdentity = {
 export type KeplerDataQueryResponse = {
   previewTable: {
     headers: { name: string }[];
-    rows: unknown[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    rows: any;
   };
 };
 

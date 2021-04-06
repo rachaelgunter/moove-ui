@@ -4,6 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
 
 import { ROLES_METADATA_KEY } from 'src/auth/roles.decorator';
+import { matchRoles } from 'src/shared/users/roles-matcher';
 
 const claimsNamespace = process.env.AUTH0_CLAIMS_NAMESPACE;
 
@@ -34,10 +35,6 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
 
     const user = this.getRequest(context).user;
 
-    return this.matchRoles(user[`${claimsNamespace}/roles`], roles);
-  }
-
-  private matchRoles(userRoles: string[], allowedRoles: string[]) {
-    return userRoles.some((role) => allowedRoles.includes(role));
+    return matchRoles(user[`${claimsNamespace}/roles`], roles);
   }
 }
