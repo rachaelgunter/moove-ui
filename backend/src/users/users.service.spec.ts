@@ -31,7 +31,9 @@ const auth0UsersMock = {
     {
       user_id: '1235',
       email: 'user.email',
-      app_metadata: {},
+      app_metadata: {
+        roles: ['ADMIN'],
+      },
       created_at: 'user.created_at',
       last_login: 'user.last_login',
       name: 'user.name',
@@ -304,6 +306,7 @@ describe('UsersService', () => {
             createdAt: 'user.created_at',
             lastLogin: 'user.last_login',
             name: 'user.name',
+            roles: undefined,
             picture: 'user.picture',
           },
           {
@@ -313,6 +316,7 @@ describe('UsersService', () => {
             createdAt: 'user.created_at',
             lastLogin: 'user.last_login',
             name: 'user.name',
+            roles: ['ADMIN'],
             picture: 'user.picture',
           },
         ],

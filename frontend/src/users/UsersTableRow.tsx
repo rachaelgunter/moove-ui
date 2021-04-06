@@ -10,6 +10,7 @@ import {
   Theme,
 } from '@material-ui/core';
 import { User } from 'src/auth/UserProvider';
+import { Role } from 'src/shared/types';
 
 interface UsersTableRowProps {
   user: User;
@@ -35,10 +36,28 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+const rolesUiMap: { [key in Role]: string } = {
+  [Role.USER]: 'Freemium',
+  [Role.PAID_USER]: 'Paid',
+  [Role.SUPER_ADMIN]: 'Super Admin',
+  [Role.ADMIN]: 'Admin',
+};
+
 const UsersTableRow: FC<UsersTableRowProps> = ({
   user,
 }: UsersTableRowProps) => {
   const classes = useStyles();
+
+  const formatRoles = (roles: Role[] | null): string => {
+    return roles?.map((role) => rolesUiMap[role]).join(', ') ?? '';
+  };
+
+  const formatDate = (dateLike: string | undefined) => {
+    if (!dateLike) {
+      return '';
+    }
+    return new Date(dateLike).toUTCString();
+  };
 
   return (
     <TableRow key={user.sub} data-testid="columns-table-row">
@@ -52,13 +71,13 @@ const UsersTableRow: FC<UsersTableRowProps> = ({
         {user.email}
       </TableCell>
       <TableCell className={classes.cell} key={`${user.sub}-role`}>
-        {user.roles?.join(' ') ?? ''}
+        {formatRoles(user.roles)}
       </TableCell>
       <TableCell className={classes.cell} key={`${user.sub}-lastLogin`}>
-        {user.lastLogin}
+        {formatDate(user.lastLogin)}
       </TableCell>
       <TableCell className={classes.cell} key={`${user.sub}-createdAt`}>
-        {user.createdAt}
+        {formatDate(user.createdAt)}
       </TableCell>
       <TableCell className={classes.cell}>
         <IconButton className={classes.rowActionButton}>

@@ -98,7 +98,7 @@ const Table: FC<TableProps> = ({
             selectIcon: classes.selectIcon,
           }}
           className={classes.pagination}
-          rowsPerPageOptions={[10, 30, 50, 100, 200]}
+          rowsPerPageOptions={[10, 30, 50, 100]}
           component="div"
           count={totalRows}
           rowsPerPage={rowsPerPage}

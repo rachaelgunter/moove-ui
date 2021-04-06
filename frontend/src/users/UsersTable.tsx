@@ -8,7 +8,7 @@ import USERS_QUERY from './queries';
 import UsersTableRow from './UsersTableRow';
 
 const USERS_TABLE_MIN_HEIGHT = 600;
-const COLUMNS = ['Name', 'Email', 'Role', 'Last Login', 'Created On', ''];
+const COLUMNS = ['Name', 'Email', 'Roles', 'Last Login', 'Created On', ''];
 
 const UsersTable: FC = () => {
   const [page, setPage] = useState(0);
@@ -53,7 +53,7 @@ const UsersTable: FC = () => {
           >
             {data &&
               data?.users?.nodes.map((user: User) => (
-                <UsersTableRow user={user} />
+                <UsersTableRow key={user.sub} user={user} />
               ))}
           </Table>
         </TableOverlay>
