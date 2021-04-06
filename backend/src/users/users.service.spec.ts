@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import { Auth0ClientService } from '../shared/auth0-client/auth0-client.service';
@@ -11,21 +12,56 @@ const usersPrismaMock = {
   },
 };
 
+const auth0UsersMock = {
+  users: [
+    {
+      user_id: '1234',
+      email: 'user.email',
+      app_metadata: {
+        organization: {
+          id: 1,
+          name: 'org',
+        },
+      },
+      created_at: 'user.created_at',
+      last_login: 'user.last_login',
+      name: 'user.name',
+      picture: 'user.picture',
+    },
+    {
+      user_id: '1235',
+      email: 'user.email',
+      app_metadata: {},
+      created_at: 'user.created_at',
+      last_login: 'user.last_login',
+      name: 'user.name',
+      picture: 'user.picture',
+    },
+  ],
+  total: 2,
+  start: 0,
+  limit: 40,
+  length: 2,
+};
+
 const auth0ClientServiceMock = {
   getUsersByEmail: () => [{ user_id: '1234' }],
   linkUsersAccounts: () => null,
+  searchUsers: () => auth0UsersMock,
 };
 
 describe('UsersService', () => {
   let service: UsersService;
   let prisma: PrismaClient;
   let auth0ClientService: Auth0ClientService;
+  let configService: ConfigService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
         PrismaClient,
+        ConfigService,
         {
           provide: Auth0ClientService,
           useValue: auth0ClientServiceMock,
@@ -39,6 +75,7 @@ describe('UsersService', () => {
     service = module.get<UsersService>(UsersService);
     prisma = module.get<PrismaClient>(PrismaClient);
     auth0ClientService = module.get<Auth0ClientService>(Auth0ClientService);
+    configService = module.get<ConfigService>(ConfigService);
   });
 
   it('should be defined', () => {
@@ -215,6 +252,70 @@ describe('UsersService', () => {
         include: {
           organization: true,
         },
+      });
+    });
+  });
+
+  describe('getUsersSearchQuery', () => {
+    beforeEach(() => {
+      jest.spyOn(configService, 'get').mockReturnValue('namespace');
+      jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(prismaUserMock);
+    });
+
+    it('should return an empty string if the user is SUPER_ADMIN', async () => {
+      const user = { sub: '1', ['namespace/roles']: ['SUPER_ADMIN'] };
+      const query = await service.getUsersSearchQuery(user);
+      expect(query).toStrictEqual('');
+    });
+
+    it("should return query string with user's org id if user is org ADMIN", async () => {
+      const user = { sub: '1', ['namespace/roles']: ['ADMIN'] };
+      const query = await service.getUsersSearchQuery(user);
+      expect(query).toStrictEqual('app_metadata.organization.id:12');
+    });
+  });
+
+  describe('searchUsers', () => {
+    beforeEach(() => {
+      jest
+        .spyOn(auth0ClientService, 'searchUsers')
+        .mockResolvedValue(auth0UsersMock);
+    });
+
+    it('should calculate page number', async () => {
+      await service.searchUsers('', 12, 10);
+      await service.searchUsers('', 0, 10);
+      await service.searchUsers('', 20, 10);
+
+      expect(auth0ClientService.searchUsers).nthCalledWith(1, '', 1, 10);
+      expect(auth0ClientService.searchUsers).nthCalledWith(2, '', 0, 10);
+      expect(auth0ClientService.searchUsers).nthCalledWith(3, '', 2, 10);
+    });
+
+    it('should transform API response to PaginatedUsers type', async () => {
+      const result = await service.searchUsers('', 10, 10);
+      expect(result).toStrictEqual({
+        totalCount: 2,
+        nodes: [
+          {
+            sub: '1234',
+            email: 'user.email',
+            organization: 'org',
+            createdAt: 'user.created_at',
+            lastLogin: 'user.last_login',
+            name: 'user.name',
+            picture: 'user.picture',
+          },
+          {
+            sub: '1235',
+            email: 'user.email',
+            organization: '',
+            createdAt: 'user.created_at',
+            lastLogin: 'user.last_login',
+            name: 'user.name',
+            picture: 'user.picture',
+          },
+        ],
       });
     });
   });
