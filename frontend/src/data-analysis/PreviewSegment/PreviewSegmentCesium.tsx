@@ -4,9 +4,9 @@ import React, { FC, useEffect, useRef } from 'react';
 import {
   CameraFlyTo,
   CesiumComponentRef,
+  Entity,
   GeoJsonDataSource,
   Viewer,
-  Entity,
 } from 'resium';
 import {
   Cartesian3,
@@ -15,8 +15,8 @@ import {
   GeoJsonDataSource as CesiumGeoJsonDataSource,
   ImageMaterialProperty,
   Ion,
-  Viewer as CesiumViewer,
   SceneMode,
+  Viewer as CesiumViewer,
 } from 'cesium';
 import icons from './signIcons';
 import 'cesium/Widgets/widgets.css';
@@ -169,7 +169,6 @@ const PreviewSegmentCesium: FC<PreviewSegmentChartProps> = ({
           }),
         },
         id: `sign-${index}`,
-        show: false,
       };
     });
   return (
@@ -185,6 +184,7 @@ const PreviewSegmentCesium: FC<PreviewSegmentChartProps> = ({
         className={classes.viewer}
         terrainProvider={createWorldTerrain()}
         scene3DOnly={false}
+        sceneMode={SceneMode.SCENE2D}
         sceneModePicker={false}
         baseLayerPicker={false}
         vrButton={false}

@@ -154,7 +154,7 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
             <AutoSizer>
               {({ height, width }) => (
                 <PreviewSegmentChart
-                  height={height - 10}
+                  height={height}
                   width={width}
                   data={chartData}
                 />

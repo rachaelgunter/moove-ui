@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/styles';
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Chart } from 'react-google-charts';
 import theme from 'src/app/styles';
 import { FontFamily } from 'src/app/styles/fonts';
@@ -27,6 +27,12 @@ const PreviewSegmentChart: FC<PreviewSegmentChartProps> = ({
   width,
 }: PreviewSegmentChartProps) => {
   const classes = useStyles();
+  const [fakeControls, setFakeControls] = useState([]);
+
+  useEffect(() => {
+    // change reference to trigger chart rerender
+    setFakeControls([]);
+  }, [width, height]);
 
   const options = {
     curveType: 'function',
@@ -88,14 +94,17 @@ const PreviewSegmentChart: FC<PreviewSegmentChartProps> = ({
 
   return (
     <Chart
+      controls={fakeControls}
       width={width}
-      height={height}
+      height={height - 10}
       className={classes.chart}
       chartType="LineChart"
       loader={<div>Loading Chart</div>}
       data={data}
       options={options}
-      rootProps={{ 'data-testid': '1' }}
+      rootProps={{
+        'data-testid': '1',
+      }}
     />
   );
 };
