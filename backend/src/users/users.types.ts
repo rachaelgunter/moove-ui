@@ -1,4 +1,5 @@
 import { InputType, Field, ObjectType, ID, Directive } from '@nestjs/graphql';
+import { Paginated } from 'src/shared/types';
 
 @InputType()
 export class UserInput {
@@ -38,7 +39,19 @@ export class User {
 
   @Field(() => String, { nullable: true })
   GCPProjectName?: string;
+
+  @Field(() => [String], { nullable: 'itemsAndList' })
+  roles?: string[];
+
+  @Field(() => String, { nullable: true })
+  createdAt?: string;
+
+  @Field(() => String, { nullable: true })
+  lastLogin?: string;
 }
+
+@ObjectType()
+export class PaginatedUsers extends Paginated(User) {}
 
 export interface UserTokenPayload {
   sub: string;
@@ -53,4 +66,5 @@ export enum Role {
   USER = 'USER',
   PAID_USER = 'PAID_USER',
   ADMIN = 'ADMIN',
+  SUPER_ADMIN = 'SUPER_ADMIN',
 }

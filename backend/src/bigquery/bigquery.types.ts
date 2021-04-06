@@ -1,4 +1,5 @@
-import { Field, InputType, ObjectType, ArgsType, Int } from '@nestjs/graphql';
+import { Field, InputType, ObjectType, ArgsType } from '@nestjs/graphql';
+import { OffsetPaginationParams } from 'src/shared/types';
 import { BigqueryClientService } from './bigquery-client/bigquery-client.service';
 
 export interface BigQueryResolverContext {
@@ -51,7 +52,7 @@ export class BigQueryTablesParams {
 }
 
 @ArgsType()
-export class BigQueryTableDataParams {
+export class BigQueryTableDataParams extends OffsetPaginationParams {
   @Field()
   projectId: string;
 
@@ -60,12 +61,6 @@ export class BigQueryTableDataParams {
 
   @Field()
   tableId?: string;
-
-  @Field(() => Int, { defaultValue: 0 })
-  offset: number;
-
-  @Field(() => Int, { defaultValue: 5 })
-  limit: number;
 
   @Field(() => [String], { nullable: 'itemsAndList' })
   selectedFields?: string[];

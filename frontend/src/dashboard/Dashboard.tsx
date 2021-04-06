@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { Grid, Typography } from '@material-ui/core';
 
 import MapOutlinedIcon from '@material-ui/icons/MapOutlined';
-
+import TimelineIcon from '@material-ui/icons/Timeline';
 import PageTemplate from 'src/shared/PageTemplate';
 import routes from 'src/shared/routes';
 import Shortcut from './Shortcut';
@@ -16,6 +16,11 @@ const Dashboard: React.FC = () => {
       label: 'RoadIQ',
       Icon: MapOutlinedIcon,
       onClick: () => history.push(routes.roadIQ.path),
+    },
+    {
+      label: 'Analytics',
+      Icon: TimelineIcon,
+      onClick: () => history.push(routes.dataAnalysis.path),
     },
   ];
 

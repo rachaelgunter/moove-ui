@@ -1,8 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Prisma, PrismaClient } from '@prisma/client';
-import { AppMetadata, UserMetadata, User } from 'auth0';
+import { AppMetadata, UserMetadata, User as Auth0User } from 'auth0';
+import { matchRoles } from 'src/shared/users/roles-matcher';
 import { Auth0ClientService } from '../shared/auth0-client/auth0-client.service';
-import { Role, TokenPair, UserInput } from './users.types';
+import {
+  TokenPair,
+  UserInput,
+  Role,
+  UserTokenPayload,
+  PaginatedUsers,
+} from './users.types';
 
 @Injectable()
 export class UsersService {
@@ -11,6 +19,7 @@ export class UsersService {
   constructor(
     private readonly prisma: PrismaClient,
     private readonly auth0ClientService: Auth0ClientService,
+    private readonly configService: ConfigService,
   ) {}
 
   async syncUserInfo(
@@ -95,7 +104,7 @@ export class UsersService {
   }
 
   getGoogleTokensFromAuth0User(
-    auth0User: User<AppMetadata, UserMetadata>,
+    auth0User: Auth0User<AppMetadata, UserMetadata>,
   ): TokenPair {
     const googleIdentity = auth0User.identities.find(
       (identity) => identity.provider === 'google-oauth2',
@@ -108,7 +117,7 @@ export class UsersService {
     };
   }
 
-  isPaidUser(user: User<AppMetadata, UserMetadata>): boolean {
+  isPaidUser(user: Auth0User<AppMetadata, UserMetadata>): boolean {
     return user?.app_metadata?.roles?.includes(Role.PAID_USER) ?? false;
   }
 
@@ -129,5 +138,37 @@ export class UsersService {
       },
       data: tokens,
     });
+  }
+
+  async searchUsers(
+    query: string,
+    offset: number,
+    limit: number,
+  ): Promise<PaginatedUsers> {
+    const page = Math.floor(offset / limit);
+
+    return this.auth0ClientService
+      .searchUsers(query, page, limit)
+      .then((users) => ({
+        totalCount: users.total,
+        nodes: users.users.map((user: Auth0User) => ({
+          sub: user.user_id,
+          email: user.email,
+          organization: user.app_metadata?.organization?.name ?? '',
+          createdAt: user.created_at,
+          lastLogin: user.last_login,
+          name: user.name,
+          picture: user.picture,
+        })),
+      }));
+  }
+
+  async getUsersSearchQuery(user: UserTokenPayload): Promise<string> {
+    const claimsNamespace = this.configService.get('AUTH0_CLAIMS_NAMESPACE');
+    if (matchRoles(user[`${claimsNamespace}/roles`], [Role.SUPER_ADMIN])) {
+      return '';
+    }
+    const { organizationId } = await this.getUserById(user.sub);
+    return `app_metadata.organization.id:${organizationId}`;
   }
 }

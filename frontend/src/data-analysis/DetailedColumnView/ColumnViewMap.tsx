@@ -40,7 +40,10 @@ const getData = (
     },
     data: {
       fields: keplerData.headers,
-      rows: keplerData.rows,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      rows: keplerData.rows.map(
+        ([lat, long, value]: [string, string, unknown]) => [+lat, +long, value],
+      ),
     },
   };
 };
@@ -55,7 +58,7 @@ const ColumnViewMap: FC<ColumnViewMapProps> = ({
   const datasetId = `${analysisName}_galileo_analysis`;
   const tableId = `${analysisName}_contextualized_sample`;
 
-  const selectedFields = ['source_geom', columnName];
+  const selectedFields = ['latitude', 'longitude', columnName];
 
   const { data, loading: dataLoading } = useQuery(KEPLER_DATA_QUERY, {
     variables: {
