@@ -13,7 +13,7 @@ export function handleGoogleError(
 export const getPreviewTableData = (fields, rows) => {
   const getValuesForColumn = (idx, rows) => {
     return rows.map((row) => {
-      return !!row.f ? [row.f[idx].v] : row.map((v) => v.f[idx].v);
+      return !!row?.f ? [row.f[idx].v] : row?.map((v) => v.f[idx].v) ?? [];
     });
   };
   const addEmptyValues = (res) => {
