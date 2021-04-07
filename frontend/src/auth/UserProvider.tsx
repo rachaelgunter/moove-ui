@@ -16,6 +16,8 @@ export type User = {
   organization: string;
   GCPProjectName?: string;
   GCSBucketName?: string;
+  lastLogin?: string;
+  createdAt?: string;
 };
 
 export const UserContext = React.createContext<User>({} as User);
