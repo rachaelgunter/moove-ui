@@ -2,6 +2,7 @@ import { Role } from 'src/shared/types';
 
 const allRolesAllowed = [Role.USER, Role.PAID_USER, Role.ADMIN];
 const allRolesExceptFreeAllowed = [Role.PAID_USER, Role.ADMIN];
+const adminRoles = [Role.ADMIN, Role.SUPER_ADMIN];
 
 const routes = {
   dashboard: {
@@ -18,11 +19,11 @@ const routes = {
   },
   users: {
     path: '/users',
-    allowedRoles: allRolesExceptFreeAllowed,
+    allowedRoles: adminRoles,
   },
   settings: {
     path: '/settings',
-    allowedRoles: allRolesExceptFreeAllowed,
+    allowedRoles: adminRoles,
   },
   callback: {
     path: '/callback',

@@ -158,6 +158,7 @@ export class UsersService {
           createdAt: user.created_at,
           lastLogin: user.last_login,
           name: user.name,
+          roles: user.app_metadata?.roles,
           picture: user.picture,
         })),
       }));
