@@ -3,6 +3,7 @@ import { Link, makeStyles } from '@material-ui/core';
 
 import Typography from 'src/shared/Typography';
 import AlertDialog from 'src/shared/AlertDialog';
+import { AlertDialogType } from 'src/shared/AlertDialog/AlertDialog';
 
 const useStyles = makeStyles({
   link: {
@@ -44,6 +45,7 @@ const Archiver: FC = () => {
         actionButtonTitle="Delete"
         onAction={onDelete}
         onClose={onCancel}
+        type={AlertDialogType.DANGER}
       />
     </>
   );

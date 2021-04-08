@@ -12,28 +12,12 @@ import { makeStyles } from '@material-ui/styles';
 import { FontFamily } from 'src/app/styles/fonts';
 import Typography from 'src/shared/Typography';
 
-const useStyles = makeStyles((theme: Theme) => {
-  return {
-    link: {
-      textAlign: 'left',
-      width: '100%',
-    },
-    dialogTitle: {
-      fontWeight: 400,
-      fontSize: 18,
-    },
-    dialogButton: {
-      fontFamily: FontFamily.ROBOTO,
-      color: theme.palette.text.secondary,
-      height: '36px',
-      letterSpacing: '1.25px',
-      marginLeft: theme.spacing(1),
-    },
-    primaryButton: {
-      color: '#e57373',
-    },
-  };
-});
+export enum AlertDialogType {
+  DANGER = 'danger',
+  WARNING = 'warning',
+  INFORMATION = 'information',
+  SUCCESS = 'success',
+}
 
 interface AlertDialogProps {
   open: boolean;
@@ -42,7 +26,39 @@ interface AlertDialogProps {
   onClose: () => void;
   onAction: () => void;
   actionButtonTitle: string;
+  type?: AlertDialogType;
 }
+
+const useStyles = (type: AlertDialogType) =>
+  makeStyles((theme: Theme) => {
+    const colorMap = {
+      [AlertDialogType.DANGER]: theme.palette.error.light,
+      [AlertDialogType.WARNING]: theme.palette.notice,
+      [AlertDialogType.INFORMATION]: theme.palette.text.secondary,
+      [AlertDialogType.SUCCESS]: theme.palette.positive,
+    };
+
+    return {
+      link: {
+        textAlign: 'left',
+        width: '100%',
+      },
+      dialogTitle: {
+        fontWeight: 400,
+        fontSize: 18,
+      },
+      dialogButton: {
+        fontFamily: FontFamily.ROBOTO,
+        color: theme.palette.text.secondary,
+        height: '36px',
+        letterSpacing: '1.25px',
+        marginLeft: theme.spacing(1),
+      },
+      primaryButton: {
+        color: colorMap[type],
+      },
+    };
+  })();
 
 const AlertDialog: FC<AlertDialogProps> = ({
   open,
@@ -51,8 +67,9 @@ const AlertDialog: FC<AlertDialogProps> = ({
   message,
   onAction,
   actionButtonTitle,
+  type = AlertDialogType.INFORMATION,
 }: AlertDialogProps) => {
-  const classes = useStyles();
+  const classes = useStyles(type);
 
   return (
     <>
@@ -91,6 +108,10 @@ const AlertDialog: FC<AlertDialogProps> = ({
       </Dialog>
     </>
   );
+};
+
+AlertDialog.defaultProps = {
+  type: AlertDialogType.INFORMATION,
 };
 
 export default AlertDialog;
