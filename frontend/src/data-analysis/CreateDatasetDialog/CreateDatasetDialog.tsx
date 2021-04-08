@@ -16,9 +16,9 @@ import { UserContext } from 'src/auth/UserProvider';
 import TextField from 'src/shared/TextField';
 import Typography from 'src/shared/Typography';
 import { CREATE_DATASET_MUTATION } from '../mutations';
-import TablesTreeView from '../TablesTreeView/TablesTreeView';
 import { TableIdentity } from '../types';
 import CreateDatasetSuccessMessage from './CreateDatasetSuccessMessage';
+import DatasourceSelector from './DatasourceSelector/DatasourceSelector';
 
 const MAX_DESCRIPTION_LENGTH = 16384;
 export const DESCRIPTION_MAX_LENGTH_ERROR =
@@ -45,12 +45,6 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     divider: {
       backgroundColor: theme.palette.divider,
-    },
-    tablesView: {
-      margin: '24px 0 59px 0',
-    },
-    tablesViewTitle: {
-      marginBottom: theme.spacing(2),
     },
     dialogControls: {
       display: 'flex',
@@ -91,6 +85,7 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   const [selectedTable, setSelectedTable] = useState<TableIdentity | null>(
     null,
   );
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [creationCompleted, setCreationCompleted] = useState(false);
   const { GCPProjectName, GCSBucketName, organization } = useContext(
     UserContext,
@@ -114,6 +109,7 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
         setName('');
         setDescription('');
         setSelectedTable(null);
+        setSelectedFile(null);
         setCreationCompleted(false);
       }, 200);
     }
@@ -145,24 +141,24 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
     }
   };
 
-  const handleTableSelect = ({
-    projectId,
-    datasetId,
-    tableId,
-  }: TableIdentity) => {
-    setSelectedTable({ projectId, datasetId, tableId });
+  const handleTableSelect = (tableIdentity: TableIdentity | null) => {
+    if (tableIdentity) {
+      const { projectId, datasetId, tableId } = tableIdentity;
+      setSelectedTable({ projectId, datasetId, tableId });
+    }
+    setSelectedTable(null);
   };
 
   const isCreateButtonEnabled = () => {
     return (
       name.length &&
       !descriptionError.length &&
-      selectedTable !== null &&
+      (selectedTable !== null || selectedFile !== null) &&
       !loading
     );
   };
 
-  const handleDatasetCreation = () => {
+  const handleDatasetCreationFromBQTable = () => {
     createDataset({
       variables: {
         datasetParams: {
@@ -176,6 +172,19 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
         },
       },
     });
+  };
+
+  const handleDatasetCreationFromFile = () => {
+    // eslint-disable-next-line no-console
+    console.log(selectedFile);
+  };
+
+  const handleDatasetCreation = () => {
+    if (selectedFile) {
+      handleDatasetCreationFromFile();
+      return;
+    }
+    handleDatasetCreationFromBQTable();
   };
 
   return (
@@ -216,15 +225,10 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
               multiline
             />
             <Divider className={classes.divider} />
-            <Box className={classes.tablesView}>
-              <Typography
-                className={classes.tablesViewTitle}
-                fontFamily={FontFamily.ROBOTO}
-              >
-                Choose a BigQuery table
-              </Typography>
-              <TablesTreeView onTableSelect={handleTableSelect} />
-            </Box>
+            <DatasourceSelector
+              onTableSelect={handleTableSelect}
+              onFileSelect={setSelectedFile}
+            />
           </>
         )}
 
