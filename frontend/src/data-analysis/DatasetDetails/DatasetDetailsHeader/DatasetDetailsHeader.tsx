@@ -19,6 +19,7 @@ import { FontFamily } from 'src/app/styles/fonts';
 import Typography from 'src/shared/Typography';
 import StatusChip from './StatusChip';
 import SpecificationColumn from './SpecificationColumn';
+import Archiver from './Archiver/Archiver';
 
 type DatasetDetailsHeaderProps = DatasetDetailsProps;
 
@@ -49,11 +50,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   actionsMenuItem: {
     fontFamily: FontFamily.ROBOTO,
-    '& > a': {
+    '& > a, & > button': {
       color: theme.palette.text.primary,
       '&:hover': {
         textDecoration: 'none',
       },
+    },
+    '& > button p': {
+      fontFamily: FontFamily.ROBOTO,
     },
   },
 }));
@@ -153,6 +157,9 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
                     <Link href={process.env.REACT_APP_JUPYTERHUB_URL}>
                       View Notebook
                     </Link>
+                  </MenuItem>
+                  <MenuItem className={classes.actionsMenuItem}>
+                    <Archiver />
                   </MenuItem>
                 </Menu>
                 <IconButton onClick={handleMenuOpen}>
