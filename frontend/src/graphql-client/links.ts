@@ -21,7 +21,7 @@ export const loginRedirectLink = (auth0Client: Auth0Client): ApolloLink =>
   onError(({ graphQLErrors }) => {
     if (
       graphQLErrors?.some(
-        (error) => error?.extensions?.exception?.response?.statusCode === 401,
+        (error) => error?.extensions?.code === 'UNAUTHENTICATED',
       )
     ) {
       auth0Client.loginWithRedirect();

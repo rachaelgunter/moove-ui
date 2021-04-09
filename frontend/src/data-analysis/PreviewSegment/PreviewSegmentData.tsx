@@ -1,17 +1,13 @@
 import { Grid, Box, Theme, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React, { FC } from 'react';
-import { useQuery } from '@apollo/client';
 import ReactJson from 'react-json-view';
-import { BIG_QUERY_PREVIEW_SEGMENT_QUERY } from '../queries';
-import { PreviewSegmentModel } from '../types';
+import { SegmentData } from '../types';
 import { PreviewSegmentStatistics } from './PreviewSegmentStatistics';
 import { FontFamily } from '../../app/styles/fonts';
 import PreviewSegmentGridItem from './PreviewSegmentGridItem';
 
-interface PreviewSegmentDataProps {
-  segmentId: string;
-}
+type PreviewSegmentDataProps = SegmentData;
 
 const useStyles = makeStyles((theme: Theme) => ({
   gridContainer: {
@@ -60,23 +56,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: FontFamily.ROBOTO,
     letterSpacing: '0.11px',
   },
+  errorContainer: {
+    background: theme.palette.bg.dark,
+    flexGrow: 1,
+    padding: theme.spacing(2),
+  },
 }));
 
 const PreviewSegmentData: FC<PreviewSegmentDataProps> = ({
-  segmentId,
+  data,
+  error,
+  loading,
 }: PreviewSegmentDataProps) => {
   const classes = useStyles();
-  type Segment = {
-    previewSegment: PreviewSegmentModel;
-  };
-  const { loading, data, error } = useQuery<Segment>(
-    BIG_QUERY_PREVIEW_SEGMENT_QUERY,
-    {
-      variables: {
-        segmentId,
-      },
-    },
-  );
+  const hasSegmentNotFoundError =
+    error?.graphQLErrors?.some(
+      (responseError) =>
+        responseError?.extensions?.code === 'SEGMENT_NOT_FOUND',
+    ) || false;
 
   const formatRawData = (
     rawData: string | undefined,
@@ -95,10 +92,20 @@ const PreviewSegmentData: FC<PreviewSegmentDataProps> = ({
   const { statistics, rawData } = data?.previewSegment || {};
 
   if (!loading && error) {
+    if (hasSegmentNotFoundError) {
+      return (
+        <Grid className={classes.gridContainer} container spacing={1}>
+          <Grid item container xs={12}>
+            <Box className={classes.errorContainer}>Segment not found</Box>
+          </Grid>
+        </Grid>
+      );
+    }
+
     return (
       <Grid className={classes.gridContainer} container spacing={1}>
         <Grid item container xs={12}>
-          <Box>
+          <Box className={classes.errorContainer}>
             Unable to load data, please try later. if the problem persists,
             contact support:{' '}
             <Link href="mailto:systems@moove.ai" color="inherit">

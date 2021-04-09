@@ -1,4 +1,4 @@
-import { Button, Theme } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React, { FC, useEffect, useRef } from 'react';
 import {
@@ -23,7 +23,7 @@ import 'cesium/Widgets/widgets.css';
 
 interface PreviewSegmentChartProps {
   data: {
-    geometryGeojson: {
+    geometryGeoJson: {
       coordinates: [number, number][];
     };
     trafficSignOffset: {
@@ -33,7 +33,7 @@ interface PreviewSegmentChartProps {
   };
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   viewer: {
     margin: 0,
   },
@@ -85,7 +85,7 @@ const PreviewSegmentCesium: FC<PreviewSegmentChartProps> = ({
     }
   }, []);
 
-  const { coordinates } = data.geometryGeojson;
+  const { coordinates } = data.geometryGeoJson;
   const startLat = coordinates[0][0];
   const startLon = coordinates[0][1];
   const endLat = coordinates[coordinates.length - 1][0];
@@ -93,7 +93,7 @@ const PreviewSegmentCesium: FC<PreviewSegmentChartProps> = ({
   const segmentGeoJson = {
     type: 'FeatureCollection',
     features: [
-      { type: 'Feature', properties: {}, geometry: data.geometryGeojson },
+      { type: 'Feature', properties: {}, geometry: data.geometryGeoJson },
     ],
   };
 
@@ -115,7 +115,7 @@ const PreviewSegmentCesium: FC<PreviewSegmentChartProps> = ({
     {
       type: 'FeatureCollection',
       features: [
-        { type: 'Feature', properties: {}, geometry: data.geometryGeojson },
+        { type: 'Feature', properties: {}, geometry: data.geometryGeoJson },
       ],
     },
     {

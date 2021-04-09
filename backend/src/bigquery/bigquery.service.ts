@@ -14,7 +14,7 @@ import {
   SegmentStatisticsFields,
 } from './bigquery.types';
 import { ConfigService } from '@nestjs/config';
-
+import { SegmentNotFound } from 'src/errors';
 const GOOGLE_ROADS_API_URL = 'https://roads.googleapis.com/v1/snapToRoads';
 
 @Injectable()
@@ -182,6 +182,11 @@ export class BigQueryService {
     const segments = await this.bigqueryClientService.getPreviewSegment(
       segmentId,
     );
+
+    if (segments.length === 0) {
+      throw new SegmentNotFound();
+    }
+
     const streetViewCoordinates = await this.snapSegmentToRoad(segments[0]);
     return {
       rawData: JSON.stringify(segments),
