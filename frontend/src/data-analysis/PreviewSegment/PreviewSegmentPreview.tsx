@@ -1,18 +1,14 @@
-import { Box, Grid, Link, Theme } from '@material-ui/core';
+import { Grid, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React, { FC } from 'react';
-import { useQuery } from '@apollo/client';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { BIG_QUERY_PREVIEW_SEGMENT_QUERY } from '../queries';
-import { PreviewSegmentModel } from '../types';
+import { PreviewSegmentModel, SegmentData } from '../types';
 import PreviewSegmentChart from './PreviewSegmentChart';
 import PreviewSegmentGridItem from './PreviewSegmentGridItem';
 import GoogleStreetView from './GoogleStreetView';
 import PreviewSegmentCesium from './PreviewSegmentCesium';
 
-interface PreviewSegmentPreviewProps {
-  segmentId: string;
-}
+type PreviewSegmentPreviewProps = SegmentData;
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -36,48 +32,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
-  segmentId,
+  data,
+  loading,
 }: PreviewSegmentPreviewProps) => {
   const classes = useStyles();
-  const { loading, data, error } = useQuery<{
-    previewSegment: PreviewSegmentModel;
-  }>(BIG_QUERY_PREVIEW_SEGMENT_QUERY, {
-    variables: {
-      segmentId,
-    },
-  });
-  const hasSegmentNotFoundError =
-    error?.graphQLErrors?.some(
-      (responseError) =>
-        responseError?.extensions?.code === 'SEGMENT_NOT_FOUND',
-    ) || false;
-
-  if (!loading && error) {
-    if (hasSegmentNotFoundError) {
-      return (
-        <Grid className={classes.container} container spacing={1}>
-          <Grid item container xs={12}>
-            <Box className={classes.errorContainer}>Segment not found</Box>
-          </Grid>
-        </Grid>
-      );
-    }
-
-    return (
-      <Grid className={classes.container} container spacing={1}>
-        <Grid item container xs={12}>
-          <Box className={classes.errorContainer}>
-            Unable to load data, please try later. if the problem persists,
-            contact support:{' '}
-            <Link href="mailto:systems@moove.ai" color="inherit">
-              systems@moove.ai
-            </Link>
-          </Box>
-        </Grid>
-      </Grid>
-    );
-  }
-
   const getChartData = (
     responseData:
       | {
@@ -128,19 +86,19 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
       const jsonObject = JSON.parse(
         responseData?.previewSegment?.rawData || '{}',
       )[0];
-      const geometryGeojson =
+      const geometryGeoJson =
         (jsonObject?.geometry_geojson &&
           JSON.parse(jsonObject.geometry_geojson)) ||
         {};
       const trafficSignOffset = jsonObject?.traffic_sign_offset || [];
 
       return {
-        geometryGeojson,
+        geometryGeoJson,
         trafficSignOffset,
       };
     } catch (e) {
       return {
-        geometryGeojson: {},
+        geometryGeoJson: {},
         trafficSignOffset: [],
       };
     }
@@ -148,7 +106,7 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
 
   const chartData = getChartData(data);
   const cesiumData = getCesiumData(data);
-  const { latitude: streetViewLatitiude, longitude: streetViewLongitude } = data
+  const { latitude: streetViewLatitude, longitude: streetViewLongitude } = data
     ?.previewSegment.streetViewCoordinates ?? { latitude: 0, longitude: 0 };
 
   return (
@@ -190,7 +148,7 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
                   height={height}
                   width={width}
                   position={{
-                    lat: streetViewLatitiude,
+                    lat: streetViewLatitude,
                     lng: streetViewLongitude,
                   }}
                 />

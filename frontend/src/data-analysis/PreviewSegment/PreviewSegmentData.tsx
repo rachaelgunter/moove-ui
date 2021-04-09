@@ -1,17 +1,13 @@
 import { Grid, Box, Theme, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React, { FC } from 'react';
-import { useQuery } from '@apollo/client';
 import ReactJson from 'react-json-view';
-import { BIG_QUERY_PREVIEW_SEGMENT_QUERY } from '../queries';
-import { PreviewSegmentModel } from '../types';
+import { SegmentData } from '../types';
 import { PreviewSegmentStatistics } from './PreviewSegmentStatistics';
 import { FontFamily } from '../../app/styles/fonts';
 import PreviewSegmentGridItem from './PreviewSegmentGridItem';
 
-interface PreviewSegmentDataProps {
-  segmentId: string;
-}
+type PreviewSegmentDataProps = SegmentData;
 
 const useStyles = makeStyles((theme: Theme) => ({
   gridContainer: {
@@ -68,20 +64,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const PreviewSegmentData: FC<PreviewSegmentDataProps> = ({
-  segmentId,
+  data,
+  error,
+  loading,
 }: PreviewSegmentDataProps) => {
   const classes = useStyles();
-  type Segment = {
-    previewSegment: PreviewSegmentModel;
-  };
-  const { loading, data, error } = useQuery<Segment>(
-    BIG_QUERY_PREVIEW_SEGMENT_QUERY,
-    {
-      variables: {
-        segmentId,
-      },
-    },
-  );
   const hasSegmentNotFoundError =
     error?.graphQLErrors?.some(
       (responseError) =>
