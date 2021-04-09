@@ -1,3 +1,5 @@
+import { ApolloError } from '@apollo/client';
+
 export enum DatasetStatus {
   ACTIVE = 'active',
   PROCESSING = 'processing',
@@ -89,4 +91,14 @@ export type PreviewSegmentModel = {
     latitude: number;
     longitude: number;
   };
+};
+
+export type Segment = {
+  previewSegment: PreviewSegmentModel;
+};
+
+export type SegmentData = {
+  data: Segment | undefined;
+  error?: ApolloError | undefined;
+  loading: boolean;
 };

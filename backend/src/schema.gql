@@ -73,8 +73,24 @@ type BigQueryTableMetadata {
   totalRows: Float!
 }
 
+type BigQueryPreviewGroupedCell {
+  id: String!
+  cell: String
+}
+
+type BigQueryPreviewGroupedRow {
+  id: String!
+  row: [BigQueryPreviewGroupedCell]
+}
+
+type BigQueryPreviewGroupedRows {
+  id: String!
+  rows: [BigQueryPreviewGroupedRow]
+}
+
 type BigQueryPreviewTable {
   headers: [BigQueryPreviewHeaders]
+  groupedRows: [BigQueryPreviewGroupedRows]
   rows: [[String]]
   tableMetadata: BigQueryTableMetadata
 }
