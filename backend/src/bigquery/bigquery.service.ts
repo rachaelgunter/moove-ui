@@ -14,7 +14,7 @@ import {
   SegmentStatisticsFields,
 } from './bigquery.types';
 import { ConfigService } from '@nestjs/config';
-import { SegmentNotFound } from 'src/errors/segment-not-found';
+import { SegmentNotFound } from 'src/errors';
 const GOOGLE_ROADS_API_URL = 'https://roads.googleapis.com/v1/snapToRoads';
 
 @Injectable()

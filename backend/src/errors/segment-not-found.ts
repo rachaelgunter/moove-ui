@@ -1,7 +1,7 @@
-import { CustomError } from './custom-error';
+import { ApolloError } from 'apollo-server-errors';
 
-export class SegmentNotFound extends CustomError {
-  constructor(message = 'SEGMENT_NOT_FOUND') {
+export class SegmentNotFound extends ApolloError {
+  constructor(message = 'Segment not found') {
     super(message, 'SEGMENT_NOT_FOUND');
 
     Object.defineProperty(this, 'name', { value: 'SegmentNotFound' });

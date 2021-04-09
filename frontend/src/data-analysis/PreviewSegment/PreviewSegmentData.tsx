@@ -82,6 +82,11 @@ const PreviewSegmentData: FC<PreviewSegmentDataProps> = ({
       },
     },
   );
+  const hasSegmentNotFoundError =
+    error?.graphQLErrors?.some(
+      (responseError) =>
+        responseError?.extensions?.code === 'SEGMENT_NOT_FOUND',
+    ) || false;
 
   const formatRawData = (
     rawData: string | undefined,
@@ -100,7 +105,7 @@ const PreviewSegmentData: FC<PreviewSegmentDataProps> = ({
   const { statistics, rawData } = data?.previewSegment || {};
 
   if (!loading && error) {
-    if (error?.message === 'SEGMENT_NOT_FOUND') {
+    if (hasSegmentNotFoundError) {
       return (
         <Grid className={classes.gridContainer} container spacing={1}>
           <Grid item container xs={12}>

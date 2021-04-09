@@ -29,6 +29,9 @@ const useStylesTable = makeStyles(() => ({
       padding: '11px 0 11px 24px',
       width: '30px',
     },
+    '& tr:hover > td': {
+      backgroundColor: '#222d33',
+    },
   },
   headerCell: {
     borderColor: 'rgba(255, 255, 255, .2)',
@@ -125,14 +128,20 @@ const PreviewTableContent: FC<PreviewTableContentProps> = ({
   };
 
   const renderRow = ({ id, row }: PreviewTableRow, isSubRow = true) => (
-    <TableRow key={id}>
+    <TableRow
+      key={id}
+      {...(!isSubRow ? { onClick: () => toggleRows(id) } : {})}
+    >
       <TableCell className={classes.headerCell}>
         {!isSubRow && (
           <IconButton
             className={classes.toggleButton}
             aria-label="expand row"
             size="small"
-            onClick={() => toggleRows(id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleRows(id);
+            }}
           >
             {openedSubrows.has(id) ? (
               <KeyboardArrowUpIcon />
@@ -148,7 +157,10 @@ const PreviewTableContent: FC<PreviewTableContentProps> = ({
             <Button
               className={classes.button}
               variant="text"
-              onClick={() => openPreviewSegment(cell || '')}
+              onClick={(e) => {
+                e.stopPropagation();
+                openPreviewSegment(cell || '');
+              }}
             >
               {cell}
             </Button>

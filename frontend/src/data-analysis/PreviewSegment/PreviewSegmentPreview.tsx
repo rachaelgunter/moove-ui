@@ -46,9 +46,14 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
       segmentId,
     },
   });
+  const hasSegmentNotFoundError =
+    error?.graphQLErrors?.some(
+      (responseError) =>
+        responseError?.extensions?.code === 'SEGMENT_NOT_FOUND',
+    ) || false;
 
   if (!loading && error) {
-    if (error?.message === 'SEGMENT_NOT_FOUND') {
+    if (hasSegmentNotFoundError) {
       return (
         <Grid className={classes.container} container spacing={1}>
           <Grid item container xs={12}>

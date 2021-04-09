@@ -12,7 +12,6 @@ import { HealthController } from './health/health.controller';
 import { HealthModule } from './health/health.module';
 import { BigqueryModule } from './bigquery/bigquery.module';
 import { DatasetsModule } from './datasets/datasets.module';
-import { GraphQLError, GraphQLFormattedError } from 'graphql';
 
 @Module({
   imports: [
@@ -25,11 +24,6 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql';
         schemaDirectives: {
           email: EmailDirective,
         },
-        formatError: (error: GraphQLError) => {
-          const graphQLFormattedError: GraphQLFormattedError = error;
-          return graphQLFormattedError;
-        },
-        debug: false,
         cors: {
           origin: configService.get('ALLOWED_ORIGINS').split(' '),
           methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
