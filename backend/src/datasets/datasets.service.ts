@@ -9,7 +9,6 @@ import {
   DatasetStatus,
   CloudFunctionDatasetStatus,
   ColumnVisualizations,
-  RemovedDataset,
 } from './datasets.types';
 import { google } from 'googleapis';
 import { GCSClient } from 'src/gcs/gcs-client';

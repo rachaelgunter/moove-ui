@@ -71,7 +71,13 @@ createAuth0Client({
 
   const client = new ApolloClient({
     link: from([withTokenLink, loginRedirectLink(auth0), authLink, httpLink]),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Dataset: {
+          keyFields: ['analysisName'],
+        },
+      },
+    }),
   });
 
   return render(

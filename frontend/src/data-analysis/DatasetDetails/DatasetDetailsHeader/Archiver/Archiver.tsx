@@ -1,6 +1,6 @@
 import React, { FC, useContext, useState } from 'react';
 import { Link, makeStyles } from '@material-ui/core';
-import { useMutation } from '@apollo/client';
+import { StoreObject, useMutation } from '@apollo/client';
 
 import Typography from 'src/shared/Typography';
 import AlertDialog from 'src/shared/AlertDialog';
@@ -17,17 +17,33 @@ const useStyles = makeStyles({
 
 interface ArchiverProps {
   datasetId: string;
+  resetDatasetModel: () => void;
 }
 
-const Archiver: FC<ArchiverProps> = ({ datasetId }: ArchiverProps) => {
+const Archiver: FC<ArchiverProps> = ({
+  datasetId,
+  resetDatasetModel,
+}: ArchiverProps) => {
   const classes = useStyles();
 
   const { GCPProjectName } = useContext(UserContext);
 
   const [open, setOpen] = useState(false);
   const [deleteDataset] = useMutation(DELETE_DATASET_MUTATION, {
-    onCompleted: () => {
-      console.warn('DELETED!');
+    update(cache, { data }) {
+      const { datasetId: analysisName } = data.deleteDataset;
+
+      cache.modify({
+        id: cache.identify({ __typename: 'Query' }),
+        fields: {
+          getDatasets(existingCommentRefs, { readField }) {
+            return existingCommentRefs.filter(
+              (commentRef: StoreObject) =>
+                analysisName !== readField('analysisName', commentRef),
+            );
+          },
+        },
+      });
     },
   });
 
@@ -35,6 +51,7 @@ const Archiver: FC<ArchiverProps> = ({ datasetId }: ArchiverProps) => {
 
   const onDelete = () => {
     onSwitch();
+    resetDatasetModel();
     deleteDataset({
       variables: {
         GCPProjectName,
