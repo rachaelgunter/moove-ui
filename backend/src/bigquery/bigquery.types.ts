@@ -136,9 +136,39 @@ export class BigQueryTableMetadata {
 }
 
 @ObjectType()
+export class BigQueryPreviewGroupedCell {
+  @Field()
+  id?: string;
+
+  @Field({ nullable: true })
+  cell?: string;
+}
+
+@ObjectType()
+export class BigQueryPreviewGroupedRow {
+  @Field()
+  id: string;
+
+  @Field(() => [BigQueryPreviewGroupedCell], { nullable: 'itemsAndList' })
+  row: BigQueryPreviewGroupedCell[];
+}
+
+@ObjectType()
+export class BigQueryPreviewGroupedRows {
+  @Field()
+  id: string;
+
+  @Field(() => [BigQueryPreviewGroupedRow], { nullable: 'itemsAndList' })
+  rows: BigQueryPreviewGroupedRow[];
+}
+
+@ObjectType()
 export class BigQueryPreviewTable {
   @Field(() => [BigQueryPreviewHeaders], { nullable: 'itemsAndList' })
   headers?: BigQueryPreviewHeaders[];
+
+  @Field(() => [BigQueryPreviewGroupedRows], { nullable: 'itemsAndList' })
+  groupedRows?: BigQueryPreviewGroupedRows[];
 
   @Field(() => [[String]], { nullable: 'itemsAndList' })
   rows?: string[][];

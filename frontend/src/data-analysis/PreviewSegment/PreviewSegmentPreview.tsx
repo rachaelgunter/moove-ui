@@ -28,6 +28,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexGrow: 1,
     },
   },
+  errorContainer: {
+    background: theme.palette.bg.dark,
+    flexGrow: 1,
+    padding: theme.spacing(2),
+  },
 }));
 
 const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
@@ -43,10 +48,20 @@ const PreviewSegmentPreview: FC<PreviewSegmentPreviewProps> = ({
   });
 
   if (!loading && error) {
+    if (error?.message === 'SEGMENT_NOT_FOUND') {
+      return (
+        <Grid className={classes.container} container spacing={1}>
+          <Grid item container xs={12}>
+            <Box className={classes.errorContainer}>Segment not found</Box>
+          </Grid>
+        </Grid>
+      );
+    }
+
     return (
       <Grid className={classes.container} container spacing={1}>
         <Grid item container xs={12}>
-          <Box>
+          <Box className={classes.errorContainer}>
             Unable to load data, please try later. if the problem persists,
             contact support:{' '}
             <Link href="mailto:systems@moove.ai" color="inherit">

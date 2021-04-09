@@ -56,6 +56,32 @@ describe('big query utils', () => {
             },
           ],
         },
+        {
+          name: 'column5',
+          type: 'RECORD',
+          mode: 'REPEATED',
+          fields: [
+            {
+              name: 'name1',
+              type: 'STRING',
+            },
+            {
+              name: 'name2',
+              type: 'RECORD',
+              mode: 'REPEATED',
+              fields: [
+                {
+                  name: 'name1',
+                  type: 'STRING',
+                },
+                {
+                  name: 'name2',
+                  type: 'STRING',
+                },
+              ],
+            },
+          ],
+        },
       ],
       rows: [
         {
@@ -121,6 +147,47 @@ describe('big query utils', () => {
             {
               v: [],
             },
+            {
+              v: [
+                {
+                  v: {
+                    f: [
+                      {
+                        v: '12',
+                      },
+                      {
+                        v: [
+                          {
+                            v: {
+                              f: [
+                                {
+                                  v: '13',
+                                },
+                                {
+                                  v: '14',
+                                },
+                              ],
+                            },
+                          },
+                          {
+                            v: {
+                              f: [
+                                {
+                                  v: '15',
+                                },
+                                {
+                                  v: '16',
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
           ],
         },
       ],
@@ -136,11 +203,14 @@ describe('big query utils', () => {
           { name: 'column3.name2', type: 'STRING' },
           { name: 'column4.name1', type: 'STRING' },
           { name: 'column4.name2', type: 'STRING' },
+          { name: 'column5.name1', type: 'STRING' },
+          { name: 'column5.name2.name1', type: 'STRING' },
+          { name: 'column5.name2.name2', type: 'STRING' },
         ],
         rows: [
-          ['1', '2', '3', '4', '5', '6', '', ''],
-          ['', '', '', '', '8', '9', '', ''],
-          ['', '', '', '', '10', '11', '', ''],
+          ['1', '2', '3', '4', '5', '6', '', '', '12', '13', '14'],
+          ['', '', '', '', '8', '9', '', '', '', '15', '16'],
+          ['', '', '', '', '10', '11', '', '', '', '', ''],
         ],
       });
     });

@@ -60,6 +60,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: FontFamily.ROBOTO,
     letterSpacing: '0.11px',
   },
+  errorContainer: {
+    background: theme.palette.bg.dark,
+    flexGrow: 1,
+    padding: theme.spacing(2),
+  },
 }));
 
 const PreviewSegmentData: FC<PreviewSegmentDataProps> = ({
@@ -95,10 +100,20 @@ const PreviewSegmentData: FC<PreviewSegmentDataProps> = ({
   const { statistics, rawData } = data?.previewSegment || {};
 
   if (!loading && error) {
+    if (error?.message === 'SEGMENT_NOT_FOUND') {
+      return (
+        <Grid className={classes.gridContainer} container spacing={1}>
+          <Grid item container xs={12}>
+            <Box className={classes.errorContainer}>Segment not found</Box>
+          </Grid>
+        </Grid>
+      );
+    }
+
     return (
       <Grid className={classes.gridContainer} container spacing={1}>
         <Grid item container xs={12}>
-          <Box>
+          <Box className={classes.errorContainer}>
             Unable to load data, please try later. if the problem persists,
             contact support:{' '}
             <Link href="mailto:systems@moove.ai" color="inherit">

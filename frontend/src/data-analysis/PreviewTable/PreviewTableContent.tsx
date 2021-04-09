@@ -9,16 +9,13 @@ import {
   makeStyles,
   TablePagination,
   Button,
+  IconButton,
 } from '@material-ui/core';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import PaginationActions from './PaginationActions';
 import { FontFamily } from '../../app/styles/fonts';
 import PreviewSegment from '../PreviewSegment/PreviewSegment';
-
-type RowCell = {
-  value: string | null;
-  id: string;
-};
-type Row = { rowId: number; row: RowCell[] };
 
 const useStylesTable = makeStyles(() => ({
   container: {
@@ -28,6 +25,10 @@ const useStylesTable = makeStyles(() => ({
   },
   table: {
     borderRadius: '4px',
+    '& tr > :first-child': {
+      padding: '11px 0 11px 24px',
+      width: '30px',
+    },
   },
   headerCell: {
     borderColor: 'rgba(255, 255, 255, .2)',
@@ -60,14 +61,29 @@ const useStylesTable = makeStyles(() => ({
   button: {
     fontSize: '13px',
   },
+  toggleButton: {
+    color: '#fff',
+  },
 }));
 
 interface PreviewTableHeaderCell {
   name: string;
 }
+interface PreviewTableCell {
+  id: string;
+  cell: string | null;
+}
+interface PreviewTableRow {
+  id: string;
+  row: PreviewTableCell[];
+}
+interface PreviewTableRows {
+  id: string;
+  rows: PreviewTableRow[];
+}
 interface PreviewTableData {
   headers: PreviewTableHeaderCell[];
-  rows: string[][];
+  groupedRows: PreviewTableRows[];
   tableMetadata: { totalRows: number };
 }
 interface PreviewTableContentProps extends PreviewTableData {
@@ -82,22 +98,16 @@ const isSegmentValue = (value: string | null): boolean =>
 
 const PreviewTableContent: FC<PreviewTableContentProps> = ({
   headers,
-  rows,
+  groupedRows,
   tableMetadata: { totalRows },
   rowsPerPage,
   page,
   handleChangePage,
   handleChangeRowsPerPage,
 }: PreviewTableContentProps) => {
-  const rowIndexedById: Row[] = rows.map((row: string[], i: number) => ({
-    rowId: i,
-    row: row.map((value, j) => ({
-      id: `${i}-${j}`,
-      value,
-    })),
-  }));
   const classes = useStylesTable();
   const [segmentValue, setSegmentValue] = useState('');
+  const [openedSubrows, setOpenedSubrows] = useState(new Set());
   const [isPreviewSegmentOpened, sedPreviewSegmentOpened] = useState(false);
 
   const openPreviewSegment = (value: string) => {
@@ -108,6 +118,47 @@ const PreviewTableContent: FC<PreviewTableContentProps> = ({
   const closePreviewSegment = () => {
     sedPreviewSegmentOpened(false);
   };
+
+  const toggleRows = (id: string) => {
+    openedSubrows.has(id) ? openedSubrows.delete(id) : openedSubrows.add(id);
+    setOpenedSubrows(new Set(openedSubrows));
+  };
+
+  const renderRow = ({ id, row }: PreviewTableRow, isSubRow = true) => (
+    <TableRow key={id}>
+      <TableCell className={classes.headerCell}>
+        {!isSubRow && (
+          <IconButton
+            className={classes.toggleButton}
+            aria-label="expand row"
+            size="small"
+            onClick={() => toggleRows(id)}
+          >
+            {openedSubrows.has(id) ? (
+              <KeyboardArrowUpIcon />
+            ) : (
+              <KeyboardArrowDownIcon />
+            )}
+          </IconButton>
+        )}
+      </TableCell>
+      {row.map(({ id: cellId, cell }) => (
+        <TableCell key={cellId} className={classes.cell}>
+          {isSegmentValue(cell) ? (
+            <Button
+              className={classes.button}
+              variant="text"
+              onClick={() => openPreviewSegment(cell || '')}
+            >
+              {cell}
+            </Button>
+          ) : (
+            cell
+          )}
+        </TableCell>
+      ))}
+    </TableRow>
+  );
 
   return (
     <div>
@@ -125,6 +176,7 @@ const PreviewTableContent: FC<PreviewTableContentProps> = ({
         >
           <TableHead>
             <TableRow>
+              <TableCell className={classes.headerCell} />
               {headers.map((item: { name: string }) => (
                 <TableCell key={item.name} className={classes.headerCell}>
                   {item.name}
@@ -132,27 +184,15 @@ const PreviewTableContent: FC<PreviewTableContentProps> = ({
               ))}
             </TableRow>
           </TableHead>
-          <TableBody>
-            {rowIndexedById.map(({ rowId, row }) => (
-              <TableRow key={rowId}>
-                {row.map(({ value, id }) => (
-                  <TableCell key={id} className={classes.cell}>
-                    {isSegmentValue(value) ? (
-                      <Button
-                        className={classes.button}
-                        variant="text"
-                        onClick={() => openPreviewSegment(value || '')}
-                      >
-                        {value}
-                      </Button>
-                    ) : (
-                      value
-                    )}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
+
+          {groupedRows.map(({ id: groupId, rows: [firstRow, ...subrows] }) => (
+            <>
+              {renderRow(firstRow, false)}
+              {openedSubrows.has(firstRow.id) && (
+                <TableBody>{subrows.map((row) => renderRow(row))}</TableBody>
+              )}
+            </>
+          ))}
         </Table>
       </TableContainer>
       <TablePagination
