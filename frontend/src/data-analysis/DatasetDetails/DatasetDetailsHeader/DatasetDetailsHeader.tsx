@@ -159,7 +159,7 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
                     </Link>
                   </MenuItem>
                   <MenuItem className={classes.actionsMenuItem}>
-                    <Archiver />
+                    <Archiver datasetId={datasetModel.name} />
                   </MenuItem>
                 </Menu>
                 <IconButton onClick={handleMenuOpen}>

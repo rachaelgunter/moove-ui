@@ -1,9 +1,12 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { Link, makeStyles } from '@material-ui/core';
+import { useMutation } from '@apollo/client';
 
 import Typography from 'src/shared/Typography';
 import AlertDialog from 'src/shared/AlertDialog';
 import { AlertDialogType } from 'src/shared/AlertDialog/AlertDialog';
+import { DELETE_DATASET_MUTATION } from 'src/data-analysis/mutations';
+import { UserContext } from 'src/auth/UserProvider';
 
 const useStyles = makeStyles({
   link: {
@@ -12,28 +15,37 @@ const useStyles = makeStyles({
   },
 });
 
-const Archiver: FC = () => {
+interface ArchiverProps {
+  datasetId: string;
+}
+
+const Archiver: FC<ArchiverProps> = ({ datasetId }: ArchiverProps) => {
   const classes = useStyles();
+
+  const { GCPProjectName } = useContext(UserContext);
+
   const [open, setOpen] = useState(false);
+  const [deleteDataset] = useMutation(DELETE_DATASET_MUTATION, {
+    onCompleted: () => {
+      console.warn('DELETED!');
+    },
+  });
 
-  const onOpen = () => {
-    console.warn('open');
-    setOpen(true);
-  };
-
-  const onCancel = () => {
-    console.warn('cancel');
-    setOpen(false);
-  };
+  const onSwitch = () => setOpen(!open);
 
   const onDelete = () => {
-    console.warn('delete');
-    setOpen(false);
+    onSwitch();
+    deleteDataset({
+      variables: {
+        GCPProjectName,
+        datasetId,
+      },
+    });
   };
 
   return (
     <>
-      <Link className={classes.link} component="button" onClick={onOpen}>
+      <Link className={classes.link} component="button" onClick={onSwitch}>
         <Typography color="textPrimary" variant="body1">
           Archive
         </Typography>
@@ -44,7 +56,7 @@ const Archiver: FC = () => {
         message="This action cannot be undone. Do you want to proceed?"
         actionButtonTitle="Delete"
         onAction={onDelete}
-        onClose={onCancel}
+        onClose={onSwitch}
         type={AlertDialogType.DANGER}
       />
     </>
