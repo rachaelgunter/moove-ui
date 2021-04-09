@@ -188,4 +188,22 @@ export class DatasetsService {
     }
     return DatasetStatus.PROCESSING;
   }
+
+  async getDatasetFileUploadUrl(
+    fileName: string,
+    organizationName: string,
+    analysisProject: string,
+    assetsBucket: string,
+    name: string,
+    description: string,
+  ): Promise<string> {
+    return this.storageClient.generateUploadSignedURL(
+      fileName,
+      organizationName,
+      analysisProject,
+      assetsBucket,
+      name,
+      description,
+    );
+  }
 }

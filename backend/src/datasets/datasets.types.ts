@@ -99,6 +99,27 @@ export class Dataset {
   status: DatasetStatus;
 }
 
+@ArgsType()
+export class DatasetFileSignedUploadUrlParams {
+  @Field()
+  fileName: string;
+
+  @Field()
+  name: string;
+
+  @Field()
+  description: string;
+
+  @Field()
+  organizationName: string;
+
+  @Field()
+  analysisProject: string;
+
+  @Field()
+  assetsBucket: string;
+}
+
 export enum DatasetStatus {
   ACTIVE = 'active',
   PROCESSING = 'processing',

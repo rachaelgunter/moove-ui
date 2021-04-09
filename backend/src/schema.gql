@@ -135,6 +135,7 @@ type Query {
   previewSegment(segmentId: String!): PreviewSegment!
   getDatasets(GCPProjectName: String!): [Dataset]
   datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!, organizationName: String!): ColumnVisualizations!
+  datasetFileSignedUploadUrl(fileName: String!, name: String!, description: String!, organizationName: String!, analysisProject: String!, assetsBucket: String!): String!
 }
 
 input BigQueryTablesParams {

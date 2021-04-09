@@ -6,6 +6,7 @@ import {
   ColumnVisualizationParams,
   ColumnVisualizations,
   Dataset,
+  DatasetFileSignedUploadUrlParams,
   DatasetParamsInput,
 } from './datasets.types';
 import { Roles } from 'src/auth/roles.decorator';
@@ -52,6 +53,30 @@ export class DatasetsResolver {
       organizationName,
       analysisName,
       columnName,
+    );
+  }
+
+  @Roles(Role.PAID_USER, Role.ADMIN)
+  @UseGuards(GqlAuthGuard)
+  @Query(() => String)
+  async datasetFileSignedUploadUrl(
+    @Args() params: DatasetFileSignedUploadUrlParams,
+  ): Promise<string> {
+    const {
+      fileName,
+      organizationName,
+      analysisProject,
+      assetsBucket,
+      name,
+      description,
+    } = params;
+    return this.datasetsService.getDatasetFileUploadUrl(
+      fileName,
+      organizationName,
+      analysisProject,
+      assetsBucket,
+      name,
+      description,
     );
   }
 }

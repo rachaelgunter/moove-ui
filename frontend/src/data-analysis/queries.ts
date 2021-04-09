@@ -160,3 +160,23 @@ export const BIG_QUERY_PREVIEW_SEGMENT_QUERY = gql`
     }
   }
 `;
+
+export const DATASET_FILE_UPLOAD_LINK_QUERY = gql`
+  query datasetFileSignedUploadUrl(
+    $fileName: String!
+    $organizationName: String!
+    $analysisProject: String!
+    $assetsBucket: String!
+    $name: String!
+    $description: String!
+  ) {
+    datasetFileSignedUploadUrl(
+      fileName: $fileName
+      organizationName: $organizationName
+      analysisProject: $analysisProject
+      assetsBucket: $assetsBucket
+      name: $name
+      description: $description
+    )
+  }
+`;

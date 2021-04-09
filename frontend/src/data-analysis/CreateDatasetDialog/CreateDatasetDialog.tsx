@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   Box,
   Button,
@@ -16,6 +16,7 @@ import { UserContext } from 'src/auth/UserProvider';
 import TextField from 'src/shared/TextField';
 import Typography from 'src/shared/Typography';
 import { CREATE_DATASET_MUTATION } from '../mutations';
+import { DATASET_FILE_UPLOAD_LINK_QUERY } from '../queries';
 import { TableIdentity } from '../types';
 import CreateDatasetSuccessMessage from './CreateDatasetSuccessMessage';
 import DatasourceSelector from './DatasourceSelector/DatasourceSelector';
@@ -98,6 +99,12 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
     },
   });
 
+  const [getUploadLink] = useLazyQuery(DATASET_FILE_UPLOAD_LINK_QUERY, {
+    fetchPolicy: 'no-cache',
+    onCompleted: ({ datasetFileSignedUploadUrl }) =>
+      uploadFile(datasetFileSignedUploadUrl),
+  });
+
   const classes = useStyles();
 
   const handleClose = () => {
@@ -164,7 +171,6 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
         datasetParams: {
           name,
           description,
-          projectId: GCPProjectName,
           organizationName: organization,
           analysisProject: GCPProjectName,
           assetsBucket: GCSBucketName,
@@ -175,8 +181,36 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   };
 
   const handleDatasetCreationFromFile = () => {
-    // eslint-disable-next-line no-console
-    console.log(selectedFile);
+    if (selectedFile) {
+      getUploadLink({
+        variables: {
+          fileName: selectedFile?.name ?? '',
+          description,
+          name,
+          organizationName: organization,
+          analysisProject: GCPProjectName,
+          assetsBucket: GCSBucketName,
+        },
+      });
+    }
+  };
+
+  const uploadFile = (link: string) => {
+    if (!GCPProjectName || !GCSBucketName) {
+      return;
+    }
+    fetch(link, {
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        'x-goog-meta-analysis_name': name,
+        'x-goog-meta-analysis_description': description,
+        'x-goog-meta-client': organization,
+        'x-goog-meta-analysis_project': GCPProjectName,
+        'x-goog-meta-visual_asset_bucket': GCSBucketName,
+      },
+      method: 'PUT',
+      body: selectedFile,
+    });
   };
 
   const handleDatasetCreation = () => {
