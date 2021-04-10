@@ -9,7 +9,7 @@ steps:
   - deploy
   - local-uploads-ingestion-trigger
   - --region=$_REGION
-  - --source=../functions/local-uploads-ingestion-trigger
+  - --source=./functions/local-uploads-ingestion-trigger
   - --entry-point=main 
   - --runtime=nodejs12
   - --trigger-http
