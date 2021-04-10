@@ -1,0 +1,15 @@
+substitutions:
+  _REGION: ""
+
+steps:
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  args:
+  - gcloud
+  - functions
+  - deploy
+  - local-uploads-ingestion-trigger
+  - --region=$_REGION
+  - --source=../functions/local-uploads-ingestion-trigger
+  - --entry-point main 
+  - --runtime nodejs12
+  - --trigger-http
