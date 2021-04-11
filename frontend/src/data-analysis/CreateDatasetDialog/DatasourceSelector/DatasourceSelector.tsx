@@ -15,7 +15,7 @@ interface DatasourceSelectorProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   datasourceSelector: {
-    margin: '24px 0 59px 0',
+    margin: '24px 0 30px 0',
   },
   title: {
     marginBottom: theme.spacing(2),
@@ -47,6 +47,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 264,
     flexGrow: 1,
     width: 665,
+  },
+  divider: {
+    marginBottom: '20px',
   },
 }));
 
@@ -108,7 +111,7 @@ const DatasourceSelector: FC<DatasourceSelectorProps> = ({
           label="File Upload"
         />
       </Tabs>
-      <Divider />
+      <Divider className={classes.divider} />
       <TabPanel value={value} index={0}>
         <TablesTreeView onTableSelect={onTableSelect} />
       </TabPanel>

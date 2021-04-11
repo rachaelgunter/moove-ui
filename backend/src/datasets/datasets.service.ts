@@ -9,25 +9,34 @@ import {
   DatasetStatus,
   CloudFunctionDatasetStatus,
   ColumnVisualizations,
+  FileDatasetParamsInput,
 } from './datasets.types';
 import { google } from 'googleapis';
 import { GCSClient } from 'src/gcs/gcs-client';
-
-// List of folders which have own request
-const RELATIONSHIPS_VISUALIZATIONS_FOLDERS = ['/joint_plot', '/scatter_plot'];
+import {
+  DEFAULT_INGESTION_PARAMS,
+  RELATIONSHIPS_VISUALIZATIONS_FOLDERS,
+} from './constants';
 
 @Injectable()
 export class DatasetsService {
   private readonly logger = new Logger(DatasetsService.name);
   private readonly auth = new google.auth.GoogleAuth();
+  private readonly ingestorUrl = '';
 
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
     private readonly storageClient: GCSClient,
-  ) {}
+  ) {
+    this.ingestorUrl = this.configService.get(
+      'INGESTION_TRIGGER_CLOUD_FUNCTION_URL',
+    );
+  }
 
-  async createDataset(datasetParams: DatasetParamsInput): Promise<string> {
+  async triggerDatasetIngestion(
+    datasetParams: DatasetParamsInput,
+  ): Promise<string> {
     const {
       name,
       projectId,
@@ -38,22 +47,17 @@ export class DatasetsService {
       analysisProject,
       assetsBucket,
     } = datasetParams;
-    const ingestionTriggerURL = this.configService.get(
-      'INGESTION_TRIGGER_CLOUD_FUNCTION_URL',
-    );
-    const client = await this.auth.getIdTokenClient(ingestionTriggerURL);
-    const headers = await client.getRequestHeaders(ingestionTriggerURL);
-
+    const headers = await this.getRequestHeaders(this.ingestorUrl);
     this.logger.log(
       `Starting ingestion process for dataset: ${JSON.stringify(
         datasetParams,
       )}`,
     );
-
     return this.httpService
       .post<string>(
-        ingestionTriggerURL,
+        this.ingestorUrl,
         {
+          ...DEFAULT_INGESTION_PARAMS,
           analysis_name: name,
           source_table: tableId,
           source_dataset: datasetId,
@@ -62,24 +66,6 @@ export class DatasetsService {
           client: organizationName,
           analysis_project: analysisProject,
           visual_asset_bucket: assetsBucket,
-          lat: 'latitude',
-          lon: 'longitude',
-          primary_ts: 'received_time',
-          extraneous_geographies: [],
-          groupby_col: 'adminarea_3',
-          jenks_cols: [
-            'heading_deg',
-            'accelerateVector',
-            'errorAmplitudeVector',
-            'temperatureExterior',
-            'rainIntensity',
-          ],
-          distance_from_road: 50,
-          validation_sample_perc: 0.05,
-          sampling_perc: 0.95,
-          training_sample_perc: 0.5,
-          sampling_max: 150000,
-          moove_stats_cols: ['temp_c', 'gust_mph', 'precip_mm', 'vis_km'],
         },
         {
           headers,
@@ -98,6 +84,41 @@ export class DatasetsService {
         }),
       )
       .toPromise();
+  }
+
+  async createDatasetFromLocalFile(
+    datasetParams: FileDatasetParamsInput,
+  ): Promise<string> {
+    const { fileName, name, organizationName } = datasetParams;
+    const localUploadsTriggerURL = this.configService.get(
+      'LOCAL_UPLOADS_INGESTION_TRIGGER_URL',
+    );
+    const headers = await this.getRequestHeaders(localUploadsTriggerURL);
+
+    const { tableId, datasetId, projectId } = await this.httpService
+      .post(
+        localUploadsTriggerURL,
+        { fileName, analysisName: name, organizationName },
+        { headers },
+      )
+      .pipe(
+        map((response) => response.data),
+        catchError((e) => {
+          this.logger.error(
+            `Failed to prepare file ${fileName} for ingestion`,
+            e,
+          );
+          return throwError(e);
+        }),
+      )
+      .toPromise();
+
+    return this.triggerDatasetIngestion({
+      ...datasetParams,
+      tableId,
+      datasetId,
+      projectId,
+    });
   }
 
   async getDatasets(GCPProjectName: string): Promise<Dataset[]> {
@@ -189,21 +210,12 @@ export class DatasetsService {
     return DatasetStatus.PROCESSING;
   }
 
-  async getDatasetFileUploadUrl(
-    fileName: string,
-    organizationName: string,
-    analysisProject: string,
-    assetsBucket: string,
-    name: string,
-    description: string,
-  ): Promise<string> {
-    return this.storageClient.generateUploadSignedURL(
-      fileName,
-      organizationName,
-      analysisProject,
-      assetsBucket,
-      name,
-      description,
-    );
+  async getDatasetFileUploadUrl(fileName: string): Promise<string> {
+    return this.storageClient.generateUploadSignedURL(fileName);
+  }
+
+  async getRequestHeaders(url: string): Promise<{ [index: string]: string }> {
+    const client = await this.auth.getIdTokenClient(url);
+    return client.getRequestHeaders(url);
   }
 }

@@ -34,6 +34,30 @@ export class DatasetParamsInput {
   assetsBucket: string;
 }
 
+@InputType()
+export class FileDatasetParamsInput {
+  @Field()
+  @Matches(/^[a-zA-Z0-9-_]+$/, {
+    message: ANALYSIS_NAME_VALIDATION_MESSAGE,
+  })
+  name: string;
+
+  @Field()
+  fileName: string;
+
+  @Field()
+  description?: string;
+
+  @Field()
+  organizationName: string;
+
+  @Field()
+  analysisProject: string;
+
+  @Field()
+  assetsBucket: string;
+}
+
 @ArgsType()
 export class ColumnVisualizationParams {
   @Field()
@@ -103,21 +127,6 @@ export class Dataset {
 export class DatasetFileSignedUploadUrlParams {
   @Field()
   fileName: string;
-
-  @Field()
-  name: string;
-
-  @Field()
-  description: string;
-
-  @Field()
-  organizationName: string;
-
-  @Field()
-  analysisProject: string;
-
-  @Field()
-  assetsBucket: string;
 }
 
 export enum DatasetStatus {

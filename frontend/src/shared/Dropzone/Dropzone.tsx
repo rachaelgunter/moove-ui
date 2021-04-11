@@ -1,4 +1,4 @@
-import { makeStyles, Theme, Typography } from '@material-ui/core';
+import { Button, makeStyles, Theme, Typography } from '@material-ui/core';
 import React, { FC, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { ReactComponent as UploadIcon } from 'src/assets/icons/upload-to-cloud.svg';
@@ -15,12 +15,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: theme.palette.bg.lighter,
     border: '2px dashed',
     height: '100%',
+    width: '100%',
     borderRadius: theme.spacing(0.5),
     borderColor: theme.palette.divider,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  dropzoneHint: {
+    marginTop: '20px',
+  },
+  fileRemoveButton: {
+    marginLeft: '20px',
+    borderColor: '#fff',
   },
 }));
 
@@ -39,28 +47,33 @@ const Dropzone: FC<DropzoneProps> = ({ onDrop }: DropzoneProps) => {
     onDrop: updateFiles,
   });
 
+  const getFileSize = (file: File): string => {
+    return `${Math.round((file.size / Math.pow(2, 20)) * 1e4) / 1e4} MB`;
+  };
+
   return (
     <div className={classes.dropzoneContainer}>
       {files.length ? (
         <div>
-          <ul>
-            {files.map((file) => (
-              <>
-                <li key={file.name}>
-                  {file.name} - {file.size} bytes
-                </li>
-                <button type="button" onClick={() => updateFiles([])}>
-                  Remove
-                </button>
-              </>
-            ))}
-          </ul>
+          {files.map((file) => (
+            <div key={file.name}>
+              {file.name} - {getFileSize(file)}
+              <Button
+                className={classes.fileRemoveButton}
+                variant="outlined"
+                type="button"
+                onClick={() => updateFiles([])}
+              >
+                Remove
+              </Button>
+            </div>
+          ))}
         </div>
       ) : (
         <div {...getRootProps({ className: classes.dropzone })}>
           <input {...getInputProps()} />
           <UploadIcon />
-          <Typography component="div">
+          <Typography className={classes.dropzoneHint} component="div">
             Drag and drop here or click to browse
           </Typography>
         </div>

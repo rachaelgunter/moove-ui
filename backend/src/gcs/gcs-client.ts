@@ -34,14 +34,7 @@ export class GCSClient extends GoogleClientService {
       );
   }
 
-  async generateUploadSignedURL(
-    fileName: string,
-    organizationName: string,
-    analysisProject: string,
-    assetsBucket: string,
-    name: string,
-    description: string,
-  ): Promise<string> {
+  async generateUploadSignedURL(fileName: string): Promise<string> {
     const DATASETS_FILES_BUCKET = process.env.DATASETS_FILES_BUCKET;
     const [url] = await this.gcsStorage
       .bucket(DATASETS_FILES_BUCKET)
@@ -51,13 +44,6 @@ export class GCSClient extends GoogleClientService {
         action: 'write',
         expires: Date.now() + 15 * 60 * 1000, // 15 minutes
         contentType: 'application/octet-stream',
-        extensionHeaders: {
-          'x-goog-meta-analysis_name': name,
-          'x-goog-meta-analysis_description': description,
-          'x-goog-meta-client': organizationName,
-          'x-goog-meta-analysis_project': analysisProject,
-          'x-goog-meta-visual_asset_bucket': assetsBucket,
-        },
       });
 
     this.logger.log(`Generated PUT signed URL for file ${fileName}`);

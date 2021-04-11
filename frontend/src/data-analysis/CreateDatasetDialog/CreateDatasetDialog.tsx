@@ -7,19 +7,26 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  makeStyles,
-  Theme,
 } from '@material-ui/core';
 import React, { FC, useContext, useState } from 'react';
 import { FontFamily } from 'src/app/styles/fonts';
 import { UserContext } from 'src/auth/UserProvider';
 import TextField from 'src/shared/TextField';
 import Typography from 'src/shared/Typography';
-import { CREATE_DATASET_MUTATION } from '../mutations';
+import { ReactComponent as CheckIcon } from 'src/assets/icons/check.svg';
+import { ReactComponent as ErrorIcon } from 'src/assets/images/warning.svg';
+
+import {
+  CREATE_BQ_DATASET_MUTATION,
+  CREATE_FILE_DATASET_MUTATION,
+} from '../mutations';
 import { DATASET_FILE_UPLOAD_LINK_QUERY } from '../queries';
 import { TableIdentity } from '../types';
-import CreateDatasetSuccessMessage from './CreateDatasetSuccessMessage';
+import CreateDatasetMessage, {
+  CreateDatasetMessageProps,
+} from './CreateDatasetMessage';
 import DatasourceSelector from './DatasourceSelector/DatasourceSelector';
+import useStyles from './useStyles';
 
 const MAX_DESCRIPTION_LENGTH = 16384;
 export const DESCRIPTION_MAX_LENGTH_ERROR =
@@ -33,52 +40,13 @@ interface CreateDatasetDialogProps {
   onComplete: () => void;
 }
 
-const useStyles = makeStyles((theme: Theme) => {
-  return {
-    paper: {
-      minHeight: '660px',
-      fontFamily: FontFamily.ROBOTO,
-    },
-    contentRoot: {
-      padding: theme.spacing(0.5, 3, 0, 3),
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    divider: {
-      backgroundColor: theme.palette.divider,
-    },
-    dialogControls: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      height: theme.spacing(6),
-    },
-    dialogTitleRoot: {
-      padding: theme.spacing(3),
-    },
-    dialogTitle: {
-      fontWeight: 400,
-      fontSize: 20,
-    },
-    dialogButton: {
-      fontFamily: FontFamily.ROBOTO,
-      color: theme.palette.text.secondary,
-      height: '36px',
-      letterSpacing: '1.25px',
-      marginLeft: theme.spacing(1),
-
-      '&:disabled': {
-        color: '#455a64',
-      },
-    },
-  };
-});
-
 const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   open,
   onClose,
   onComplete,
 }: CreateDatasetDialogProps) => {
+  const classes = useStyles();
+
   const [description, setDescription] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
   const [name, setName] = useState('');
@@ -88,29 +56,56 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [creationCompleted, setCreationCompleted] = useState(false);
+  const [creationError, setCreationError] = useState<string | null>(null);
   const { GCPProjectName, GCSBucketName, organization } = useContext(
     UserContext,
   );
 
-  const [createDataset, { loading }] = useMutation(CREATE_DATASET_MUTATION, {
-    onCompleted: () => {
-      setCreationCompleted(true);
-      onComplete();
+  const [createBQDataset, { loading: BQCreationLoading }] = useMutation(
+    CREATE_BQ_DATASET_MUTATION,
+    {
+      onCompleted: () => {
+        setCreationCompleted(true);
+        onComplete();
+      },
+      onError: (e) => setCreationError(e.message),
     },
-  });
+  );
+
+  const [createFileDataset, { loading: fileCreationLoading }] = useMutation(
+    CREATE_FILE_DATASET_MUTATION,
+    {
+      onCompleted: () => {
+        setCreationCompleted(true);
+        onComplete();
+      },
+      onError: (e) => setCreationError(e.message),
+    },
+  );
 
   const [getUploadLink] = useLazyQuery(DATASET_FILE_UPLOAD_LINK_QUERY, {
     fetchPolicy: 'no-cache',
     onCompleted: ({ datasetFileSignedUploadUrl }) =>
-      uploadFile(datasetFileSignedUploadUrl),
+      uploadFile(datasetFileSignedUploadUrl).then(() =>
+        createFileDataset({
+          variables: {
+            datasetParams: {
+              name,
+              description,
+              organizationName: organization,
+              analysisProject: GCPProjectName,
+              assetsBucket: GCSBucketName,
+              fileName: selectedFile?.name ?? '',
+            },
+          },
+        }),
+      ),
   });
-
-  const classes = useStyles();
 
   const handleClose = () => {
     onClose();
 
-    if (!loading) {
+    if (!BQCreationLoading || fileCreationLoading) {
       // timeout to avoid visible content changes during close transition
       setTimeout(() => {
         setName('');
@@ -118,6 +113,7 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
         setSelectedTable(null);
         setSelectedFile(null);
         setCreationCompleted(false);
+        setCreationError(null);
       }, 200);
     }
   };
@@ -161,12 +157,12 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
       name.length &&
       !descriptionError.length &&
       (selectedTable !== null || selectedFile !== null) &&
-      !loading
+      !(fileCreationLoading || BQCreationLoading)
     );
   };
 
   const handleDatasetCreationFromBQTable = () => {
-    createDataset({
+    createBQDataset({
       variables: {
         datasetParams: {
           name,
@@ -185,28 +181,15 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
       getUploadLink({
         variables: {
           fileName: selectedFile?.name ?? '',
-          description,
-          name,
-          organizationName: organization,
-          analysisProject: GCPProjectName,
-          assetsBucket: GCSBucketName,
         },
       });
     }
   };
 
-  const uploadFile = (link: string) => {
-    if (!GCPProjectName || !GCSBucketName) {
-      return;
-    }
-    fetch(link, {
+  const uploadFile = async (link: string) => {
+    return fetch(link, {
       headers: {
         'Content-Type': 'application/octet-stream',
-        'x-goog-meta-analysis_name': name,
-        'x-goog-meta-analysis_description': description,
-        'x-goog-meta-client': organization,
-        'x-goog-meta-analysis_project': GCPProjectName,
-        'x-goog-meta-visual_asset_bucket': GCSBucketName,
       },
       method: 'PUT',
       body: selectedFile,
@@ -219,6 +202,19 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
       return;
     }
     handleDatasetCreationFromBQTable();
+  };
+
+  const getCreationMessageProps = (): CreateDatasetMessageProps => {
+    return {
+      message: creationError
+        ? 'Unable to start ingestion'
+        : 'Dataset successfully imported',
+      messageHint: creationError
+        ? 'We were unable to create dataset. Please examine your data'
+        : `The ingestion process may take longer depending on the size of the
+      imported data.`,
+      Icon: creationError ? ErrorIcon : CheckIcon,
+    };
   };
 
   return (
@@ -239,8 +235,8 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
         </Typography>
       </DialogTitle>
       <DialogContent className={classes.contentRoot}>
-        {creationCompleted ? (
-          <CreateDatasetSuccessMessage />
+        {creationCompleted || creationError ? (
+          <CreateDatasetMessage {...getCreationMessageProps()} />
         ) : (
           <>
             <TextField
@@ -269,19 +265,23 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
         <Divider className={classes.divider} />
         <Box className={classes.dialogControls}>
           <Button
-            disabled={loading}
+            disabled={fileCreationLoading || BQCreationLoading}
             className={classes.dialogButton}
             onClick={handleClose}
           >
-            {creationCompleted ? 'Close' : 'Cancel'}
+            {creationCompleted || creationError ? 'Close' : 'Cancel'}
           </Button>
-          {!creationCompleted && (
+          {!(creationCompleted || creationError) && (
             <Button
               disabled={!isCreateButtonEnabled()}
               className={classes.dialogButton}
               onClick={handleDatasetCreation}
             >
-              {!loading ? 'Create' : <CircularProgress size="1em" />}
+              {!(fileCreationLoading || BQCreationLoading) ? (
+                'Create'
+              ) : (
+                <CircularProgress size="1em" />
+              )}
             </Button>
           )}
         </Box>
