@@ -127,6 +127,12 @@ export class Dataset {
 export class DatasetFileSignedUploadUrlParams {
   @Field()
   fileName: string;
+
+  @Field()
+  organizationName: string;
+
+  @Field()
+  analysisName: string;
 }
 
 export enum DatasetStatus {

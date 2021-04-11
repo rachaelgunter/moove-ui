@@ -11,7 +11,8 @@ import {
   FileDatasetParamsInput,
 } from './datasets.types';
 import { Roles } from 'src/auth/roles.decorator';
-import { Role } from 'src/users/users.types';
+import { Role, UserTokenPayload } from 'src/users/users.types';
+import { CurrentUser } from 'src/auth/graphql-current-user.decorator';
 
 @Resolver()
 export class DatasetsResolver {
@@ -81,8 +82,14 @@ export class DatasetsResolver {
   @Query(() => String)
   async datasetFileSignedUploadUrl(
     @Args() params: DatasetFileSignedUploadUrlParams,
+    @CurrentUser() user: UserTokenPayload,
   ): Promise<string> {
-    const { fileName } = params;
-    return this.datasetsService.getDatasetFileUploadUrl(fileName);
+    const { fileName, organizationName, analysisName } = params;
+    return this.datasetsService.getDatasetFileUploadUrl(
+      organizationName,
+      analysisName,
+      fileName,
+      user,
+    );
   }
 }

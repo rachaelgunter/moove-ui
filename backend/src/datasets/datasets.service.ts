@@ -17,6 +17,9 @@ import {
   DEFAULT_INGESTION_PARAMS,
   RELATIONSHIPS_VISUALIZATIONS_FOLDERS,
 } from './constants';
+import { UserTokenPayload } from 'src/users/users.types';
+import { UsersService } from 'src/users/users.service';
+import { ForbiddenError } from 'apollo-server-errors';
 
 @Injectable()
 export class DatasetsService {
@@ -28,6 +31,7 @@ export class DatasetsService {
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
     private readonly storageClient: GCSClient,
+    private readonly usersService: UsersService,
   ) {
     this.ingestorUrl = this.configService.get(
       'INGESTION_TRIGGER_CLOUD_FUNCTION_URL',
@@ -210,8 +214,24 @@ export class DatasetsService {
     return DatasetStatus.PROCESSING;
   }
 
-  async getDatasetFileUploadUrl(fileName: string): Promise<string> {
-    return this.storageClient.generateUploadSignedURL(fileName);
+  async getDatasetFileUploadUrl(
+    organizationName: string,
+    analysisName: string,
+    fileName: string,
+    user: UserTokenPayload,
+  ): Promise<string> {
+    const dbUser = await this.usersService.getUserById(user.sub);
+    if (dbUser.organization.name !== organizationName) {
+      throw new ForbiddenError(
+        `You are not allowed to upload files for org ${organizationName}`,
+      );
+    }
+
+    return this.storageClient.generateUploadSignedURL(
+      organizationName,
+      analysisName,
+      fileName,
+    );
   }
 
   async getRequestHeaders(url: string): Promise<{ [index: string]: string }> {

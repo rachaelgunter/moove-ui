@@ -34,11 +34,15 @@ export class GCSClient extends GoogleClientService {
       );
   }
 
-  async generateUploadSignedURL(fileName: string): Promise<string> {
+  async generateUploadSignedURL(
+    organizationName: string,
+    analyisName: string,
+    fileName: string,
+  ): Promise<string> {
     const DATASETS_FILES_BUCKET = process.env.DATASETS_FILES_BUCKET;
     const [url] = await this.gcsStorage
       .bucket(DATASETS_FILES_BUCKET)
-      .file(fileName)
+      .file(`${organizationName}/${analyisName}/${fileName}`)
       .getSignedUrl({
         version: 'v4',
         action: 'write',

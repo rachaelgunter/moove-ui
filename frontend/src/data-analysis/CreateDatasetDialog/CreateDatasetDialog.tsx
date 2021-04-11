@@ -181,6 +181,8 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
       getUploadLink({
         variables: {
           fileName: selectedFile?.name ?? '',
+          organizationName: organization,
+          analysisName: name,
         },
       });
     }
