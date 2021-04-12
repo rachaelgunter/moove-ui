@@ -92,8 +92,15 @@ export class DatasetsService {
 
   async createDatasetFromLocalFile(
     datasetParams: FileDatasetParamsInput,
+    user: UserTokenPayload,
   ): Promise<string> {
     const { fileName, name, organizationName } = datasetParams;
+    await this.validateOrganizationMembership(
+      user,
+      organizationName,
+      `You are not allowed to upload files for org ${organizationName}`,
+    );
+
     const localUploadsTriggerURL = this.configService.get(
       'LOCAL_UPLOADS_INGESTION_TRIGGER_URL',
     );
@@ -220,12 +227,11 @@ export class DatasetsService {
     fileName: string,
     user: UserTokenPayload,
   ): Promise<string> {
-    const dbUser = await this.usersService.getUserById(user.sub);
-    if (dbUser.organization.name !== organizationName) {
-      throw new ForbiddenError(
-        `You are not allowed to upload files for org ${organizationName}`,
-      );
-    }
+    await this.validateOrganizationMembership(
+      user,
+      organizationName,
+      `You are not allowed to upload files for org ${organizationName}`,
+    );
 
     return this.storageClient.generateUploadSignedURL(
       organizationName,
@@ -237,5 +243,16 @@ export class DatasetsService {
   async getRequestHeaders(url: string): Promise<{ [index: string]: string }> {
     const client = await this.auth.getIdTokenClient(url);
     return client.getRequestHeaders(url);
+  }
+
+  async validateOrganizationMembership(
+    user: UserTokenPayload,
+    organizationName: string,
+    errorMessage: string,
+  ): Promise<void | never> {
+    const dbUser = await this.usersService.getUserById(user.sub);
+    if (dbUser.organization.name !== organizationName) {
+      throw new ForbiddenError(errorMessage);
+    }
   }
 }

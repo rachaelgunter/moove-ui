@@ -9,9 +9,10 @@ const LOCAL_FILES_BUCKET_NAME = 'galileo-datasets-files';
 const LOCAL_FILES_PROJECT_NAME = 'moove-platform-lineate-dev';
 const LOCAL_FILES_DATASET_NAME = 'galileo_ingestions_user_uploads';
 
-async function createTableFromCSV(organizationName, analysisName, GCSFileName) {
+async function createTableFromCSV(organizationName, analysisName, fileName) {
   const tableId = `${organizationName}_${analysisName}_${Date.now()}`;
   const datasetId = LOCAL_FILES_DATASET_NAME;
+  const GCSFileName = `${organizationName}/${analysisName}/${fileName}`;
 
   const metadata = {
     sourceFormat: 'CSV',
@@ -29,7 +30,9 @@ async function createTableFromCSV(organizationName, analysisName, GCSFileName) {
     .table(tableId)
     .load(storage.bucket(LOCAL_FILES_BUCKET_NAME).file(GCSFileName), metadata);
 
-  console.log(`Temporary table creation job ${job.id} completed.`);
+  console.log(
+    `Temporary table creation job ${job.id} for ${organizationName} ${analysisName} completed.`
+  );
 
   const errors = job.status.errors;
   if (errors && errors.length > 0) {

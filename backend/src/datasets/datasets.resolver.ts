@@ -41,10 +41,12 @@ export class DatasetsResolver {
   async createLocalFileDataset(
     @Args({ name: 'datasetParams' }, new ValidationPipe())
     datasetParams: FileDatasetParamsInput,
+    @CurrentUser() user: UserTokenPayload,
   ): Promise<string> {
     try {
       const response = await this.datasetsService.createDatasetFromLocalFile(
         datasetParams,
+        user,
       );
       return response;
     } catch (e) {
