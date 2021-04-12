@@ -191,7 +191,7 @@ const InviteUserDialog: FC<InviteUserDialogProps> = ({
   const getControls = () => {
     return (
       <>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleClose}>Cancel</Button>
         {!(completed || error) && (
           <Button
             onClick={handleUserCreation}
