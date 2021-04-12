@@ -12,11 +12,14 @@ import {
 } from '@material-ui/core';
 import React, { FC, useState } from 'react';
 import { User } from 'src/auth/UserProvider';
+import CreateDatasetMessage from 'src/data-analysis/CreateDatasetDialog/CreateDatasetMessage';
 import { haveAccess } from 'src/shared/authorization/utils';
 import DialogWrapper from 'src/shared/DialogWrapper';
 import TextField from 'src/shared/TextField';
 import { Role } from 'src/shared/types';
 import { isValidEmail } from 'src/shared/utils';
+import { ReactComponent as CheckIcon } from 'src/assets/icons/check.svg';
+import { ReactComponent as ErrorIcon } from 'src/assets/images/warning.svg';
 import CREATE_USER_MUTATION from '../mutations';
 import { ORGANIZATIONS_QUERY } from '../queries';
 import { Organization } from '../types';
@@ -64,6 +67,8 @@ const InviteUserDialog: FC<InviteUserDialogProps> = ({
   const [organizationId, setOrganizationId] = useState<number>(
     userOrganization.id,
   );
+  const [completed, setCompleted] = useState(false);
+  const [error, setError] = useState(false);
   const [emailError, setEmailError] = useState('');
 
   const { data: organizationsData } = useQuery<{
@@ -73,6 +78,8 @@ const InviteUserDialog: FC<InviteUserDialogProps> = ({
     CREATE_USER_MUTATION,
     {
       refetchQueries: ['users'],
+      onCompleted: () => setCompleted(true),
+      onError: () => setError(true),
     },
   );
 
@@ -184,23 +191,53 @@ const InviteUserDialog: FC<InviteUserDialogProps> = ({
   const getControls = () => {
     return (
       <>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button
-          onClick={handleUserCreation}
-          disabled={isInviteButtonDisabled()}
-        >
-          Invite
-        </Button>
+        <Button onClick={handleClose}>Cancel</Button>
+        {!(completed || error) && (
+          <Button
+            onClick={handleUserCreation}
+            disabled={isInviteButtonDisabled()}
+          >
+            Invite
+          </Button>
+        )}
       </>
     );
+  };
+
+  const getMessageModalProps = () => {
+    return {
+      message: error ? 'Failed to send an invite' : 'User successfully invited',
+      messageHint: error ? '' : 'An email with verification link was sent',
+      Icon: error ? ErrorIcon : CheckIcon,
+    };
+  };
+
+  const handleClose = () => {
+    onClose();
+
+    setTimeout(() => {
+      setName('');
+      setEmail('');
+      setOrganizationId(userOrganization.id);
+      setRole(Role.PAID_USER);
+      setCompleted(false);
+      setError(false);
+      setEmailError('');
+    }, 200);
   };
 
   return (
     <DialogWrapper
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       dialogTitle="Invite User"
-      dialogContent={getContent()}
+      dialogContent={
+        completed || error ? (
+          <CreateDatasetMessage {...getMessageModalProps()} />
+        ) : (
+          getContent()
+        )
+      }
       dialogControls={getControls()}
       width={716}
       height={335}
