@@ -83,6 +83,9 @@ const DatasourceSelector: FC<DatasourceSelectorProps> = ({
     event: React.ChangeEvent<Record<string, unknown>>,
     newValue: number,
   ) => {
+    if (newValue === value) {
+      return;
+    }
     onTableSelect(null);
     onFileSelect(null);
     setValue(newValue);

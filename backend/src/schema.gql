@@ -149,48 +149,14 @@ type Query {
   users(offset: Int = 0, limit: Int = 5): PaginatedUsers!
   getUsersProjects: [BigQueryProject!]!
   tables(tablesParams: BigQueryTablesParams!): [BigQueryTable]
-  tableData(
-    offset: Int = 0
-    limit: Int = 5
-    projectId: String!
-    datasetId: String!
-    tableId: String!
-    selectedFields: [String]
-  ): BigQueryTableData!
-  tableInfo(
-    projectId: String!
-    datasetId: String!
-    tableId: String!
-  ): BigQueryTableInfo!
-  previewTable(
-    offset: Int = 0
-    limit: Int = 5
-    projectId: String!
-    datasetId: String!
-    tableId: String!
-    selectedFields: [String]
-  ): BigQueryPreviewTable!
-  columnsTable(
-    offset: Int = 0
-    limit: Int = 5
-    projectId: String!
-    datasetId: String!
-    tableId: String!
-    selectedFields: [String]
-  ): [BigQueryColumnTable]
+  tableData(offset: Int = 0, limit: Int = 5, projectId: String!, datasetId: String!, tableId: String!, selectedFields: [String]): BigQueryTableData!
+  tableInfo(projectId: String!, datasetId: String!, tableId: String!): BigQueryTableInfo!
+  previewTable(offset: Int = 0, limit: Int = 5, projectId: String!, datasetId: String!, tableId: String!, selectedFields: [String]): BigQueryPreviewTable!
+  columnsTable(offset: Int = 0, limit: Int = 5, projectId: String!, datasetId: String!, tableId: String!, selectedFields: [String]): [BigQueryColumnTable]
   previewSegment(segmentId: String!): PreviewSegment!
   getDatasets(GCPProjectName: String!): [Dataset]
-  datasetColumnVisualizations(
-    bucketName: String!
-    analysisName: String!
-    columnName: String!
-    organizationName: String!
-  ): ColumnVisualizations!
-  datasetFileSignedUploadUrl(
-    fileName: String!
-    organizationName: String!
-    analysisName: String!
-  ): String!
+  datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!, organizationName: String!): ColumnVisualizations!
+  datasetFileSignedUploadUrl(fileName: String!, organizationName: String!, analysisName: String!): String!
 }
 
 input BigQueryTablesParams {

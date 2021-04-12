@@ -148,6 +148,7 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
     if (tableIdentity) {
       const { projectId, datasetId, tableId } = tableIdentity;
       setSelectedTable({ projectId, datasetId, tableId });
+      return;
     }
     setSelectedTable(null);
   };
