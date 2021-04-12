@@ -3,6 +3,12 @@ import React, { FC } from 'react';
 import Typography from 'src/shared/Typography';
 import { ReactComponent as CheckIcon } from 'src/assets/icons/check.svg';
 
+export interface CreateDatasetMessageProps {
+  Icon: FC;
+  message: string;
+  messageHint: string;
+}
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flex: 1,
@@ -22,23 +28,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const CreateDatasetSuccessMessage: FC = () => {
+const CreateDatasetMessage: FC<CreateDatasetMessageProps> = ({
+  Icon = CheckIcon,
+  message,
+  messageHint,
+}: CreateDatasetMessageProps) => {
   const classes = useStyles();
 
   return (
     <Box className={classes.root}>
-      <CheckIcon />
+      <Icon />
       <Box className={classes.successMessage}>
-        <Typography align="center">Dataset successfully imported</Typography>
+        <Typography align="center">{message}</Typography>
       </Box>
       <Box className={classes.successMessageHint}>
         <Typography variant="body2" align="center">
-          The ingestion process may take longer depending on the size of the
-          imported data
+          {messageHint}
         </Typography>
       </Box>
     </Box>
   );
 };
 
-export default CreateDatasetSuccessMessage;
+export default CreateDatasetMessage;

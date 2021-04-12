@@ -156,6 +156,7 @@ type Query {
   previewSegment(segmentId: String!): PreviewSegment!
   getDatasets(GCPProjectName: String!): [Dataset]
   datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!, organizationName: String!): ColumnVisualizations!
+  datasetFileSignedUploadUrl(fileName: String!, organizationName: String!, analysisName: String!): String!
 }
 
 input BigQueryTablesParams {
@@ -166,6 +167,7 @@ input BigQueryTablesParams {
 type Mutation {
   syncUserData(signedInUser: UserInput!): User!
   createDataset(datasetParams: DatasetParamsInput!): String!
+  createLocalFileDataset(datasetParams: FileDatasetParamsInput!): String!
   deleteDataset(datasetId: String!, GCPProjectName: String!): RemovedDataset
 }
 
@@ -182,6 +184,15 @@ input DatasetParamsInput {
   projectId: String!
   datasetId: String!
   tableId: String!
+  organizationName: String!
+  analysisProject: String!
+  assetsBucket: String!
+}
+
+input FileDatasetParamsInput {
+  name: String!
+  fileName: String!
+  description: String!
   organizationName: String!
   analysisProject: String!
   assetsBucket: String!
