@@ -74,7 +74,10 @@ const DataAnalysis: React.FC = () => {
               />
             </Grid>
             {selectedDataset && (
-              <DatasetDetails datasetModel={selectedDataset} />
+              <DatasetDetails
+                datasetModel={selectedDataset}
+                resetDatasetModel={() => setSelectedDataset(null)}
+              />
             )}
           </Grid>
         )}

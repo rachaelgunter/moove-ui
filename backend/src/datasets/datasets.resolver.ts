@@ -7,6 +7,8 @@ import {
   ColumnVisualizations,
   Dataset,
   DatasetParamsInput,
+  RemovedDataset,
+  RemovingDatasetParams,
 } from './datasets.types';
 import { Roles } from 'src/auth/roles.decorator';
 import { Role } from 'src/users/users.types';
@@ -53,5 +55,14 @@ export class DatasetsResolver {
       analysisName,
       columnName,
     );
+  }
+
+  @Roles(Role.PAID_USER, Role.ADMIN)
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => RemovedDataset, { nullable: true })
+  async deleteDataset(
+    @Args() { GCPProjectName, datasetId }: RemovingDatasetParams,
+  ): Promise<RemovedDataset> {
+    return this.datasetsService.deleteDataset(GCPProjectName, datasetId);
   }
 }

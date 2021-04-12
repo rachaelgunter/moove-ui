@@ -188,4 +188,8 @@ export class DatasetsService {
     }
     return DatasetStatus.PROCESSING;
   }
+
+  deleteDataset(GCPProjectName: string, datasetId: string) {
+    return { GCPProjectName, datasetId };
+  }
 }
