@@ -1,11 +1,17 @@
 import { UseGuards } from '@nestjs/common';
-import { Resolver, Query, Args } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { GqlAuthGuard } from 'src/auth/graphql-auth.guard';
 import { CurrentUser } from 'src/auth/graphql-current-user.decorator';
 import { Roles } from 'src/auth/roles.decorator';
 import { OffsetPaginationParams } from 'src/shared/types';
 import { UsersService } from './users.service';
-import { PaginatedUsers, Role, UserTokenPayload } from './users.types';
+import {
+  CreateUserPayload,
+  PaginatedUsers,
+  Role,
+  User,
+  UserTokenPayload,
+} from './users.types';
 
 @Resolver()
 export class UsersResolver {
@@ -21,5 +27,14 @@ export class UsersResolver {
     const { offset, limit } = args;
     const query = await this.usersService.getUsersSearchQuery(user);
     return this.usersService.searchUsers(query, offset, limit);
+  }
+
+  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => User)
+  async createUser(
+    @Args('createUserPayload') createUserPayload: CreateUserPayload,
+  ): Promise<User> {
+    return this.usersService.createUser(createUserPayload);
   }
 }

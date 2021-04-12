@@ -23,6 +23,12 @@ export const graphqlUserMock: User = {
   email: 'test@mail.com',
   name: 'name',
   picture: 'http://picture.com',
+  organizationObject: {
+    GCPProjectName: 'test',
+    GCSBucketName: 'test',
+    id: 12,
+    name: 'test org',
+  },
   organization: 'test org',
   GCPProjectName: 'test',
   GCSBucketName: 'test',

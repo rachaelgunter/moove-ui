@@ -1,4 +1,5 @@
 import { InputType, Field, ObjectType, ID, Directive } from '@nestjs/graphql';
+import { Organization } from 'src/organizations/organizations.types';
 import { Paginated } from 'src/shared/types';
 
 @InputType()
@@ -14,6 +15,21 @@ export class UserInput {
 
   @Field()
   name?: string;
+}
+
+@InputType()
+export class CreateUserPayload {
+  @Field()
+  name: string;
+
+  @Field()
+  email: string;
+
+  @Field(() => String)
+  role: Role;
+
+  @Field()
+  organizationId: number;
 }
 
 @ObjectType()
@@ -32,11 +48,23 @@ export class User {
   name?: string;
 
   @Field(() => String, { nullable: true })
+  @Directive(
+    '@deprecated(reason: "This field will be removed in the next version")',
+  )
   organization: string;
 
+  @Field(() => Organization, { nullable: true })
+  organizationObject: Organization;
+
+  @Directive(
+    '@deprecated(reason: "This field will be removed in the next version")',
+  )
   @Field(() => String, { nullable: true })
   GCSBucketName?: string;
 
+  @Directive(
+    '@deprecated(reason: "This field will be removed in the next version")',
+  )
   @Field(() => String, { nullable: true })
   GCPProjectName?: string;
 

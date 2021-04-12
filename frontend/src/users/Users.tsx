@@ -1,5 +1,6 @@
 import { Grid, makeStyles, Theme, Typography } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { UserContext } from 'src/auth/UserProvider';
 import CreateButton from 'src/shared/CreateButton';
 
 import PageTemplate from 'src/shared/PageTemplate';
@@ -14,6 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Users: React.FC = () => {
   const [isInvitationDialogOpened, setInvitationDialogOpened] = useState(false);
+  const user = useContext(UserContext);
   const classes = useStyles();
 
   return (
@@ -37,11 +39,14 @@ const Users: React.FC = () => {
         </Grid>
         <UsersTable />
       </PageTemplate>
-      <InviteUserDialog
-        open={isInvitationDialogOpened}
-        onClose={() => setInvitationDialogOpened(false)}
-        onComplete={() => setInvitationDialogOpened(false)}
-      />
+      {user.organizationObject && (
+        <InviteUserDialog
+          open={isInvitationDialogOpened}
+          onClose={() => setInvitationDialogOpened(false)}
+          onComplete={() => setInvitationDialogOpened(false)}
+          userData={user}
+        />
+      )}
     </>
   );
 };

@@ -7,7 +7,9 @@ import {
   UserMetadata,
   UserPage,
 } from 'auth0';
-
+import { Organization } from 'src/organizations/organizations.types';
+import { Role } from 'src/users/users.types';
+import crypto from 'crypto';
 @Injectable()
 export class Auth0ClientService {
   private readonly client: ManagementClient;
@@ -53,6 +55,21 @@ export class Auth0ClientService {
       include_totals: true,
       page,
       per_page: perPage,
+    });
+  }
+
+  async createUser(
+    email: string,
+    name: string,
+    organization: Organization,
+    role: Role,
+  ): Promise<Auth0User> {
+    return this.client.createUser({
+      email,
+      name,
+      app_metadata: { organization, roles: [role] },
+      password: `${crypto.randomBytes(15).toString('base64').slice(0, 15)}_Tt0`, // _Tt0 for ensuring password validity
+      connection: 'Username-Password-Authentication',
     });
   }
 }

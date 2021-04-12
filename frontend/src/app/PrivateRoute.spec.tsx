@@ -36,6 +36,12 @@ const mockedUser = {
   name: 'test',
   roles: [],
   organization: 'org.com',
+  organizationObject: {
+    id: 1,
+    name: 'org',
+    GCSBucketName: '',
+    GCPProjectName: '',
+  },
 };
 
 const path = '/test';
