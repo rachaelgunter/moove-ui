@@ -20,6 +20,7 @@ describe('UsersTransformer', () => {
     const expected = {
       ...graphqlUserWithoutOrg,
       organization: null,
+      organizationObject: null,
     };
     expect(
       usersTransformer.transformUserToGraphQLResponseObject(userWithoutOrg),

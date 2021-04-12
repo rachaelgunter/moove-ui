@@ -70,6 +70,12 @@ const userMock: User = {
   roles: [],
   sub: '',
   organization: '',
+  organizationObject: {
+    id: 1,
+    name: 'org',
+    GCSBucketName: '',
+    GCPProjectName: '',
+  },
 };
 
 const createWrapper = () =>

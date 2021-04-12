@@ -1,6 +1,6 @@
 import { DatasetModel, DatasetStatus } from './types';
 
-interface DatasetDataProps {
+export interface DatasetDataProps {
   bigQueryDatasetName: string;
   analysisName: string;
   description: string;
@@ -12,14 +12,16 @@ interface DatasetDataProps {
 export const getDatasetModel = (
   data: DatasetDataProps,
   index: number,
-): DatasetModel => ({
-  id: index,
-  name: data.analysisName,
-  description: data.description,
-  totalRows: data.totalRows,
-  createdAt: data.createdAt,
-  status: data.status,
-});
+): DatasetModel => {
+  return {
+    id: index,
+    name: data.analysisName,
+    description: data.description,
+    totalRows: data.totalRows,
+    createdAt: data.createdAt,
+    status: data.status,
+  };
+};
 
 export const getDatasetModels = (data: DatasetDataProps[]): DatasetModel[] =>
   data.map((item: DatasetDataProps, index: number) =>

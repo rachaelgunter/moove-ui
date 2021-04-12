@@ -29,6 +29,12 @@ const mockedUser = {
   name: 'test',
   roles: [Role.USER],
   organization: 'org.com',
+  organizationObject: {
+    id: 1,
+    name: 'org',
+    GCSBucketName: '',
+    GCPProjectName: '',
+  },
 };
 
 describe('LinkList', () => {

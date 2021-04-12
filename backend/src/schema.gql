@@ -2,12 +2,20 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Organization {
+  id: Float!
+  name: String!
+  GCSBucketName: String!
+  GCPProjectName: String!
+}
+
 type User {
   sub: ID!
   email: String!
   picture: String
   name: String
   organization: String
+  organizationObject: Organization
   GCSBucketName: String
   GCPProjectName: String
   roles: [String]
@@ -139,6 +147,11 @@ type Dataset {
   status: String!
 }
 
+type RemovedDataset {
+  datasetId: String!
+  GCPProjectName: String!
+}
+
 type Query {
   getCurrentUser: User!
   users(offset: Int = 0, limit: Int = 5): PaginatedUsers!
@@ -151,6 +164,8 @@ type Query {
   previewSegment(segmentId: String!): PreviewSegment!
   getDatasets(GCPProjectName: String!): [Dataset]
   datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!, organizationName: String!): ColumnVisualizations!
+  datasetFileSignedUploadUrl(fileName: String!, organizationName: String!, analysisName: String!): String!
+  organizations: [Organization!]!
 }
 
 input BigQueryTablesParams {
@@ -160,7 +175,10 @@ input BigQueryTablesParams {
 
 type Mutation {
   syncUserData(signedInUser: UserInput!): User!
+  createUser(createUserPayload: CreateUserPayload!): User!
   createDataset(datasetParams: DatasetParamsInput!): String!
+  createLocalFileDataset(datasetParams: FileDatasetParamsInput!): String!
+  deleteDataset(datasetId: String!, GCPProjectName: String!): RemovedDataset
 }
 
 input UserInput {
@@ -170,12 +188,28 @@ input UserInput {
   name: String!
 }
 
+input CreateUserPayload {
+  name: String!
+  email: String!
+  role: String!
+  organizationId: Float!
+}
+
 input DatasetParamsInput {
   name: String!
   description: String!
   projectId: String!
   datasetId: String!
   tableId: String!
+  organizationName: String!
+  analysisProject: String!
+  assetsBucket: String!
+}
+
+input FileDatasetParamsInput {
+  name: String!
+  fileName: String!
+  description: String!
   organizationName: String!
   analysisProject: String!
   assetsBucket: String!

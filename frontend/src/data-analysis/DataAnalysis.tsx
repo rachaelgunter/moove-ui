@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/client';
 import PageTemplate from 'src/shared/PageTemplate';
 import { DatasetModel } from 'src/data-analysis/types';
 import { UserContext } from 'src/auth/UserProvider';
-import AddDatasetButton from './AddDatasetButton';
+import AddDatasetButton from '../shared/CreateButton';
 import DatasetList from './DatasetList';
 import DatasetDetails from './DatasetDetails';
 import CreateDatasetDialog from './CreateDatasetDialog/CreateDatasetDialog';
@@ -56,7 +56,9 @@ const DataAnalysis: React.FC = () => {
             <Typography variant="subtitle1">Datasets</Typography>
           </Grid>
           <Grid item>
-            <AddDatasetButton onClick={onAddDatasetClick} />
+            <AddDatasetButton onClick={onAddDatasetClick}>
+              New Dataset
+            </AddDatasetButton>
           </Grid>
         </Grid>
         {loading && (
@@ -74,7 +76,10 @@ const DataAnalysis: React.FC = () => {
               />
             </Grid>
             {selectedDataset && (
-              <DatasetDetails datasetModel={selectedDataset} />
+              <DatasetDetails
+                datasetModel={selectedDataset}
+                resetDatasetModel={() => setSelectedDataset(null)}
+              />
             )}
           </Grid>
         )}

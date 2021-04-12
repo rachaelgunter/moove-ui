@@ -6,16 +6,21 @@ import DatasetDetailsContent from './DatasetDetailsContent';
 
 export interface DatasetDetailsProps {
   datasetModel: DatasetModel;
+  resetDatasetModel: () => void;
 }
 
 const DatasetDetails: React.FC<DatasetDetailsProps> = ({
   datasetModel,
+  resetDatasetModel,
 }: DatasetDetailsProps) => {
   return (
     <Grid item xs={9}>
       <Grid item container direction="column" spacing={2}>
         <Grid item>
-          <DatasetDetailsHeader datasetModel={datasetModel} />
+          <DatasetDetailsHeader
+            datasetModel={datasetModel}
+            resetDatasetModel={resetDatasetModel}
+          />
         </Grid>
         <Grid item container>
           <DatasetDetailsContent datasetModel={datasetModel} />

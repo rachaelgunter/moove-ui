@@ -4,6 +4,7 @@ import { User as Auth0User } from '@auth0/auth0-spa-js';
 
 import AuthContext from 'src/index';
 import { Role } from 'src/shared/types';
+import { Organization } from 'src/users/types';
 
 const claimsNamespace = process.env.REACT_APP_AUTH0_CLAIMS_NAMESPACE;
 
@@ -14,6 +15,7 @@ export type User = {
   name: string;
   roles: Role[];
   organization: string;
+  organizationObject: Organization;
   GCPProjectName?: string;
   GCSBucketName?: string;
   lastLogin?: string;
@@ -32,6 +34,10 @@ const CURRENT_USER_QUERY = gql`
       name
       sub
       organization
+      organizationObject {
+        id
+        name
+      }
       email
       picture
       GCSBucketName

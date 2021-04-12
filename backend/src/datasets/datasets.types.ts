@@ -34,6 +34,30 @@ export class DatasetParamsInput {
   assetsBucket: string;
 }
 
+@InputType()
+export class FileDatasetParamsInput {
+  @Field()
+  @Matches(/^[a-zA-Z0-9-_]+$/, {
+    message: ANALYSIS_NAME_VALIDATION_MESSAGE,
+  })
+  name: string;
+
+  @Field()
+  fileName: string;
+
+  @Field()
+  description?: string;
+
+  @Field()
+  organizationName: string;
+
+  @Field()
+  analysisProject: string;
+
+  @Field()
+  assetsBucket: string;
+}
+
 @ArgsType()
 export class ColumnVisualizationParams {
   @Field()
@@ -99,6 +123,18 @@ export class Dataset {
   status: DatasetStatus;
 }
 
+@ArgsType()
+export class DatasetFileSignedUploadUrlParams {
+  @Field()
+  fileName: string;
+
+  @Field()
+  organizationName: string;
+
+  @Field()
+  analysisName: string;
+}
+
 export enum DatasetStatus {
   ACTIVE = 'active',
   PROCESSING = 'processing',
@@ -109,4 +145,22 @@ export enum CloudFunctionDatasetStatus {
   ACTIVE = 'finished',
   PROCESSING = 'pending',
   FAILED = 'failed',
+}
+
+@ArgsType()
+export class RemovingDatasetParams {
+  @Field()
+  datasetId: string;
+
+  @Field()
+  GCPProjectName: string;
+}
+
+@ObjectType()
+export class RemovedDataset {
+  @Field()
+  datasetId: string;
+
+  @Field()
+  GCPProjectName: string;
 }

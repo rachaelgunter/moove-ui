@@ -4,7 +4,7 @@ import React, { FC, useState } from 'react';
 import { User } from 'src/auth/UserProvider';
 import Table from 'src/shared/Table';
 import TableOverlay from 'src/shared/TableOverlay/TableOverlay';
-import USERS_QUERY from './queries';
+import { USERS_QUERY } from './queries';
 import UsersTableRow from './UsersTableRow';
 
 const USERS_TABLE_MIN_HEIGHT = 600;
