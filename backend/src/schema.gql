@@ -73,8 +73,24 @@ type BigQueryTableMetadata {
   totalRows: Float!
 }
 
+type BigQueryPreviewGroupedCell {
+  id: String!
+  cell: String
+}
+
+type BigQueryPreviewGroupedRow {
+  id: String!
+  row: [BigQueryPreviewGroupedCell]
+}
+
+type BigQueryPreviewGroupedRows {
+  id: String!
+  rows: [BigQueryPreviewGroupedRow]
+}
+
 type BigQueryPreviewTable {
   headers: [BigQueryPreviewHeaders]
+  groupedRows: [BigQueryPreviewGroupedRows]
   rows: [[String]]
   tableMetadata: BigQueryTableMetadata
 }
@@ -123,19 +139,58 @@ type Dataset {
   status: String!
 }
 
+type RemovedDataset {
+  datasetId: String!
+  GCPProjectName: String!
+}
+
 type Query {
   getCurrentUser: User!
   users(offset: Int = 0, limit: Int = 5): PaginatedUsers!
   getUsersProjects: [BigQueryProject!]!
   tables(tablesParams: BigQueryTablesParams!): [BigQueryTable]
-  tableData(offset: Int = 0, limit: Int = 5, projectId: String!, datasetId: String!, tableId: String!, selectedFields: [String]): BigQueryTableData!
-  tableInfo(projectId: String!, datasetId: String!, tableId: String!): BigQueryTableInfo!
-  previewTable(offset: Int = 0, limit: Int = 5, projectId: String!, datasetId: String!, tableId: String!, selectedFields: [String]): BigQueryPreviewTable!
-  columnsTable(offset: Int = 0, limit: Int = 5, projectId: String!, datasetId: String!, tableId: String!, selectedFields: [String]): [BigQueryColumnTable]
+  tableData(
+    offset: Int = 0
+    limit: Int = 5
+    projectId: String!
+    datasetId: String!
+    tableId: String!
+    selectedFields: [String]
+  ): BigQueryTableData!
+  tableInfo(
+    projectId: String!
+    datasetId: String!
+    tableId: String!
+  ): BigQueryTableInfo!
+  previewTable(
+    offset: Int = 0
+    limit: Int = 5
+    projectId: String!
+    datasetId: String!
+    tableId: String!
+    selectedFields: [String]
+  ): BigQueryPreviewTable!
+  columnsTable(
+    offset: Int = 0
+    limit: Int = 5
+    projectId: String!
+    datasetId: String!
+    tableId: String!
+    selectedFields: [String]
+  ): [BigQueryColumnTable]
   previewSegment(segmentId: String!): PreviewSegment!
   getDatasets(GCPProjectName: String!): [Dataset]
-  datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!, organizationName: String!): ColumnVisualizations!
-  datasetFileSignedUploadUrl(fileName: String!, organizationName: String!, analysisName: String!): String!
+  datasetColumnVisualizations(
+    bucketName: String!
+    analysisName: String!
+    columnName: String!
+    organizationName: String!
+  ): ColumnVisualizations!
+  datasetFileSignedUploadUrl(
+    fileName: String!
+    organizationName: String!
+    analysisName: String!
+  ): String!
 }
 
 input BigQueryTablesParams {
@@ -147,6 +202,7 @@ type Mutation {
   syncUserData(signedInUser: UserInput!): User!
   createDataset(datasetParams: DatasetParamsInput!): String!
   createLocalFileDataset(datasetParams: FileDatasetParamsInput!): String!
+  deleteDataset(datasetId: String!, GCPProjectName: String!): RemovedDataset
 }
 
 input UserInput {

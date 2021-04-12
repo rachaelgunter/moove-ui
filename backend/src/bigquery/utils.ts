@@ -10,7 +10,7 @@ export function handleGoogleError(
   throw new InternalServerErrorException(errorMessage);
 }
 
-export const getPreviewTableData = (fields, rows) => {
+export const getPreviewTableData = (fields, rows, offset = 0) => {
   const getValuesForColumn = (idx, rows) => {
     return rows.map((row) => {
       return !!row?.f ? [row.f[idx].v] : row?.map((v) => v.f[idx].v) ?? [];
@@ -45,10 +45,50 @@ export const getPreviewTableData = (fields, rows) => {
     }
     return tableData;
   };
-  const formatResults = (results) => {
+  const formatResults = (results, offset) => {
     const resultsWithEmptyValues = addEmptyValues(results);
     const tableData = generateEmptyResultArray(resultsWithEmptyValues);
     const headers = [];
+    const getGroupedRows = (rows) => {
+      if (!rows) {
+        return [];
+      }
+
+      const groupedRows = [];
+      const cntRows = rows[0].values.length;
+      const cntCols = rows.length;
+
+      for (let i = 0; i < cntRows; i += 1) {
+        let rowsValues = [];
+        const cntChildren = rows[0].values[i].length;
+
+        for (let j = 0; j < cntCols; j += 1) {
+          rowsValues = [...rowsValues, ...rows[j].values[i]];
+        }
+
+        groupedRows[i] = groupedRows[i] || {
+          id: `group-${offset + i}`,
+          rows: [],
+        };
+
+        for (let j = 0; j < rowsValues.length; j += 1) {
+          const idx = j % cntChildren;
+
+          groupedRows[i].rows[idx] = groupedRows[i].rows[idx] || {
+            id: `row-${offset + i + idx}`,
+            row: [],
+          };
+          groupedRows[i].rows[idx].row.push({
+            id: `cell-${offset + i + idx}-${
+              groupedRows[i].rows[idx].row.length
+            }`,
+            cell: rowsValues[j],
+          });
+        }
+      }
+
+      return groupedRows;
+    };
 
     resultsWithEmptyValues.forEach((column, columnIndex) => {
       headers.push({
@@ -61,6 +101,7 @@ export const getPreviewTableData = (fields, rows) => {
     });
 
     return {
+      groupedRows: getGroupedRows(resultsWithEmptyValues),
       rows: tableData,
       headers,
     };
@@ -96,7 +137,14 @@ export const getPreviewTableData = (fields, rows) => {
     ) {
       const stateRows = !data[i].mode
         ? stack[stackIdx].rows.map((row) => row.f[i].v)
-        : stack[stackIdx].rows.map((row) => row.f[i].v.map((v) => v.v));
+        : stack[stackIdx].rows.map((row) => {
+            if (typeof row.f === 'undefined') {
+              return [].concat(
+                ...row.map((item) => item.f[i].v.map((v) => v.v)),
+              );
+            }
+            return row.f[i].v.map((v) => v.v);
+          });
       stack.push({
         prefix: `${stack[stackIdx].prefix}${data[i].name}.`,
         data: data[i].fields,
@@ -126,5 +174,5 @@ export const getPreviewTableData = (fields, rows) => {
     }
   }
 
-  return formatResults(results);
+  return formatResults(results, offset);
 };

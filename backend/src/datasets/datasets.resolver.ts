@@ -9,6 +9,8 @@ import {
   DatasetFileSignedUploadUrlParams,
   DatasetParamsInput,
   FileDatasetParamsInput,
+  RemovedDataset,
+  RemovingDatasetParams,
 } from './datasets.types';
 import { Roles } from 'src/auth/roles.decorator';
 import { Role, UserTokenPayload } from 'src/users/users.types';
@@ -93,5 +95,14 @@ export class DatasetsResolver {
       fileName,
       user,
     );
+  }
+
+  @Roles(Role.PAID_USER, Role.ADMIN, Role.SUPER_ADMIN)
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => RemovedDataset, { nullable: true })
+  async deleteDataset(
+    @Args() { GCPProjectName, datasetId }: RemovingDatasetParams,
+  ): Promise<RemovedDataset> {
+    return this.datasetsService.deleteDataset(GCPProjectName, datasetId);
   }
 }

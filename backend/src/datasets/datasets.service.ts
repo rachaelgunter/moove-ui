@@ -255,4 +255,8 @@ export class DatasetsService {
       throw new ForbiddenError(errorMessage);
     }
   }
+
+  deleteDataset(GCPProjectName: string, datasetId: string) {
+    return { GCPProjectName, datasetId };
+  }
 }

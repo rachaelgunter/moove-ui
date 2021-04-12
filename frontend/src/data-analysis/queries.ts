@@ -140,7 +140,16 @@ export const BIG_QUERY_PREVIEW_TABLE_QUERY = gql`
       headers {
         name
       }
-      rows
+      groupedRows {
+        id
+        rows {
+          id
+          row {
+            id
+            cell
+          }
+        }
+      }
     }
   }
 `;

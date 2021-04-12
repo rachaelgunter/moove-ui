@@ -11,3 +11,12 @@ export const CREATE_FILE_DATASET_MUTATION = gql`
     createLocalFileDataset(datasetParams: $datasetParams)
   }
 `;
+
+export const DELETE_DATASET_MUTATION = gql`
+  mutation DeleteDataset($GCPProjectName: String!, $datasetId: String!) {
+    deleteDataset(GCPProjectName: $GCPProjectName, datasetId: $datasetId) {
+      GCPProjectName
+      datasetId
+    }
+  }
+`;

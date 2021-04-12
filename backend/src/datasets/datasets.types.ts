@@ -146,3 +146,21 @@ export enum CloudFunctionDatasetStatus {
   PROCESSING = 'pending',
   FAILED = 'failed',
 }
+
+@ArgsType()
+export class RemovingDatasetParams {
+  @Field()
+  datasetId: string;
+
+  @Field()
+  GCPProjectName: string;
+}
+
+@ObjectType()
+export class RemovedDataset {
+  @Field()
+  datasetId: string;
+
+  @Field()
+  GCPProjectName: string;
+}
