@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from 'react';
-import { Card, CardContent, CardHeader, Grid } from '@material-ui/core';
+import { Card, CardHeader, Grid, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
 import Logo from '../assets/logo/galileo-logo-medium.svg';
@@ -80,7 +80,11 @@ const ErrorPage = ({ error }: ErrorPageProps): ReactElement => {
       <Grid container item justify="center" alignItems="center">
         <Card className={classes.card}>
           <CardHeader component={Header} />
-          <CardContent className={classes.content}>{error}</CardContent>
+          <div className={classes.content}>
+            <Typography variant="body2" align="center">
+              {error}
+            </Typography>
+          </div>
         </Card>
       </Grid>
     </div>

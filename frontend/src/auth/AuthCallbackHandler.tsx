@@ -2,7 +2,7 @@ import { gql, useMutation } from '@apollo/client';
 import { Auth0Client } from '@auth0/auth0-spa-js';
 import React, { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import ErrorPage from 'src/auth/ErrorPage';
+
 import AuthContext from '../index';
 
 interface AuthCallBackHandlerProps {
@@ -53,13 +53,7 @@ const AuthCallBackHandler: React.FC<AuthCallBackHandlerProps> = ({
 const AuthCallBackHandlerWrapper: React.FC = () => {
   return (
     <AuthContext.Consumer>
-      {(auth0) =>
-        auth0 ? (
-          <AuthCallBackHandler auth0={auth0} />
-        ) : (
-          <ErrorPage error="test err" />
-        )
-      }
+      {(auth0) => (auth0 ? <AuthCallBackHandler auth0={auth0} /> : null)}
     </AuthContext.Consumer>
   );
 };

@@ -72,7 +72,7 @@ const SignUpForm: FC = () => {
         if (err) {
           setServerSideError(SIGN_UP_ERROR);
         } else {
-          history.push('/');
+          history.push('/verification');
         }
         setDisableSubmit(false);
         setFullName('');
