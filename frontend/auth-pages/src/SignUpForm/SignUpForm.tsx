@@ -1,4 +1,5 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   EMAIL_ERROR_TEXT,
   PASSWORD_ERROR_TEXT,
@@ -20,6 +21,8 @@ const SignUpForm: FC = () => {
   const [password, setPassword] = useState('');
   const [repeatedPassword, setRepeatedPassword] = useState(''); // TODO to rename
   const [serverSideError, setServerSideError] = useState('');
+
+  const history = useHistory();
 
   const [disableSubmit, setDisableSubmit] = useState(true);
   const { webAuth } = useContext(WebAuthProvider);
@@ -59,7 +62,7 @@ const SignUpForm: FC = () => {
       password2: repeatedPassword,
     };
 
-    webAuth.redirect.signupAndLogin(
+    webAuth.signup(
       {
         email,
         password,
@@ -68,6 +71,8 @@ const SignUpForm: FC = () => {
       (err) => {
         if (err) {
           setServerSideError(SIGN_UP_ERROR);
+        } else {
+          history.push('/verification');
         }
         setDisableSubmit(false);
         setFullName('');

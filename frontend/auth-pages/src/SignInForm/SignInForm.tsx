@@ -48,7 +48,7 @@ const SignInForm: FC = () => {
       },
       (err) => {
         if (err) {
-          setServerSideError(SIGN_IN_ERROR);
+          setServerSideError(err.description || SIGN_IN_ERROR);
         }
         setDisableSubmit(false);
         setEmail('');
