@@ -27,8 +27,9 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-const AddDatasetButton: React.FC<ButtonProps> = (props: ButtonProps) => {
+const CreateButton: React.FC<ButtonProps> = (props: ButtonProps) => {
   const classes = useStyles();
+  const { children } = props;
   return (
     <Button
       disableElevation
@@ -43,9 +44,9 @@ const AddDatasetButton: React.FC<ButtonProps> = (props: ButtonProps) => {
       startIcon={<AddCircleOutlineOutlinedIcon fontSize="small" />}
       {...props}
     >
-      New Dataset
+      {children}
     </Button>
   );
 };
 
-export default AddDatasetButton;
+export default CreateButton;
