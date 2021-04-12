@@ -64,7 +64,7 @@ const Archiver: FC<ArchiverProps> = ({
     <>
       <Link className={classes.link} component="button" onClick={onSwitch}>
         <Typography color="textPrimary" variant="body1">
-          Archive
+          Delete
         </Typography>
       </Link>
       <AlertDialog
