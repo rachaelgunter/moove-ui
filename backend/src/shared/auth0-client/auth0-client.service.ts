@@ -9,7 +9,8 @@ import {
 } from 'auth0';
 import { Organization } from 'src/organizations/organizations.types';
 import { Role } from 'src/users/users.types';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
+
 @Injectable()
 export class Auth0ClientService {
   private readonly client: ManagementClient;
