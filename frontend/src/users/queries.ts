@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-const USERS_QUERY = gql`
+export const USERS_QUERY = gql`
   query users($offset: Int!, $limit: Int!) {
     users(offset: $offset, limit: $limit) {
       totalCount
@@ -17,4 +17,11 @@ const USERS_QUERY = gql`
   }
 `;
 
-export default USERS_QUERY;
+export const ORGANIZATIONS_QUERY = gql`
+  query organizations {
+    organizations {
+      id
+      name
+    }
+  }
+`;

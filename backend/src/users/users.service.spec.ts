@@ -1,6 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
+import { OrganizationsService } from 'src/organizations/organizations.service';
 import { Auth0ClientService } from '../shared/auth0-client/auth0-client.service';
 import { prismaUserMock } from './users.mock';
 import { UsersService } from './users.service';
@@ -52,6 +53,10 @@ const auth0ClientServiceMock = {
   searchUsers: () => auth0UsersMock,
 };
 
+const organizationsServiceMock = {
+  getOrganizationById: () => ({ id: 1, name: 's' }),
+};
+
 describe('UsersService', () => {
   let service: UsersService;
   let prisma: PrismaClient;
@@ -67,6 +72,10 @@ describe('UsersService', () => {
         {
           provide: Auth0ClientService,
           useValue: auth0ClientServiceMock,
+        },
+        {
+          provide: OrganizationsService,
+          useValue: organizationsServiceMock,
         },
       ],
     })

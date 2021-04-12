@@ -14,6 +14,7 @@ export class UsersTransformer {
       name,
       picture,
       organization: organization?.name ?? null,
+      organizationObject: organization ?? null,
       ...(organization?.GCPProjectName && {
         GCPProjectName: organization.GCPProjectName,
       }),

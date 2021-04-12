@@ -18,14 +18,20 @@ interface DialogWrapperProps {
   dialogTitle: string;
   dialogContent: JSX.Element;
   dialogControls?: JSX.Element;
+  height?: number;
+  width?: number;
+  isMaximizable?: boolean;
   onClose: () => void;
   onResize?: (isFullScreen: boolean) => void;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles<
+  Theme,
+  Pick<DialogWrapperProps, 'width' | 'height'>
+>((theme: Theme) => ({
   paper: {
-    minHeight: '790px',
-    minWidth: '1040px',
+    minHeight: (props) => `${props.height}px`,
+    minWidth: (props) => `${props.width}px`,
     fontFamily: FontFamily.ROBOTO,
   },
   contentRoot: {
@@ -73,8 +79,11 @@ const DialogWrapper: FC<DialogWrapperProps> = ({
   dialogTitle,
   dialogContent,
   dialogControls,
+  height = 790,
+  width = 1040,
+  isMaximizable = true,
 }: DialogWrapperProps) => {
-  const classes = useStyles();
+  const classes = useStyles({ height, width });
   const [isFullScreen, setIsFullScreen] = useState(false);
   const onChangeSize = (value: boolean): void => {
     setIsFullScreen(value);
@@ -99,9 +108,11 @@ const DialogWrapper: FC<DialogWrapperProps> = ({
           >
             {dialogTitle}
           </Typography>
-          <IconButton onClick={() => onChangeSize(!isFullScreen)}>
-            <MaximizeIcon />
-          </IconButton>
+          {isMaximizable && (
+            <IconButton onClick={() => onChangeSize(!isFullScreen)}>
+              <MaximizeIcon />
+            </IconButton>
+          )}
         </Box>
       </DialogTitle>
       <DialogContent className={classes.contentRoot}>
@@ -116,6 +127,9 @@ const DialogWrapper: FC<DialogWrapperProps> = ({
 DialogWrapper.defaultProps = {
   dialogControls: <></>,
   onResize: () => {},
+  height: 790,
+  width: 1040,
+  isMaximizable: true,
 };
 
 export default DialogWrapper;
