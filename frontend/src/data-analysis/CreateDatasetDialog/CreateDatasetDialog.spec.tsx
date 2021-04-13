@@ -4,11 +4,11 @@ import { fireEvent, render, RenderResult } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
 
 import theme from 'src/app/styles';
-
-import CreateDatasetDialog, {
+import {
   DATASET_NAME_ERROR,
   DESCRIPTION_MAX_LENGTH_ERROR,
-} from './CreateDatasetDialog';
+} from './pages/SelectSourcePage';
+import CreateDatasetDialog from './CreateDatasetDialog';
 
 describe('CreateDatasetDialog', () => {
   let wrapper: RenderResult;

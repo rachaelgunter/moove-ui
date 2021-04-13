@@ -1,21 +1,15 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Divider,
-} from '@material-ui/core';
+import { Dialog, DialogContent, DialogTitle, Divider } from '@material-ui/core';
 import React, { FC, useContext, useState } from 'react';
 import { FontFamily } from 'src/app/styles/fonts';
 import { UserContext } from 'src/auth/UserProvider';
-import TextField from 'src/shared/TextField';
 import Typography from 'src/shared/Typography';
 import { ReactComponent as CheckIcon } from 'src/assets/icons/check.svg';
 import { ReactComponent as ErrorIcon } from 'src/assets/images/warning.svg';
 
+import { IngestionOptionsPage, SelectSourcePage } from './pages';
+import CreateDatasetControls from './CreateDatasetControls';
+import CreateDatasetStepper from './CreateDatasetStepper';
 import {
   CREATE_BQ_DATASET_MUTATION,
   CREATE_FILE_DATASET_MUTATION,
@@ -25,14 +19,10 @@ import { TableIdentity } from '../types';
 import CreateDatasetMessage, {
   CreateDatasetMessageProps,
 } from './CreateDatasetMessage';
-import DatasourceSelector from './DatasourceSelector/DatasourceSelector';
 import useStyles from './useStyles';
-
-const MAX_DESCRIPTION_LENGTH = 16384;
-export const DESCRIPTION_MAX_LENGTH_ERROR =
-  'Maximum description length is limited to 16384 characters';
-export const DATASET_NAME_ERROR =
-  'Name should contain only alphanumeric characters, underscores or dashes';
+import CreateDatasetContext, {
+  CreateDatasetType,
+} from './CreateDatasetContext';
 
 interface CreateDatasetDialogProps {
   open: boolean;
@@ -47,16 +37,27 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
 }: CreateDatasetDialogProps) => {
   const classes = useStyles();
 
+  const steps = [
+    {
+      label: 'Select source',
+      component: SelectSourcePage,
+    },
+    {
+      label: 'Ingestion options',
+      component: IngestionOptionsPage,
+    },
+  ];
+
+  const [pageHaveError, setPageError] = useState(false);
   const [description, setDescription] = useState('');
-  const [descriptionError, setDescriptionError] = useState('');
   const [name, setName] = useState('');
-  const [nameError, setNameError] = useState('');
   const [selectedTable, setSelectedTable] = useState<TableIdentity | null>(
     null,
   );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [creationCompleted, setCreationCompleted] = useState(false);
   const [creationError, setCreationError] = useState<string | null>(null);
+  const [currentStep, setCurrentStep] = useState<number>(0);
   const { GCPProjectName, GCSBucketName, organization } = useContext(
     UserContext,
   );
@@ -118,30 +119,20 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
     }
   };
 
-  const onNameChange = (updatedName: string) => {
+  const handleNameChange = (updatedName: string) => {
     setName(updatedName);
-    updateNameErrorState(updatedName);
   };
 
-  const onDescriptionChange = (updatedDescription: string) => {
+  const handleDescriptionChange = (updatedDescription: string) => {
     setDescription(updatedDescription);
-    updateDescriptionErrorState(updatedDescription);
   };
 
-  const updateDescriptionErrorState = (updatedDescription: string) => {
-    if (updatedDescription.length > MAX_DESCRIPTION_LENGTH) {
-      setDescriptionError(DESCRIPTION_MAX_LENGTH_ERROR);
-    } else {
-      setDescriptionError('');
-    }
+  const handleErrorStatusChange = (value: boolean) => {
+    setPageError(value);
   };
 
-  const updateNameErrorState = (updatedName: string) => {
-    if (updatedName.match(/^[a-zA-Z0-9-_]*$/)) {
-      setNameError('');
-    } else {
-      setNameError(DATASET_NAME_ERROR);
-    }
+  const handleFileSelect = (file: File | null) => {
+    setSelectedFile(file);
   };
 
   const handleTableSelect = (tableIdentity: TableIdentity | null) => {
@@ -151,15 +142,6 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
       return;
     }
     setSelectedTable(null);
-  };
-
-  const isCreateButtonEnabled = () => {
-    return (
-      name.length &&
-      !descriptionError.length &&
-      (selectedTable !== null || selectedFile !== null) &&
-      !(fileCreationLoading || BQCreationLoading)
-    );
   };
 
   const handleDatasetCreationFromBQTable = () => {
@@ -207,6 +189,14 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
     handleDatasetCreationFromBQTable();
   };
 
+  const handleStepChange = (newStep: number) => {
+    if (newStep < 0 || newStep > steps.length - 1) {
+      return;
+    }
+
+    setCurrentStep(newStep);
+  };
+
   const getCreationMessageProps = (): CreateDatasetMessageProps => {
     return {
       message: creationError
@@ -219,6 +209,27 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
       Icon: creationError ? ErrorIcon : CheckIcon,
     };
   };
+
+  const contextValue: CreateDatasetType = {
+    name,
+    description,
+    pageHaveError,
+    selectedTable,
+    selectedFile,
+    creationTerminated: Boolean(creationCompleted || creationError),
+    loading: fileCreationLoading || BQCreationLoading,
+    currentStep,
+    stepAmount: steps.length,
+    handleNameChange,
+    handleDescriptionChange,
+    handleErrorStatusChange,
+    handleStepChange,
+    handleTableSelect,
+    handleFileSelect,
+    handleClose,
+    handleDatasetCreation,
+  };
+  const PageComponent = steps[currentStep].component;
 
   return (
     <Dialog
@@ -238,56 +249,21 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
         </Typography>
       </DialogTitle>
       <DialogContent className={classes.contentRoot}>
-        {creationCompleted || creationError ? (
-          <CreateDatasetMessage {...getCreationMessageProps()} />
-        ) : (
-          <>
-            <TextField
-              label="Name"
-              value={name}
-              onChange={onNameChange}
-              error={!!nameError.length}
-              errorText={nameError}
-            />
-            <TextField
-              label="Description"
-              value={description}
-              onChange={onDescriptionChange}
-              error={!!descriptionError.length}
-              errorText={descriptionError}
-              multiline
-            />
-            <Divider className={classes.divider} />
-            <DatasourceSelector
-              onTableSelect={handleTableSelect}
-              onFileSelect={setSelectedFile}
-            />
-          </>
-        )}
-
-        <Divider className={classes.divider} />
-        <Box className={classes.dialogControls}>
-          <Button
-            disabled={fileCreationLoading || BQCreationLoading}
-            className={classes.dialogButton}
-            onClick={handleClose}
-          >
-            {creationCompleted || creationError ? 'Close' : 'Cancel'}
-          </Button>
-          {!(creationCompleted || creationError) && (
-            <Button
-              disabled={!isCreateButtonEnabled()}
-              className={classes.dialogButton}
-              onClick={handleDatasetCreation}
-            >
-              {!(fileCreationLoading || BQCreationLoading) ? (
-                'Create'
-              ) : (
-                <CircularProgress size="1em" />
-              )}
-            </Button>
+        <CreateDatasetContext.Provider value={contextValue}>
+          {creationCompleted || creationError ? (
+            <CreateDatasetMessage {...getCreationMessageProps()} />
+          ) : (
+            <>
+              <CreateDatasetStepper
+                steps={steps.map(({ label }) => label)}
+                currentStep={currentStep}
+              />
+              <PageComponent />
+            </>
           )}
-        </Box>
+          <Divider />
+          <CreateDatasetControls />
+        </CreateDatasetContext.Provider>
       </DialogContent>
     </Dialog>
   );
