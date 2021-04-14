@@ -155,6 +155,7 @@ const InviteUserDialog: FC<InviteUserDialogProps> = ({
               >
                 <MenuItem value={Role.PAID_USER}>Paid User</MenuItem>
                 <MenuItem value={Role.ADMIN}>Admin</MenuItem>
+                <MenuItem value={Role.API_USER}>API User</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -184,6 +185,7 @@ const InviteUserDialog: FC<InviteUserDialogProps> = ({
               </Grid>
             )}
         </Grid>
+
         <Box className={classes.hint}>
           <Typography variant="body2">
             An email will be sent to the email above with instructions to join.
