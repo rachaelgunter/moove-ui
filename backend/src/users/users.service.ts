@@ -13,6 +13,7 @@ import {
   PaginatedUsers,
   CreateUserPayload,
   User,
+  auth0RolesMap,
 } from './users.types';
 
 @Injectable()
@@ -186,8 +187,12 @@ export class UsersService {
       email,
       name,
       organization,
-      role,
+      auth0RolesMap[role],
     );
+
+    if ([Role.API_USER, Role.USER, Role.ROAD_IQ_USER].includes(role)) {
+      await this.auth0ClientService.sendPasswordChangeEmail(user.email);
+    }
 
     return {
       sub: user.user_id,
