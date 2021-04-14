@@ -50,6 +50,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   hint: {
     margin: '24px 0',
   },
+  dialogButton: {
+    '&:disabled': {
+      color: theme.palette.action.disabled,
+    },
+  },
 }));
 
 const InviteUserDialog: FC<InviteUserDialogProps> = ({
@@ -191,14 +196,19 @@ const InviteUserDialog: FC<InviteUserDialogProps> = ({
   const getControls = () => {
     return (
       <>
-        <Button onClick={handleClose}>Cancel</Button>
-        {!(completed || error) && (
-          <Button
-            onClick={handleUserCreation}
-            disabled={isInviteButtonDisabled()}
-          >
-            Invite
-          </Button>
+        {!(completed || error) ? (
+          <>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button
+              className={classes.dialogButton}
+              onClick={handleUserCreation}
+              disabled={isInviteButtonDisabled()}
+            >
+              Invite
+            </Button>
+          </>
+        ) : (
+          <Button onClick={handleClose}>Ok</Button>
         )}
       </>
     );

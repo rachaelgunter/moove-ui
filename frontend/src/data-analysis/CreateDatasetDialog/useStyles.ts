@@ -37,7 +37,7 @@ export default makeStyles((theme: Theme) => {
       marginLeft: theme.spacing(1),
 
       '&:disabled': {
-        color: '#455a64',
+        color: theme.palette.action.disabled,
       },
     },
   };
