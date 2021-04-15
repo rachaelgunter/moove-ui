@@ -57,6 +57,8 @@ export class UsersService {
         ? this.getGoogleTokensFromAuth0User(freshUser)
         : { accessToken: null, refreshToken: null };
 
+      const organizationId = freshUser?.app_metadata?.organization?.id;
+
       const syncedUser = await this.prisma.user.upsert({
         create: {
           id: userInput.sub,
@@ -65,12 +67,18 @@ export class UsersService {
           picture: userInput.picture,
           accessToken,
           refreshToken,
+          ...(organizationId && {
+            organizationId,
+          }),
         },
         update: {
           name: userInput.name ?? null,
           picture: userInput.picture,
           accessToken,
           refreshToken,
+          ...(organizationId && {
+            organizationId,
+          }),
         },
         where: { id: existingUser ? existingUser.user_id : userInput.sub },
         include: {
@@ -183,6 +191,7 @@ export class UsersService {
     const organization = await this.organizationsService.getOrganizationById(
       organizationId,
     );
+    this.logger.log(`Creating user: ${createUserPayload}`);
     const user: Auth0User = await this.auth0ClientService.createUser(
       email,
       name,
@@ -191,6 +200,9 @@ export class UsersService {
     );
 
     if ([Role.API_USER, Role.USER, Role.ROAD_IQ_USER].includes(role)) {
+      this.logger.log(
+        `Sending password change email for user: ${createUserPayload}`,
+      );
       await this.auth0ClientService.sendPasswordChangeEmail(user.email);
     }
 
