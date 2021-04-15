@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 400,
     lineHeight: 1.43,
   },
+  marginBottom: {
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 const SignIn: FC<SignInProps> = ({ hasGoogleAuth = false }: SignInProps) => {
@@ -32,9 +35,15 @@ const SignIn: FC<SignInProps> = ({ hasGoogleAuth = false }: SignInProps) => {
       {hasGoogleAuth ? (
         <>
           <GoogleAuth hint={SIGN_IN_HINT} buttonText={SIGN_IN_BUTTON_TEXT} />
-          <Typography variant="body2" component="p" align="center">
+          <Typography
+            className={classes.marginBottom}
+            variant="body2"
+            component="p"
+            align="center"
+          >
             Don’t have a paid account?
-            <br />
+          </Typography>
+          <Typography variant="body2" component="p" align="center">
             Sign up at&nbsp;
             <a
               className={classes.link}
@@ -44,16 +53,31 @@ const SignIn: FC<SignInProps> = ({ hasGoogleAuth = false }: SignInProps) => {
             >
               moove.ai
             </a>
+            {` or sign in`}&nbsp;
+            <Link href="/" variant="body2">
+              here
+            </Link>
           </Typography>
         </>
       ) : (
         <>
           <SignInForm />
           <Footer>
-            <Typography variant="body2" component="span" align="center">
+            <Typography
+              className={classes.marginBottom}
+              variant="body2"
+              component="span"
+              align="center"
+            >
               Don’t have an account?&nbsp;
               <Link href="/sign-up" variant="body2">
                 Sign Up
+              </Link>
+            </Typography>
+            <Typography variant="body2" component="span" align="center">
+              Have a paid account?&nbsp;
+              <Link href="/premium" variant="body2">
+                Sign in with Google
               </Link>
             </Typography>
           </Footer>
