@@ -33,7 +33,7 @@ const GoogleAuthButton = withStyles({
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
-      marginBottom: '14px',
+      marginBottom: '22px',
     },
     googleIcon: {
       marginRight: '22px',
