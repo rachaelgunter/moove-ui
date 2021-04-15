@@ -8,5 +8,5 @@ export enum Role {
   ADMIN = 'ADMIN',
   SUPER_ADMIN = 'SUPER_ADMIN',
   API_USER = 'API_USER',
-  ROAD_IQ_USER = 'ROAD_IQ_USER',
+  ROAD_IQ_PAID_USER = 'ROAD_IQ_PAID_USER',
 }
