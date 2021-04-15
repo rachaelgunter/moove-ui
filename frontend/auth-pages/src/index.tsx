@@ -65,6 +65,9 @@ ReactDOM.render(
     <WebAuthProvider.Provider value={{ webAuth, options }}>
       <HashRouter>
         <Switch>
+          <Route exact path="/premium">
+            <SignIn hasGoogleAuth />
+          </Route>
           <Route exact path="/">
             <SignIn />
           </Route>
