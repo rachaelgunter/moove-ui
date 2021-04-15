@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Typography } from '@material-ui/core';
+import { makeStyles, Theme, Typography } from '@material-ui/core';
 
 import AuthPage from './AuthPage';
 import Footer from './Footer';
@@ -14,35 +14,54 @@ interface SignInProps {
   hasGoogleAuth?: boolean;
 }
 
-const SignIn: FC<SignInProps> = ({ hasGoogleAuth = false }: SignInProps) => (
-  <AuthPage>
-    {hasGoogleAuth ? (
-      <>
-        <GoogleAuth hint={SIGN_IN_HINT} buttonText={SIGN_IN_BUTTON_TEXT} />
-        <Typography variant="body2" component="p" align="center">
-          Don’t have a paid account?
-          <br />
-          Sign up at&nbsp;
-          <Link href="https://moove.ai/" variant="body2">
-            moove.ai
-          </Link>
-        </Typography>
-      </>
-    ) : (
-      <>
-        <SignInForm />
-        <Footer>
-          <Typography variant="body2" component="span" align="center">
-            Don’t have an account?&nbsp;
-            <Link href="/sign-up" variant="body2">
-              Sign Up
-            </Link>
+const useStyles = makeStyles((theme: Theme) => ({
+  link: {
+    color: theme.palette.secondary.light,
+    fontSize: '14px',
+    fontFamily: 'Poppins, serif',
+    fontWeight: 400,
+    lineHeight: 1.43,
+  },
+}));
+
+const SignIn: FC<SignInProps> = ({ hasGoogleAuth = false }: SignInProps) => {
+  const classes = useStyles();
+
+  return (
+    <AuthPage>
+      {hasGoogleAuth ? (
+        <>
+          <GoogleAuth hint={SIGN_IN_HINT} buttonText={SIGN_IN_BUTTON_TEXT} />
+          <Typography variant="body2" component="p" align="center">
+            Don’t have a paid account?
+            <br />
+            Sign up at&nbsp;
+            <a
+              className={classes.link}
+              href="https://moove.ai/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              moove.ai
+            </a>
           </Typography>
-        </Footer>
-      </>
-    )}
-  </AuthPage>
-);
+        </>
+      ) : (
+        <>
+          <SignInForm />
+          <Footer>
+            <Typography variant="body2" component="span" align="center">
+              Don’t have an account?&nbsp;
+              <Link href="/sign-up" variant="body2">
+                Sign Up
+              </Link>
+            </Typography>
+          </Footer>
+        </>
+      )}
+    </AuthPage>
+  );
+};
 
 SignIn.defaultProps = {
   hasGoogleAuth: false,
