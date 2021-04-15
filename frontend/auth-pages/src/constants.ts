@@ -9,3 +9,11 @@ export const backgroundMap2x =
   'https://storage.googleapis.com/unified-ui-auth-static-assets/background-map%402x.jpg';
 export const backgroundMap3x =
   'https://storage.googleapis.com/unified-ui-auth-static-assets/background-map%403x.jpg';
+
+export const BUSINESS_VERTICALS = [
+  'Automotive',
+  'Insurance',
+  'Govt/DOT',
+  'Transport Logistics',
+  'Academia',
+];
