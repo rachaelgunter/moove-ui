@@ -192,7 +192,7 @@ input CreateUserPayload {
   name: String!
   email: String!
   role: String!
-  organizationId: Float!
+  organizationId: Float
 }
 
 input DatasetParamsInput {

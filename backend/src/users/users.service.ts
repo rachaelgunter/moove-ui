@@ -188,9 +188,9 @@ export class UsersService {
 
   async createUser(createUserPayload: CreateUserPayload): Promise<User> {
     const { name, email, organizationId, role } = createUserPayload;
-    const organization = await this.organizationsService.getOrganizationById(
-      organizationId,
-    );
+    const organization = organizationId
+      ? await this.organizationsService.getOrganizationById(organizationId)
+      : null;
     this.logger.log(`Creating user: ${createUserPayload}`);
     const user: Auth0User = await this.auth0ClientService.createUser(
       email,
@@ -199,7 +199,7 @@ export class UsersService {
       auth0RolesMap[role],
     );
 
-    if ([Role.API_USER, Role.USER, Role.ROAD_IQ_USER].includes(role)) {
+    if ([Role.API_USER, Role.USER, Role.ROAD_IQ_PAID_USER].includes(role)) {
       this.logger.log(
         `Sending password change email for user: ${createUserPayload}`,
       );
@@ -209,7 +209,7 @@ export class UsersService {
     return {
       sub: user.user_id,
       email: user.email,
-      organization: user.app_metadata.organization.name,
+      organization: user.app_metadata.organization?.name,
       organizationObject: user.app_metadata.organization,
       picture: user.picture,
       createdAt: user.created_at,

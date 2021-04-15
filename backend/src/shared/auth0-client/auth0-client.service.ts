@@ -70,13 +70,13 @@ export class Auth0ClientService {
   async createUser(
     email: string,
     name: string,
-    organization: Organization,
+    organization: Organization | null,
     roles: Role[],
   ): Promise<Auth0User> {
     return this.client.createUser({
       email,
       name,
-      app_metadata: { organization, roles },
+      app_metadata: { ...(organization && { organization }), roles },
       password: `${crypto.randomBytes(15).toString('base64').slice(0, 15)}_Tt0`, // _Tt0 for ensuring password validity
       connection: 'Username-Password-Authentication',
     });
