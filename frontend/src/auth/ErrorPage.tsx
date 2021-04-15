@@ -1,7 +1,8 @@
-import React, { FC, ReactElement } from 'react';
-import { Card, CardHeader, Grid, Typography } from '@material-ui/core';
+import React, { FC, ReactElement, useContext } from 'react';
+import { Card, CardHeader, Grid, Link, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
+import AuthContext from 'src';
 import Logo from '../assets/logo/galileo-logo-medium.svg';
 
 export const backgroundMap1x =
@@ -54,6 +55,7 @@ interface ErrorPageProps {
 
 const ErrorPage = ({ error }: ErrorPageProps): ReactElement => {
   const classes = useStyles();
+  const auth = useContext(AuthContext);
 
   const Header: FC = () => {
     return (
@@ -67,6 +69,10 @@ const ErrorPage = ({ error }: ErrorPageProps): ReactElement => {
         <img src={Logo} width="139px" height="24px" alt="" />
       </Grid>
     );
+  };
+
+  const logout = () => {
+    auth?.logout({ returnTo: process.env.REACT_APP_AUTH0_LOGOUT_REDIRECT_URI });
   };
 
   return (
@@ -83,6 +89,9 @@ const ErrorPage = ({ error }: ErrorPageProps): ReactElement => {
           <div className={classes.content}>
             <Typography variant="body2" align="center">
               {error}
+            </Typography>
+            <Typography variant="body2" align="center">
+              Return to <Link onClick={logout}>login</Link>
             </Typography>
           </div>
         </Card>
