@@ -1,8 +1,8 @@
 import {
+  Box,
   Button,
   createStyles,
   makeStyles,
-  Typography,
   withStyles,
 } from '@material-ui/core';
 import React, { FC, useContext } from 'react';
@@ -32,14 +32,8 @@ const GoogleAuthButton = withStyles({
 
 const useStyles = makeStyles(() =>
   createStyles({
-    hint: {
-      marginBottom: '19px',
-      fontWeight: 500,
-    },
-    secondaryHint: {
-      margin: '19px 0 14px 0',
-      color: '#a0b3b2',
-      fontWeight: 500,
+    root: {
+      marginBottom: '14px',
     },
     googleIcon: {
       marginRight: '22px',
@@ -68,22 +62,12 @@ const GoogleAuth: FC<GoogleAuthProps> = ({
   };
 
   return (
-    <>
-      <Typography className={classes.hint} align="center">
-        {hint}
-      </Typography>
+    <Box className={classes.root}>
       <GoogleAuthButton onClick={signInWithGoogle}>
         <Image className={classes.googleIcon} width="20px" height="20px" />
         {buttonText}
       </GoogleAuthButton>
-      <Typography
-        className={classes.secondaryHint}
-        variant="body2"
-        align="center"
-      >
-        OR
-      </Typography>
-    </>
+    </Box>
   );
 };
 
