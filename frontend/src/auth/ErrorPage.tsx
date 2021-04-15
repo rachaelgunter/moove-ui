@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from 'react';
-import { Card, CardHeader, Grid, Typography } from '@material-ui/core';
+import { Card, CardHeader, Grid, Link, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
 import Logo from '../assets/logo/galileo-logo-medium.svg';
@@ -54,6 +54,7 @@ interface ErrorPageProps {
 
 const ErrorPage = ({ error }: ErrorPageProps): ReactElement => {
   const classes = useStyles();
+  const logoutURL = `//${process.env.REACT_APP_AUTH0_DOMAIN}/v2/logout?returnTo=${process.env.REACT_APP_AUTH0_LOGOUT_REDIRECT_URI}&client_id=${process.env.REACT_APP_AUTH0_CLIENT_ID}`;
 
   const Header: FC = () => {
     return (
@@ -83,6 +84,9 @@ const ErrorPage = ({ error }: ErrorPageProps): ReactElement => {
           <div className={classes.content}>
             <Typography variant="body2" align="center">
               {error}
+            </Typography>
+            <Typography variant="body2" align="center">
+              Return to <Link href={logoutURL}>login</Link>
             </Typography>
           </div>
         </Card>
