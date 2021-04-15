@@ -18,7 +18,7 @@ declare module '@material-ui/core/styles/createPalette' {
 const theme = createMuiTheme({
   spacing: 8,
   typography: {
-    fontFamily: ['Poppins', 'serif'].join(','),
+    fontFamily: ['Poppins', 'serif', 'Roboto'].join(','),
     body1: {
       fontFamily: 'Poppins',
       fontSize: 16,
@@ -49,6 +49,19 @@ const theme = createMuiTheme({
     text: {
       primary: '#ffffff',
       secondary: 'rgba(255, 255,255, 0.5)',
+    },
+  },
+  overrides: {
+    MuiList: {
+      root: {
+        background: '#303c43',
+      },
+    },
+    MuiMenuItem: {
+      root: {
+        background: '#303c43',
+        fontFamily: 'Roboto',
+      },
     },
   },
 });
