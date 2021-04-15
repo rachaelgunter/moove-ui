@@ -19,6 +19,7 @@ import { FontFamily } from 'src/app/styles/fonts';
 import Typography from 'src/shared/Typography';
 import StatusChip from './StatusChip';
 import SpecificationColumn from './SpecificationColumn';
+import Archiver from './Archiver/Archiver';
 
 type DatasetDetailsHeaderProps = DatasetDetailsProps;
 
@@ -47,19 +48,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     minWidth: theme.spacing(6),
   },
+  actionsMenu: {
+    width: 140,
+  },
   actionsMenuItem: {
     fontFamily: FontFamily.ROBOTO,
-    '& > a': {
+    '& > a, & > button': {
       color: theme.palette.text.primary,
       '&:hover': {
         textDecoration: 'none',
       },
+    },
+    '& > button p': {
+      fontFamily: FontFamily.ROBOTO,
     },
   },
 }));
 
 const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
   datasetModel,
+  resetDatasetModel,
 }: DatasetDetailsHeaderProps) => {
   const classes = useStyles();
 
@@ -132,34 +140,41 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
             </SpecificationColumn>
           </Grid>
           <Grid item className={classes.actions} id="dataset-actions">
-            {isActive && (
-              <>
-                <Menu
-                  id="simple-menu"
-                  anchorEl={anchorEl}
-                  getContentAnchorEl={null}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
+            <>
+              <Menu
+                id="simple-menu"
+                classes={{ list: classes.actionsMenu }}
+                anchorEl={anchorEl}
+                getContentAnchorEl={null}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                {isActive && (
                   <MenuItem className={classes.actionsMenuItem}>
                     <Link href={process.env.REACT_APP_JUPYTERHUB_URL}>
                       View Notebook
                     </Link>
                   </MenuItem>
-                </Menu>
-                <IconButton onClick={handleMenuOpen}>
-                  <MoreVertIcon />
-                </IconButton>
-              </>
-            )}
+                )}
+                <MenuItem className={classes.actionsMenuItem}>
+                  <Archiver
+                    datasetId={datasetModel.name}
+                    resetDatasetModel={resetDatasetModel}
+                  />
+                </MenuItem>
+              </Menu>
+              <IconButton onClick={handleMenuOpen}>
+                <MoreVertIcon />
+              </IconButton>
+            </>
           </Grid>
         </Grid>
         <Grid item id="dataset-edit">

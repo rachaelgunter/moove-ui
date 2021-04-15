@@ -1,6 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
+import { OrganizationsService } from 'src/organizations/organizations.service';
 import { Auth0ClientService } from '../shared/auth0-client/auth0-client.service';
 import { prismaUserMock } from './users.mock';
 import { UsersService } from './users.service';
@@ -31,7 +32,9 @@ const auth0UsersMock = {
     {
       user_id: '1235',
       email: 'user.email',
-      app_metadata: {},
+      app_metadata: {
+        roles: ['ADMIN'],
+      },
       created_at: 'user.created_at',
       last_login: 'user.last_login',
       name: 'user.name',
@@ -50,6 +53,10 @@ const auth0ClientServiceMock = {
   searchUsers: () => auth0UsersMock,
 };
 
+const organizationsServiceMock = {
+  getOrganizationById: () => ({ id: 1, name: 's' }),
+};
+
 describe('UsersService', () => {
   let service: UsersService;
   let prisma: PrismaClient;
@@ -65,6 +72,10 @@ describe('UsersService', () => {
         {
           provide: Auth0ClientService,
           useValue: auth0ClientServiceMock,
+        },
+        {
+          provide: OrganizationsService,
+          useValue: organizationsServiceMock,
         },
       ],
     })
@@ -304,6 +315,7 @@ describe('UsersService', () => {
             createdAt: 'user.created_at',
             lastLogin: 'user.last_login',
             name: 'user.name',
+            roles: undefined,
             picture: 'user.picture',
           },
           {
@@ -313,6 +325,7 @@ describe('UsersService', () => {
             createdAt: 'user.created_at',
             lastLogin: 'user.last_login',
             name: 'user.name',
+            roles: ['ADMIN'],
             picture: 'user.picture',
           },
         ],

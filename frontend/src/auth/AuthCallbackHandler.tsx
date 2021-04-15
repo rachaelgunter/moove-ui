@@ -2,6 +2,7 @@ import { gql, useMutation } from '@apollo/client';
 import { Auth0Client } from '@auth0/auth0-spa-js';
 import React, { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
+
 import AuthContext from '../index';
 
 interface AuthCallBackHandlerProps {

@@ -7,6 +7,7 @@ import theme from './app/styles';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Terms from './Terms';
+import EmailVerification from './EmailVerification';
 import WebAuthProvider from './WebAuthProvider';
 
 function getAuthOptions() {
@@ -64,6 +65,9 @@ ReactDOM.render(
     <WebAuthProvider.Provider value={{ webAuth, options }}>
       <HashRouter>
         <Switch>
+          <Route exact path="/premium">
+            <SignIn hasGoogleAuth />
+          </Route>
           <Route exact path="/">
             <SignIn />
           </Route>
@@ -72,6 +76,9 @@ ReactDOM.render(
           </Route>
           <Route path="/terms">
             <Terms />
+          </Route>
+          <Route path="/verification">
+            <EmailVerification />
           </Route>
         </Switch>
       </HashRouter>

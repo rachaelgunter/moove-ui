@@ -10,11 +10,13 @@ import {
 } from '@material-ui/icons';
 
 import routes from 'src/shared/routes';
+import { UserContext } from 'src/auth/UserProvider';
 import { NavSidebarContext } from './NavSidebarProvider';
 import ExpandButton from './ExpandButton';
 import Profile from './Profile';
 import Logo from './Logo';
 import LinkList, { NavLink } from './LinkList';
+import { haveAccess } from '../authorization/utils';
 
 interface SidebarStyleProps {
   width: number;
@@ -54,6 +56,7 @@ const NavSidebar: React.FC = () => {
   const history = useHistory();
   const { width, isExpanded } = useContext(NavSidebarContext);
   const classes = useStyles({ width });
+  const user = useContext(UserContext);
 
   const primaryLinks: NavLink[] = [
     {
@@ -96,6 +99,8 @@ const NavSidebar: React.FC = () => {
     },
   ];
 
+  const isAdmin = haveAccess(user.roles, routes.users.allowedRoles);
+
   return (
     <Drawer
       variant="permanent"
@@ -109,8 +114,12 @@ const NavSidebar: React.FC = () => {
       <Logo />
       <Profile isNavSidebarOpened={isExpanded} />
       <LinkList links={primaryLinks} />
-      <Divider className={classes.divider} />
-      <LinkList links={secondaryLinks} />
+      {isAdmin && (
+        <>
+          <Divider className={classes.divider} />
+          <LinkList links={secondaryLinks} />
+        </>
+      )}
       <Divider className={classes.divider} />
       <List>
         <ExpandButton />

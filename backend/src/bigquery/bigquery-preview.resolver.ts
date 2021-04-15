@@ -84,14 +84,7 @@ export class BigQueryPreviewResolver {
     @Args() args: BigQueryPreviewSegmentParams,
   ): Promise<PreviewSegment> {
     const { segmentId } = args;
-    try {
-      return await this.bigQueryService.getPreviewSegment(segmentId);
-    } catch (e) {
-      handleGoogleError(
-        this.logger,
-        `Unable to get BigQuery preview segment ${segmentId}`,
-        e,
-      );
-    }
+
+    return await this.bigQueryService.getPreviewSegment(segmentId);
   }
 }

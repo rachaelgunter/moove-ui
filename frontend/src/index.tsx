@@ -19,6 +19,10 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { Provider } from 'react-redux';
+import ErrorPage from 'src/auth/ErrorPage';
+import theme from 'src/app/styles';
+import { ThemeProvider } from '@material-ui/styles';
+import { CssBaseline } from '@material-ui/core';
 import { loginRedirectLink, authLink, httpLink } from './graphql-client/links';
 import store from './kepler/store';
 
@@ -45,10 +49,23 @@ createAuth0Client({
   audience,
 }).then(async (auth0) => {
   let token = '';
+  const queryParams = new URLSearchParams(window.location.search);
+
+  if (queryParams.has('error')) {
+    return render(
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <ErrorPage
+          error={queryParams.get('error_description') || 'Undefined error'}
+        />
+      </ThemeProvider>,
+      document.getElementById('root'),
+    );
+  }
 
   // Check if the token is present on page reload
   try {
-    if (window.location.search.includes('code=')) {
+    if (queryParams.has('code')) {
       await auth0.handleRedirectCallback();
     }
 
@@ -71,7 +88,13 @@ createAuth0Client({
 
   const client = new ApolloClient({
     link: from([withTokenLink, loginRedirectLink(auth0), authLink, httpLink]),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Dataset: {
+          keyFields: ['analysisName'],
+        },
+      },
+    }),
   });
 
   return render(

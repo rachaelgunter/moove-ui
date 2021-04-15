@@ -140,7 +140,16 @@ export const BIG_QUERY_PREVIEW_TABLE_QUERY = gql`
       headers {
         name
       }
-      rows
+      groupedRows {
+        id
+        rows {
+          id
+          row {
+            id
+            cell
+          }
+        }
+      }
     }
   }
 `;
@@ -158,5 +167,19 @@ export const BIG_QUERY_PREVIEW_SEGMENT_QUERY = gql`
         longitude
       }
     }
+  }
+`;
+
+export const DATASET_FILE_UPLOAD_LINK_QUERY = gql`
+  query datasetFileSignedUploadUrl(
+    $organizationName: String!
+    $analysisName: String!
+    $fileName: String!
+  ) {
+    datasetFileSignedUploadUrl(
+      organizationName: $organizationName
+      analysisName: $analysisName
+      fileName: $fileName
+    )
   }
 `;

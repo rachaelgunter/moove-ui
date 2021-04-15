@@ -188,7 +188,7 @@ export class BigqueryClientService extends GoogleClientService {
     ]);
 
     return {
-      ...getPreviewTableData(fields, rows),
+      ...getPreviewTableData(fields, rows, startIndex),
       tableMetadata,
     };
   }
@@ -204,7 +204,7 @@ export class BigqueryClientService extends GoogleClientService {
         LIMIT 100`;
 
     return bigquery.query(query).then((data) => {
-      return data[0];
+      return data[0] || [];
     });
   }
 }
