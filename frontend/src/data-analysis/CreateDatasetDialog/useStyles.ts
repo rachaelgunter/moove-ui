@@ -21,5 +21,16 @@ export default makeStyles((theme: Theme) => {
       fontWeight: 400,
       fontSize: 20,
     },
+    dialogButton: {
+      fontFamily: FontFamily.ROBOTO,
+      color: theme.palette.text.secondary,
+      height: '36px',
+      letterSpacing: '1.25px',
+      marginLeft: theme.spacing(1),
+
+      '&:disabled': {
+        color: theme.palette.action.disabled,
+      },
+    },
   };
 });

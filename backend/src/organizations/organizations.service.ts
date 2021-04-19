@@ -10,7 +10,7 @@ export class OrganizationsService {
     return await this.prismaClient.organization.findMany();
   }
 
-  async getOrganizationById(id: number): Promise<Organization> {
+  async getOrganizationById(id: number): Promise<Organization | null> {
     return this.prismaClient.organization.findUnique({ where: { id } });
   }
 }

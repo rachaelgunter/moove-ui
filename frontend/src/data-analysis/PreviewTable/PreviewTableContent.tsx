@@ -53,6 +53,11 @@ const useStylesTable = makeStyles(() => ({
     verticalAlign: 'middle',
     padding: '11px 24px 11px 24px',
   },
+  subCell: {
+    color: 'rgba(255, 255, 255, 0.5)',
+    fontWeight: 500,
+    fontSize: '11px',
+  },
   pagination: {
     width: '100%',
     backgroundColor: '#303c43',
@@ -152,7 +157,11 @@ const PreviewTableContent: FC<PreviewTableContentProps> = ({
         )}
       </TableCell>
       {row.map(({ id: cellId, cell }) => (
-        <TableCell key={cellId} className={classes.cell}>
+        <TableCell
+          key={cellId}
+          classes={(isSubRow && { root: classes.subCell }) || {}}
+          className={classes.cell}
+        >
           {isSegmentValue(cell) ? (
             <Button
               className={classes.button}

@@ -13,6 +13,7 @@ import {
   PaginatedUsers,
   CreateUserPayload,
   User,
+  auth0RolesMap,
 } from './users.types';
 
 @Injectable()
@@ -56,6 +57,8 @@ export class UsersService {
         ? this.getGoogleTokensFromAuth0User(freshUser)
         : { accessToken: null, refreshToken: null };
 
+      const organizationId = freshUser?.app_metadata?.organization?.id;
+
       const syncedUser = await this.prisma.user.upsert({
         create: {
           id: userInput.sub,
@@ -64,12 +67,18 @@ export class UsersService {
           picture: userInput.picture,
           accessToken,
           refreshToken,
+          ...(organizationId && {
+            organizationId,
+          }),
         },
         update: {
           name: userInput.name ?? null,
           picture: userInput.picture,
           accessToken,
           refreshToken,
+          ...(organizationId && {
+            organizationId,
+          }),
         },
         where: { id: existingUser ? existingUser.user_id : userInput.sub },
         include: {
@@ -179,20 +188,28 @@ export class UsersService {
 
   async createUser(createUserPayload: CreateUserPayload): Promise<User> {
     const { name, email, organizationId, role } = createUserPayload;
-    const organization = await this.organizationsService.getOrganizationById(
-      organizationId,
-    );
+    const organization = organizationId
+      ? await this.organizationsService.getOrganizationById(organizationId)
+      : null;
+    this.logger.log(`Creating user: ${createUserPayload}`);
     const user: Auth0User = await this.auth0ClientService.createUser(
       email,
       name,
       organization,
-      role,
+      auth0RolesMap[role],
     );
+
+    if ([Role.API_USER, Role.USER, Role.ROAD_IQ_PAID_USER].includes(role)) {
+      this.logger.log(
+        `Sending password change email for user: ${createUserPayload}`,
+      );
+      await this.auth0ClientService.sendPasswordChangeEmail(user.email);
+    }
 
     return {
       sub: user.user_id,
       email: user.email,
-      organization: user.app_metadata.organization.name,
+      organization: user.app_metadata.organization?.name,
       organizationObject: user.app_metadata.organization,
       picture: user.picture,
       createdAt: user.created_at,

@@ -50,6 +50,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   hint: {
     margin: '24px 0',
   },
+  dialogButton: {
+    '&:disabled': {
+      color: theme.palette.action.disabled,
+    },
+  },
 }));
 
 const InviteUserDialog: FC<InviteUserDialogProps> = ({
@@ -64,7 +69,7 @@ const InviteUserDialog: FC<InviteUserDialogProps> = ({
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<Role>(Role.PAID_USER);
-  const [organizationId, setOrganizationId] = useState<number>(
+  const [organizationId, setOrganizationId] = useState<number | string>(
     userOrganization.id,
   );
   const [completed, setCompleted] = useState(false);
@@ -93,7 +98,11 @@ const InviteUserDialog: FC<InviteUserDialogProps> = ({
   };
 
   const onRoleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setRole(event.target.value as Role);
+    const newRole = event.target.value as Role;
+    setRole(newRole);
+    if (newRole === Role.ROAD_IQ_PAID_USER) {
+      setOrganizationId('');
+    }
   };
 
   const onOrganizationChange = (
@@ -115,7 +124,7 @@ const InviteUserDialog: FC<InviteUserDialogProps> = ({
           name,
           email,
           role,
-          organizationId,
+          organizationId: organizationId === '' ? null : organizationId,
         },
       },
     });
@@ -148,8 +157,15 @@ const InviteUserDialog: FC<InviteUserDialogProps> = ({
                 value={role}
                 onChange={(event) => onRoleChange(event)}
               >
+                <MenuItem value={Role.USER}>Freemium</MenuItem>
                 <MenuItem value={Role.PAID_USER}>Paid User</MenuItem>
                 <MenuItem value={Role.ADMIN}>Admin</MenuItem>
+                <MenuItem value={Role.API_USER}>API User</MenuItem>
+                {haveAccess(userData.roles, [Role.SUPER_ADMIN]) && (
+                  <MenuItem value={Role.ROAD_IQ_PAID_USER}>
+                    RoadIQ User
+                  </MenuItem>
+                )}
               </Select>
             </FormControl>
           </Grid>
@@ -165,6 +181,7 @@ const InviteUserDialog: FC<InviteUserDialogProps> = ({
                     className={classes.selector}
                     variant="outlined"
                     value={organizationId}
+                    disabled={role === Role.ROAD_IQ_PAID_USER}
                     onChange={(event) => onOrganizationChange(event)}
                   >
                     {organizationsData.organizations.map(
@@ -179,6 +196,7 @@ const InviteUserDialog: FC<InviteUserDialogProps> = ({
               </Grid>
             )}
         </Grid>
+
         <Box className={classes.hint}>
           <Typography variant="body2">
             An email will be sent to the email above with instructions to join.
@@ -191,14 +209,19 @@ const InviteUserDialog: FC<InviteUserDialogProps> = ({
   const getControls = () => {
     return (
       <>
-        <Button onClick={onClose}>Cancel</Button>
-        {!(completed || error) && (
-          <Button
-            onClick={handleUserCreation}
-            disabled={isInviteButtonDisabled()}
-          >
-            Invite
-          </Button>
+        {!(completed || error) ? (
+          <>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button
+              className={classes.dialogButton}
+              onClick={handleUserCreation}
+              disabled={isInviteButtonDisabled()}
+            >
+              Invite
+            </Button>
+          </>
+        ) : (
+          <Button onClick={handleClose}>Ok</Button>
         )}
       </>
     );

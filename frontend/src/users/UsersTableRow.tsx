@@ -41,6 +41,8 @@ const rolesUiMap: { [key in Role]: string } = {
   [Role.PAID_USER]: 'Paid',
   [Role.SUPER_ADMIN]: 'Super Admin',
   [Role.ADMIN]: 'Admin',
+  [Role.API_USER]: 'API User',
+  [Role.ROAD_IQ_PAID_USER]: 'RoadIQ User',
 };
 
 const UsersTableRow: FC<UsersTableRowProps> = ({

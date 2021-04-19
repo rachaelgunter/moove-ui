@@ -1,9 +1,12 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { MenuItem } from '@material-ui/core';
+import Selector from '../Selector/Selector';
 import {
   EMAIL_ERROR_TEXT,
   PASSWORD_ERROR_TEXT,
   PASSWORD_CONFIRMATION_ERROR_TEXT,
+  BUSINESS_VERTICALS,
 } from '../constants';
 import TextField, { TextFieldType } from '../TextField';
 import { isValidEmail, isValidPassword } from '../utils';
@@ -19,6 +22,7 @@ const SignUpForm: FC = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [businessVertical, setBusinessVertical] = useState('');
   const [repeatedPassword, setRepeatedPassword] = useState(''); // TODO to rename
   const [serverSideError, setServerSideError] = useState('');
 
@@ -32,10 +36,11 @@ const SignUpForm: FC = () => {
       fullName !== '' &&
       isValidEmail(email) &&
       isValidPassword(password) &&
-      repeatedPassword === password;
+      repeatedPassword === password &&
+      businessVertical !== '';
 
     setDisableSubmit(!formIsValid);
-  }, [fullName, email, password, repeatedPassword]);
+  }, [fullName, email, password, repeatedPassword, businessVertical]);
 
   const onFullNameChange = (newValue: string) => {
     setFullName(newValue);
@@ -53,6 +58,10 @@ const SignUpForm: FC = () => {
     setRepeatedPassword(newValue);
   };
 
+  const onBusinessVerticalChange = (newValue: string) => {
+    setBusinessVertical(newValue);
+  };
+
   const onSubmit = () => {
     setDisableSubmit(true);
     const formValue = {
@@ -67,6 +76,9 @@ const SignUpForm: FC = () => {
         email,
         password,
         connection: 'Username-Password-Authentication',
+        userMetadata: {
+          businessVertical,
+        },
       },
       (err) => {
         if (err) {
@@ -79,6 +91,7 @@ const SignUpForm: FC = () => {
         setEmail('');
         setPassword('');
         setRepeatedPassword('');
+        setBusinessVertical('');
       },
     );
 
@@ -117,6 +130,17 @@ const SignUpForm: FC = () => {
           error={repeatedPassword !== '' && repeatedPassword !== password}
           errorText={PASSWORD_CONFIRMATION_ERROR_TEXT}
         />
+        <Selector
+          label="Business vertical"
+          value={businessVertical}
+          valueChange={onBusinessVerticalChange}
+        >
+          {BUSINESS_VERTICALS.map((vertical) => (
+            <MenuItem key={vertical} value={vertical}>
+              {vertical}
+            </MenuItem>
+          ))}
+        </Selector>
         <SubmitButton onClick={onSubmit} disabled={disableSubmit}>
           {submitButtonTitle}
         </SubmitButton>

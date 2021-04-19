@@ -80,6 +80,7 @@ const theme = createMuiTheme({
     },
     action: {
       selected: '#235e5e',
+      disabled: '#455a64',
     },
     background: {
       paper: '#303c43',
