@@ -9,6 +9,7 @@ import SignUp from './SignUp';
 import Terms from './Terms';
 import EmailVerification from './EmailVerification';
 import WebAuthProvider from './WebAuthProvider';
+import ForgotPassword from './ForgotPassword';
 
 function getAuthOptions() {
   const config = JSON.parse(
@@ -79,6 +80,9 @@ ReactDOM.render(
           </Route>
           <Route path="/verification">
             <EmailVerification />
+          </Route>
+          <Route exact path="/forgot-password">
+            <ForgotPassword />
           </Route>
         </Switch>
       </HashRouter>
