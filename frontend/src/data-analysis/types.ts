@@ -102,3 +102,8 @@ export type SegmentData = {
   error?: ApolloError | undefined;
   loading: boolean;
 };
+
+export type ColumnData = {
+  name: string;
+  type: string;
+};
