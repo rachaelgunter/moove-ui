@@ -115,6 +115,8 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
         setSelectedFile(null);
         setCreationCompleted(false);
         setCreationError(null);
+        setPageError(false);
+        setCurrentStep(0);
       }, 200);
     }
   };
