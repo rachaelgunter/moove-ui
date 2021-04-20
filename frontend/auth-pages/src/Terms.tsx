@@ -1,9 +1,18 @@
-import React, { FC } from 'react';
-import { Typography, makeStyles, Theme, Box } from '@material-ui/core';
+import React, { FC, useContext, useState } from 'react';
+import {
+  Typography,
+  makeStyles,
+  Theme,
+  Box,
+  Tooltip,
+  fade,
+} from '@material-ui/core';
 
 import AuthPage from './AuthPage';
-import Footer from './Footer';
 import Link from './Link';
+import SubmitButton from './SubmitButton';
+import TermsContent from './TermsContent/TermsContent';
+import TermsProvider from './TermsProvider';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -19,111 +28,87 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     fontWeight: 500,
   },
+  footer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  agreeButton: {
+    width: '150px',
+    marginBottom: theme.spacing(2),
+
+    '&:disabled': {
+      backgroundColor: fade(theme.palette.secondary.dark, 0.4),
+      color: fade(theme.palette.text.primary, 0.4),
+    },
+  },
+  hint: {
+    lineHeight: '36px',
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 const Terms: FC = () => {
   const classes = useStyles();
+  const [isViewed, setIsViewed] = useState(false);
   const { root } = classes;
+  const { termsAccepted, handleTermsAcceptance } = useContext(TermsProvider);
+
+  const handleScroll = (e: React.UIEvent<HTMLElement>) => {
+    const bottom =
+      e.currentTarget.scrollHeight - e.currentTarget.scrollTop ===
+      e.currentTarget.clientHeight;
+    if (bottom) {
+      setIsViewed(true);
+    }
+  };
 
   return (
     <AuthPage size="large">
-      <Box className={classes.container}>
+      <Box className={classes.container} onScroll={handleScroll}>
         <Typography
           classes={{ root }}
           className={classes.title}
           variant="body2"
+          align="center"
           component="p"
         >
-          What is Lorem Ipsum?
+          TERMS OF USE
         </Typography>
-        <Typography classes={{ root }} variant="body2" component="p">
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry&apos;s standard dummy text
-          ever since the 1500s, when an unknown printer took a galley of type
-          and scrambled it to make a type specimen book. It has survived not
-          only five centuries, but also the leap into electronic typesetting,
-          remaining essentially unchanged. It was popularised in the 1960s with
-          the release of Letraset sheets containing Lorem Ipsum passages, and
-          more recently with desktop publishing software like Aldus PageMaker
-          including versions of Lorem Ipsum.
-        </Typography>
-        <Typography
-          classes={{ root }}
-          className={classes.title}
-          variant="body2"
-          component="p"
-        >
-          Where does it come from?
-        </Typography>
-        <Typography classes={{ root }} variant="body2" component="p">
-          Contrary to popular belief, Lorem Ipsum is not simply random text. It
-          has roots in a piece of classical Latin literature from 45 BC, making
-          it over 2000 years old. Richard McClintock, a Latin professor at
-          Hampden-Sydney College in Virginia, looked up one of the more obscure
-          Latin words, consectetur, from a Lorem Ipsum passage, and going
-          through the cites of the word in classical literature, discovered the
-          undoubtable source. Lorem Ipsum comes from sections 1.10.32 and
-          1.10.33 of &quot;de Finibus Bonorum et Malorum&quot; (The Extremes of
-          Good and Evil) by Cicero, written in 45 BC. This book is a treatise on
-          the theory of ethics, very popular during the Renaissance. The first
-          line of Lorem Ipsum, &quot;Lorem ipsum dolor sit amet..&quot;, comes
-          from a line in section 1.10.32. The standard chunk of Lorem Ipsum used
-          since the 1500s is reproduced below for those interested. Sections
-          1.10.32 and 1.10.33 from &quot;de Finibus Bonorum et Malorum&quot; by
-          Cicero are also reproduced in their exact original form, accompanied
-          by English versions from the 1914 translation by H. Rackham.
-        </Typography>
-        <Typography
-          classes={{ root }}
-          className={classes.title}
-          variant="body2"
-          component="p"
-        >
-          Why do we use it?
-        </Typography>
-        <Typography classes={{ root }} variant="body2" component="p">
-          It is a long established fact that a reader will be distracted by the
-          readable content of a page when looking at its layout. The point of
-          using Lorem Ipsum is that it has a more-or-less normal distribution of
-          letters, as opposed to using &quot;Content here, content here&quot;,
-          making it look like readable English. Many desktop publishing packages
-          and web page editors now use Lorem Ipsum as their default model text,
-          and a search for &quot;lorem ipsum&quot; will uncover many web sites
-          still in their infancy. Various versions have evolved over the years,
-          sometimes by accident, sometimes on purpose (injected humour and the
-          like).
-        </Typography>
-        <Typography
-          classes={{ root }}
-          className={classes.title}
-          variant="body2"
-          component="p"
-        >
-          Where can I get some?
-        </Typography>
-        <Typography classes={{ root }} variant="body2" component="p">
-          There are many variations of passages of Lorem Ipsum available, but
-          the majority have suffered alteration in some form, by injected
-          humour, or randomised words which don&apos;t look even slightly
-          believable. If you are going to use a passage of Lorem Ipsum, you need
-          to be sure there isn&apos;t anything embarrassing hidden in the middle
-          of text. All the Lorem Ipsum generators on the Internet tend to repeat
-          predefined chunks as necessary, making this the first true generator
-          on the Internet. It uses a dictionary of over 200 Latin words,
-          combined with a handful of model sentence structures, to generate
-          Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is
-          therefore always free from repetition, injected humour, or
-          non-characteristic words etc.
+        <Typography classes={{ root }} variant="body2" component="div">
+          <TermsContent />
         </Typography>
       </Box>
-      <Footer justify="flex-end">
+      <Box className={classes.footer}>
+        {termsAccepted ? (
+          <Typography classes={{ root: classes.hint }} variant="body2">
+            Terms accepted. You can now proceed to sign up
+          </Typography>
+        ) : (
+          <Tooltip
+            disableHoverListener={isViewed}
+            disableFocusListener={isViewed}
+            title="You need to read to the bottom of these terms and conditions before you can continue"
+            placement="top"
+          >
+            <span>
+              <SubmitButton
+                onClick={() => handleTermsAcceptance(!termsAccepted)}
+                className={classes.agreeButton}
+                disabled={!isViewed}
+              >
+                accept
+              </SubmitButton>
+            </span>
+          </Tooltip>
+        )}
         <Typography variant="body2" component="p">
           Back to&nbsp;
           <Link href="/sign-up" variant="body2">
             Sign Up
           </Link>
         </Typography>
-      </Footer>
+      </Box>
     </AuthPage>
   );
 };
