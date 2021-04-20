@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/styles';
 import React, { FC } from 'react';
 
 interface SelectorProps extends SelectProps {
-  label: string;
+  label?: string;
   children: React.ReactNode;
 }
 
@@ -57,9 +57,11 @@ const Selector: FC<SelectorProps> = ({
 
   return (
     <FormControl fullWidth>
-      <InputLabel className={classes.label} variant="outlined">
-        {label}
-      </InputLabel>
+      {label && (
+        <InputLabel className={classes.label} variant="outlined">
+          {label}
+        </InputLabel>
+      )}
       <Select
         variant="outlined"
         label={label}
@@ -73,6 +75,10 @@ const Selector: FC<SelectorProps> = ({
       </Select>
     </FormControl>
   );
+};
+
+Selector.defaultProps = {
+  label: undefined,
 };
 
 export default Selector;

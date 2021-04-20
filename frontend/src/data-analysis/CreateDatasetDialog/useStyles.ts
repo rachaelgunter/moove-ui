@@ -32,5 +32,10 @@ export default makeStyles((theme: Theme) => {
         color: theme.palette.action.disabled,
       },
     },
+    pageWrapper: {
+      flex: 1,
+      overflowY: 'auto',
+      paddingTop: theme.spacing(0.5),
+    },
   };
 });

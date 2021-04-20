@@ -32,6 +32,21 @@ export class DatasetParamsInput {
 
   @Field()
   assetsBucket: string;
+
+  @Field()
+  primaryTimestamp: string;
+
+  @Field()
+  groupBy: string;
+
+  @Field(() => [String])
+  jenksCols: string[];
+
+  @Field()
+  lat: string;
+
+  @Field()
+  lon: string;
 }
 
 @InputType()
@@ -56,6 +71,21 @@ export class FileDatasetParamsInput {
 
   @Field()
   assetsBucket: string;
+
+  @Field()
+  primaryTimestamp: string;
+
+  @Field()
+  groupBy: string;
+
+  @Field(() => [String])
+  jenksCols: string[];
+
+  @Field()
+  lat: string;
+
+  @Field()
+  lon: string;
 }
 
 @ArgsType()

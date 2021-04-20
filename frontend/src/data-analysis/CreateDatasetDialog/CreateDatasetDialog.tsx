@@ -7,7 +7,7 @@ import Typography from 'src/shared/Typography';
 import { ReactComponent as CheckIcon } from 'src/assets/icons/check.svg';
 import { ReactComponent as ErrorIcon } from 'src/assets/images/warning.svg';
 
-import { IngestionOptionsPage, SelectSourcePage } from './pages';
+import { SelectOptionsPage, SelectSourcePage } from './pages';
 import CreateDatasetControls from './CreateDatasetControls';
 import CreateDatasetStepper from './CreateDatasetStepper';
 import {
@@ -22,6 +22,7 @@ import CreateDatasetMessage, {
 import useStyles from './useStyles';
 import CreateDatasetContext, {
   CreateDatasetType,
+  LatLonData,
 } from './CreateDatasetContext';
 
 interface CreateDatasetDialogProps {
@@ -43,8 +44,8 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
       component: SelectSourcePage,
     },
     {
-      label: 'Ingestion options',
-      component: IngestionOptionsPage,
+      label: 'Select options',
+      component: SelectOptionsPage,
     },
   ];
 
@@ -61,6 +62,14 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   const { GCPProjectName, GCSBucketName, organization } = useContext(
     UserContext,
   );
+  const [geographyColumn, setGeographyColumn] = useState<string>('');
+  const [latLongColumns, setLatLongColumns] = useState<LatLonData>({
+    lat: '',
+    lon: '',
+  });
+  const [timestampColumn, setTimestampColumn] = useState<string>('');
+  const [groupByColumn, setGroupByColumn] = useState<string>('');
+  const [jenkColsColumns, setJenkColsColumns] = useState<Array<string>>([]);
 
   const [createBQDataset, { loading: BQCreationLoading }] = useMutation(
     CREATE_BQ_DATASET_MUTATION,
@@ -117,6 +126,14 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
         setCreationError(null);
         setPageError(false);
         setCurrentStep(0);
+        setGeographyColumn('');
+        setLatLongColumns({
+          lat: '',
+          lon: '',
+        });
+        setTimestampColumn('');
+        setGroupByColumn('');
+        setJenkColsColumns([]);
       }, 200);
     }
   };
@@ -124,17 +141,29 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   const handleNameChange = (updatedName: string) => {
     setName(updatedName);
   };
-
   const handleDescriptionChange = (updatedDescription: string) => {
     setDescription(updatedDescription);
   };
-
   const handleErrorStatusChange = (value: boolean) => {
     setPageError(value);
   };
-
   const handleFileSelect = (file: File | null) => {
     setSelectedFile(file);
+  };
+  const handleGeographyColumnChange = (column: string) => {
+    setGeographyColumn(column);
+  };
+  const handleLatLongColumnsChange = (columns: LatLonData) => {
+    setLatLongColumns(columns);
+  };
+  const handleTimestampColumnChange = (column: string) => {
+    setTimestampColumn(column);
+  };
+  const handleGroupByColumnChange = (column: string) => {
+    setGroupByColumn(column);
+  };
+  const handleJenkColsColumnsChange = (columns: Array<string>) => {
+    setJenkColsColumns(columns);
   };
 
   const handleTableSelect = (tableIdentity: TableIdentity | null) => {
@@ -155,6 +184,10 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
           organizationName: organization,
           analysisProject: GCPProjectName,
           assetsBucket: GCSBucketName,
+          primaryTimestamp: timestampColumn,
+          groupBy: groupByColumn,
+          jenksCols: jenkColsColumns,
+          ...latLongColumns,
           ...selectedTable,
         },
       },
@@ -222,6 +255,11 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
     loading: fileCreationLoading || BQCreationLoading,
     currentStep,
     stepAmount: steps.length,
+    geographyColumn,
+    latLongColumns,
+    timestampColumn,
+    groupByColumn,
+    jenkColsColumns,
     handleNameChange,
     handleDescriptionChange,
     handleErrorStatusChange,
@@ -230,6 +268,11 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
     handleFileSelect,
     handleClose,
     handleDatasetCreation,
+    handleGeographyColumnChange,
+    handleLatLongColumnsChange,
+    handleTimestampColumnChange,
+    handleGroupByColumnChange,
+    handleJenkColsColumnsChange,
   };
   const PageComponent = steps[currentStep].component;
 
@@ -260,7 +303,9 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
                 steps={steps.map(({ label }) => label)}
                 currentStep={currentStep}
               />
-              <PageComponent />
+              <div className={classes.pageWrapper}>
+                <PageComponent />
+              </div>
             </>
           )}
           <Divider />

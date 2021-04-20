@@ -205,6 +205,11 @@ input DatasetParamsInput {
   organizationName: String!
   analysisProject: String!
   assetsBucket: String!
+  primaryTimestamp: String!
+  groupBy: String!
+  jenksCols: [String!]!
+  lat: String!
+  lon: String!
 }
 
 input FileDatasetParamsInput {
@@ -214,4 +219,9 @@ input FileDatasetParamsInput {
   organizationName: String!
   analysisProject: String!
   assetsBucket: String!
+  primaryTimestamp: String!
+  groupBy: String!
+  jenksCols: [String!]!
+  lat: String!
+  lon: String!
 }

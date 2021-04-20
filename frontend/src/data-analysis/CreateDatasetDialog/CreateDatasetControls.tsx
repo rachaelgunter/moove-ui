@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'flex-end',
     alignItems: 'center',
     height: theme.spacing(6),
+    flexShrink: 0,
   },
   dialogButton: {
     fontFamily: FontFamily.ROBOTO,
