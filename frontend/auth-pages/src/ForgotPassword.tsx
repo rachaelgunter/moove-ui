@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { makeStyles, Typography } from '@material-ui/core';
 
 import AuthPage from './AuthPage';
@@ -6,8 +6,11 @@ import TextField, { TextFieldType } from './TextField';
 import isValidEmail from './SignInForm/utils';
 import SubmitButton from './SubmitButton';
 import Info from './Info';
+import WebAuthProvider from './WebAuthProvider';
+import ServerSideError from './ServerSideError/ServerSideError';
 
 export const SUBMIT_BUTTON_TITLE = 'RECOVER PASSWORD';
+const SIGN_IN_ERROR = 'Wrong email';
 
 const useStyles = makeStyles({
   hintTitle: {
@@ -27,6 +30,9 @@ const ForgotPassword: FC = () => {
   const [email, setEmail] = useState('');
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [disableSubmit, setDisableSubmit] = useState(true);
+  const [serverSideError, setServerSideError] = useState('');
+
+  const { webAuth } = useContext(WebAuthProvider);
 
   useEffect(() => {
     const formIsValid = isValidEmail(email);
@@ -40,8 +46,24 @@ const ForgotPassword: FC = () => {
 
   const onSubmit = () => {
     const formValue = { email };
-    setDisableSubmit(true);
-    setIsEmailSent(true);
+
+    webAuth.changePassword(
+      {
+        email,
+        connection: 'Username-Password-Authentication',
+      },
+      (err) => {
+        setDisableSubmit(false);
+        setEmail('');
+
+        if (err) {
+          setServerSideError(err.description || SIGN_IN_ERROR);
+          return;
+        }
+
+        setIsEmailSent(true);
+      },
+    );
 
     return formValue;
   };
@@ -71,6 +93,7 @@ const ForgotPassword: FC = () => {
           {SUBMIT_BUTTON_TITLE}
         </SubmitButton>
       </form>
+      <ServerSideError serverSideErrorText={serverSideError} />
     </AuthPage>
   ) : (
     <Info
