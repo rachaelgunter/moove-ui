@@ -6,6 +6,7 @@ import MapOutlinedIcon from '@material-ui/icons/MapOutlined';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import PageTemplate from 'src/shared/PageTemplate';
 import routes from 'src/shared/routes';
+import { Role } from 'src/shared/types';
 import Shortcut from './Shortcut';
 
 const Dashboard: React.FC = () => {
@@ -13,14 +14,16 @@ const Dashboard: React.FC = () => {
 
   const shortcuts = [
     {
-      label: 'RoadIQ',
+      label: 'Map',
       Icon: MapOutlinedIcon,
       onClick: () => history.push(routes.roadIQ.path),
+      allowedRoles: Object.values(Role),
     },
     {
       label: 'Analytics',
       Icon: TimelineIcon,
       onClick: () => history.push(routes.dataAnalysis.path),
+      allowedRoles: [Role.PAID_USER, Role.ADMIN, Role.SUPER_ADMIN],
     },
   ];
 
