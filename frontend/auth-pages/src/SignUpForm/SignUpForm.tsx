@@ -23,7 +23,7 @@ const SignUpForm: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [businessVertical, setBusinessVertical] = useState('');
-  const [repeatedPassword, setRepeatedPassword] = useState(''); // TODO to rename
+  const [repeatedPassword, setRepeatedPassword] = useState('');
   const [serverSideError, setServerSideError] = useState('');
 
   const history = useHistory();
