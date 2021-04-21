@@ -44,9 +44,9 @@ const LatLonSelector: React.FC<LatLonSelectorProps> = ({
   const [geographyError, setGeographyError] = useState(false);
 
   const {
-    latLongColumns,
+    latLonColumns,
     geographyColumn,
-    handleLatLongColumnsChange,
+    handleLatLonColumnsChange,
     handleGeographyColumnChange,
   } = useContext(CreateDatasetContext);
 
@@ -58,7 +58,7 @@ const LatLonSelector: React.FC<LatLonSelectorProps> = ({
       handleGeographyColumnChange('');
       setGeographyError(false);
     } else {
-      handleLatLongColumnsChange({
+      handleLatLonColumnsChange({
         lat: '',
         lon: '',
       });
@@ -70,8 +70,8 @@ const LatLonSelector: React.FC<LatLonSelectorProps> = ({
   };
 
   const onLatLongColumnChange = (field: keyof LatLonData, value: string) => {
-    handleLatLongColumnsChange({
-      ...latLongColumns,
+    handleLatLonColumnsChange({
+      ...latLonColumns,
       [field]: value,
     });
   };
@@ -87,7 +87,7 @@ const LatLonSelector: React.FC<LatLonSelectorProps> = ({
   const onLatLongBlur = (field: keyof LatLonData) => {
     setLatLonError((prev) => ({
       ...prev,
-      [field]: !latLongColumns[field],
+      [field]: !latLonColumns[field],
     }));
   };
 
@@ -101,16 +101,18 @@ const LatLonSelector: React.FC<LatLonSelectorProps> = ({
       ? [
           {
             label: 'Latitude',
-            value: latLongColumns.lat,
+            value: latLonColumns.lat,
             error: latLonError.lat,
+            'data-testid': 'LatLonSelector__lat',
             onChange: (event: React.ChangeEvent<{ value: unknown }>) =>
               onLatLongColumnChange('lat', event.target.value as string),
             onBlur: () => onLatLongBlur('lat'),
           },
           {
             label: 'Longitude',
-            value: latLongColumns.lon,
+            value: latLonColumns.lon,
             error: latLonError.lon,
+            'data-testid': 'LatLonSelector__lon',
             onChange: (event: React.ChangeEvent<{ value: unknown }>) =>
               onLatLongColumnChange('lon', event.target.value as string),
             onBlur: () => onLatLongBlur('lon'),
@@ -121,6 +123,7 @@ const LatLonSelector: React.FC<LatLonSelectorProps> = ({
             label: 'Geography',
             value: geographyColumn,
             error: geographyError,
+            'data-testid': 'LatLonSelector__geography',
             onChange: onGeographyColumnChange,
             onBlur: onGeographyBlur,
           },

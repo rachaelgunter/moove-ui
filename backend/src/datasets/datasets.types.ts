@@ -36,6 +36,9 @@ export class DatasetParamsInput {
   @Field()
   primaryTimestamp: string;
 
+  @Field({ nullable: true })
+  primaryGeography: string;
+
   @Field()
   groupBy: string;
 
@@ -74,6 +77,9 @@ export class FileDatasetParamsInput {
 
   @Field()
   primaryTimestamp: string;
+
+  @Field({ nullable: true })
+  primaryGeography: string;
 
   @Field()
   groupBy: string;

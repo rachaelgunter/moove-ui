@@ -206,6 +206,7 @@ input DatasetParamsInput {
   analysisProject: String!
   assetsBucket: String!
   primaryTimestamp: String!
+  primaryGeography: String
   groupBy: String!
   jenksCols: [String!]!
   lat: String!
@@ -220,6 +221,7 @@ input FileDatasetParamsInput {
   analysisProject: String!
   assetsBucket: String!
   primaryTimestamp: String!
+  primaryGeography: String
   groupBy: String!
   jenksCols: [String!]!
   lat: String!

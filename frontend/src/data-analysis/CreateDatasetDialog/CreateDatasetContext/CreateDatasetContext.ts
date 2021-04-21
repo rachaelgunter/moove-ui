@@ -17,7 +17,7 @@ export type CreateDatasetType = {
   currentStep: number;
   stepAmount: number;
   geographyColumn: string;
-  latLongColumns: LatLonData;
+  latLonColumns: LatLonData;
   timestampColumn: string;
   groupByColumn: string;
   jenkColsColumns: Array<string>;
@@ -31,7 +31,7 @@ export type CreateDatasetType = {
   handleClose: () => void;
   handleDatasetCreation: () => void;
   handleGeographyColumnChange: (column: string) => void;
-  handleLatLongColumnsChange: (columns: LatLonData) => void;
+  handleLatLonColumnsChange: (columns: LatLonData) => void;
   handleTimestampColumnChange: (column: string) => void;
   handleGroupByColumnChange: (column: string) => void;
   handleJenkColsColumnsChange: (columns: Array<string>) => void;

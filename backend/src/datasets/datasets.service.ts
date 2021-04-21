@@ -55,6 +55,7 @@ export class DatasetsService {
       jenksCols,
       lat,
       lon,
+      primaryGeography,
     } = datasetParams;
     const headers = await this.getRequestHeaders(this.ingestorUrl);
     this.logger.log(
@@ -78,8 +79,9 @@ export class DatasetsService {
           primary_ts: primaryTimestamp,
           groupby_col: groupBy ? groupBy : undefined,
           jenks_cols: jenksCols.length ? jenksCols : undefined,
-          lat,
-          lon,
+          lat: lat ? lat : undefined,
+          lon: lon ? lon : undefined,
+          primary_geography: primaryGeography ? primaryGeography : undefined,
         },
         {
           headers,

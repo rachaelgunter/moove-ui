@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { Box, Button, CircularProgress, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { FontFamily } from 'src/app/styles/fonts';
 
+import { FontFamily } from 'src/app/styles/fonts';
 import CreateDatasetContext from './CreateDatasetContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -57,6 +57,7 @@ const CreateDatasetControls: React.FC = () => {
 
     return (
       <Button
+        data-testid="create-dataset__button-previous"
         disabled={isFirstStep || loading}
         className={classes.dialogButton}
         onClick={handleStepDecrease}
@@ -82,6 +83,7 @@ const CreateDatasetControls: React.FC = () => {
 
     return (
       <Button
+        data-testid="create-dataset__button-next"
         disabled={pageHaveError || loading}
         className={classes.dialogButton}
         onClick={isLastStep ? handleDatasetCreation : handleStepIncrease}

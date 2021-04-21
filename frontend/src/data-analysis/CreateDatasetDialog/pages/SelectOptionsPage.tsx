@@ -31,7 +31,7 @@ const SelectOptionsPage: React.FC = () => {
   const [timestampError, setTimestampError] = useState(false);
   const {
     selectedTable,
-    latLongColumns,
+    latLonColumns,
     geographyColumn,
     timestampColumn,
     groupByColumn,
@@ -63,12 +63,12 @@ const SelectOptionsPage: React.FC = () => {
   useEffect(() => {
     handleErrorStatusChange(
       Boolean(
-        ((!latLongColumns.lat || !latLongColumns.lon) && !geographyColumn) ||
+        ((!latLonColumns.lat || !latLonColumns.lon) && !geographyColumn) ||
           !timestampColumn,
       ),
     );
   }, [
-    latLongColumns,
+    latLonColumns,
     geographyColumn,
     handleErrorStatusChange,
     timestampColumn,
@@ -106,6 +106,7 @@ const SelectOptionsPage: React.FC = () => {
       menuItems: getColumnNamesByType(tableColumns, ColumnType.TIMESTAMP),
       required: true,
       error: timestampError,
+      'data-testid': 'SelectOptionsPage__timestamp',
     },
     {
       label: 'Groupby col',

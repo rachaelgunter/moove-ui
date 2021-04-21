@@ -1,12 +1,12 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Dialog, DialogContent, DialogTitle, Divider } from '@material-ui/core';
 import React, { FC, useContext, useState } from 'react';
+
 import { FontFamily } from 'src/app/styles/fonts';
 import { UserContext } from 'src/auth/UserProvider';
 import Typography from 'src/shared/Typography';
 import { ReactComponent as CheckIcon } from 'src/assets/icons/check.svg';
 import { ReactComponent as ErrorIcon } from 'src/assets/images/warning.svg';
-
 import { SelectOptionsPage, SelectSourcePage } from './pages';
 import CreateDatasetControls from './CreateDatasetControls';
 import CreateDatasetStepper from './CreateDatasetStepper';
@@ -59,17 +59,18 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   const [creationCompleted, setCreationCompleted] = useState(false);
   const [creationError, setCreationError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const { GCPProjectName, GCSBucketName, organization } = useContext(
-    UserContext,
-  );
   const [geographyColumn, setGeographyColumn] = useState<string>('');
-  const [latLongColumns, setLatLongColumns] = useState<LatLonData>({
+  const [latLonColumns, setLatLonColumns] = useState<LatLonData>({
     lat: '',
     lon: '',
   });
   const [timestampColumn, setTimestampColumn] = useState<string>('');
   const [groupByColumn, setGroupByColumn] = useState<string>('');
   const [jenkColsColumns, setJenkColsColumns] = useState<Array<string>>([]);
+
+  const { GCPProjectName, GCSBucketName, organization } = useContext(
+    UserContext,
+  );
 
   const [createBQDataset, { loading: BQCreationLoading }] = useMutation(
     CREATE_BQ_DATASET_MUTATION,
@@ -127,7 +128,7 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
         setPageError(false);
         setCurrentStep(0);
         setGeographyColumn('');
-        setLatLongColumns({
+        setLatLonColumns({
           lat: '',
           lon: '',
         });
@@ -153,8 +154,8 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   const handleGeographyColumnChange = (column: string) => {
     setGeographyColumn(column);
   };
-  const handleLatLongColumnsChange = (columns: LatLonData) => {
-    setLatLongColumns(columns);
+  const handleLatLonColumnsChange = (columns: LatLonData) => {
+    setLatLonColumns(columns);
   };
   const handleTimestampColumnChange = (column: string) => {
     setTimestampColumn(column);
@@ -185,9 +186,10 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
           analysisProject: GCPProjectName,
           assetsBucket: GCSBucketName,
           primaryTimestamp: timestampColumn,
+          primaryGeography: geographyColumn,
           groupBy: groupByColumn,
           jenksCols: jenkColsColumns,
-          ...latLongColumns,
+          ...latLonColumns,
           ...selectedTable,
         },
       },
@@ -256,7 +258,7 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
     currentStep,
     stepAmount: steps.length,
     geographyColumn,
-    latLongColumns,
+    latLonColumns,
     timestampColumn,
     groupByColumn,
     jenkColsColumns,
@@ -269,7 +271,7 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
     handleClose,
     handleDatasetCreation,
     handleGeographyColumnChange,
-    handleLatLongColumnsChange,
+    handleLatLonColumnsChange,
     handleTimestampColumnChange,
     handleGroupByColumnChange,
     handleJenkColsColumnsChange,
