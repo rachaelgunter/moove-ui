@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       counterIncrement: 'item',
     },
   },
+  link: {
+    color: theme.palette.primary.main,
+  },
 }));
 
 const TermsContent: FC = () => {
@@ -37,9 +40,11 @@ const TermsContent: FC = () => {
         <b>“Services”</b>, and collectively with the Platform and Moove Data,{' '}
         <b>“Offerings”</b>). You may submit an online order (<b>“Order”</b>) for
         the Offerings You wish to access and use through Moove’s website, at{' '}
-        <a href="//moove.ai">https://moove.ai/</a>, by selecting Your desired
-        Offerings, proceeding to checkout, and clicking “I agree” to the terms
-        of the Order and these Terms.
+        <a className={classes.link} href="//moove.ai">
+          https://moove.ai/
+        </a>
+        , by selecting Your desired Offerings, proceeding to checkout, and
+        clicking “I agree” to the terms of the Order and these Terms.
       </p>
       <p>
         By submitting Your Order and clicking “I agree”, You agree to enter into
@@ -52,29 +57,29 @@ const TermsContent: FC = () => {
       </p>
       <ol className={classes.ol}>
         <li className={classes.li}>
-          DEFINITIONS. All capitalized terms used in this Agreement and defined
-          in the context in which they are used will have the meanings given to
-          them herein. All other terms used in this Agreement will have their
-          plain English (U.S.) meaning.
+          <b>Definitions</b>. All capitalized terms used in this Agreement and
+          defined in the context in which they are used will have the meanings
+          given to them herein. All other terms used in this Agreement will have
+          their plain English (U.S.) meaning.
         </li>
         <li className={classes.li}>
-          TERM. This Agreement begins on the date You submit an Order and click
-          “I agree” (the “Effective Date”). This Agreement will continue in
-          effect for the initial term stated in the Order (the “Initial Term”),
-          and will automatically renew for successive terms of equal length
-          (each a “Renewal Term”) unless, (1) either party provides termination
-          notice 30 days prior to the end of the Initial Term or then-current
-          Renewal Term, or (2) this Agreement is terminated in accordance with
-          its terms.
+          <b>Term</b>. This Agreement begins on the date You submit an Order and
+          click “I agree” (the “Effective Date”). This Agreement will continue
+          in effect for the initial term stated in the Order (the “Initial
+          Term”), and will automatically renew for successive terms of equal
+          length (each a “Renewal Term”) unless, (1) either party provides
+          termination notice 30 days prior to the end of the Initial Term or
+          then-current Renewal Term, or (2) this Agreement is terminated in
+          accordance with its terms.
         </li>
         <li className={classes.li}>
-          ORDERS. These Terms are incorporated into each Order You place for any
-          Moove Offerings. To the extent of any conflict between these Terms and
-          an Order, these Terms will control. All Orders are non-cancellable
-          once made.
+          <b>Orders</b>. These Terms are incorporated into each Order You place
+          for any Moove Offerings. To the extent of any conflict between these
+          Terms and an Order, these Terms will control. All Orders are
+          non-cancellable once made.
         </li>
         <li className={classes.li}>
-          ACCESS
+          <b>ACCESS</b>
           <ol className={classes.ol}>
             <li className={classes.li}>
               <b>To Free Offerings.</b>Moove may provide You the ability to
@@ -188,9 +193,9 @@ const TermsContent: FC = () => {
           implication, estoppel, or otherwise.
         </li>
         <li className={classes.li}>
-          Support, Maintenance, and Other Services. Moove will provide support,
-          maintenance and other Services solely as specified in Orders under
-          this Agreement or under a separate written agreement between the
+          <b>Support, Maintenance, and Other Services</b>. Moove will provide
+          support, maintenance and other Services solely as specified in Orders
+          under this Agreement or under a separate written agreement between the
           parties. Except as may be specified in an Order, or such a separate
           agreement, Moove is under no obligation to provide You with support,
           maintenance or other Services. Notwithstanding the foregoing, should
@@ -200,7 +205,7 @@ const TermsContent: FC = () => {
           support, maintenance or other Services, as applicable.
         </li>
         <li className={classes.li}>
-          Fees and Payment.
+          <b>Fees and Payment.</b>
           <ol className={classes.ol}>
             <li className={classes.li}>
               Unless You are only accessing the Free Offerings, You shall pay
@@ -234,27 +239,27 @@ const TermsContent: FC = () => {
           </ol>
         </li>
         <li className={classes.li}>
-          Ownership and Rights.
+          <b>Ownership and Rights.</b>
           <ol className={classes.ol}>
             <li className={classes.li}>
-              Moove. Moove and its licensors own and will continue to retain all
-              right, title, and interest in and to (a) all Technology, (b) with
-              the exception of Your Data, all Moove Data and any other
-              information, data, datasets (including the structure,
-              organization, selection, coordination, and arrangement thereof),
-              content, reports and other materials, generated on the Platform or
-              otherwise provided by or on behalf of Moove; (c) any updates,
-              upgrades, new versions, modifications, or enhancements to any of
-              the foregoing, and (e) all IPR in and relating to each of the
-              foregoing. Except as set forth in this Agreement, You are granted
-              no licenses or rights in or to any Technology, or any IPR therein
-              or related thereto.
+              <b>Moove</b>. Moove and its licensors own and will continue to
+              retain all right, title, and interest in and to (a) all
+              Technology, (b) with the exception of Your Data, all Moove Data
+              and any other information, data, datasets (including the
+              structure, organization, selection, coordination, and arrangement
+              thereof), content, reports and other materials, generated on the
+              Platform or otherwise provided by or on behalf of Moove; (c) any
+              updates, upgrades, new versions, modifications, or enhancements to
+              any of the foregoing, and (e) all IPR in and relating to each of
+              the foregoing. Except as set forth in this Agreement, You are
+              granted no licenses or rights in or to any Technology, or any IPR
+              therein or related thereto.
             </li>
             <li className={classes.li}>
-              Client. As between You and Moove, all data, datasets, and other
-              information You or Your representatives provide to Moove (“Client
-              Data”), is owned by You and Your respective licensors. You
-              represent, warrant, and covenant, that (a) You have and will
+              <b>Client</b>. As between You and Moove, all data, datasets, and
+              other information You or Your representatives provide to Moove
+              (“Client Data”), is owned by You and Your respective licensors.
+              You represent, warrant, and covenant, that (a) You have and will
               maintain all necessary consents, permissions, and rights necessary
               to provide Moove with Your Data and for Moove to use Your Data as
               permitted under this Agreement; and (b) unless specified in Your
@@ -290,32 +295,32 @@ const TermsContent: FC = () => {
               the Offerings.
             </li>
             <li className={classes.li}>
-              Names & Logos. The names, logos, and other trademarks and service
-              marks of each party are and will remain the property of each
-              party. During the term, Moove may include Your name and logo in
-              Moove’s standard marketing materials and customer lists.
+              <b>Names & Logos.</b> The names, logos, and other trademarks and
+              service marks of each party are and will remain the property of
+              each party. During the term, Moove may include Your name and logo
+              in Moove’s standard marketing materials and customer lists.
             </li>
           </ol>
         </li>
         <li className={classes.li}>
-          Termination and Effect.
+          <b>Termination and Effect.</b>
           <ol className={classes.ol}>
             <li className={classes.li}>
-              Termination. Either party may terminate this Agreement at any time
-              upon written notice to the other party if the other party
+              <b>Termination.</b> Either party may terminate this Agreement at
+              any time upon written notice to the other party if the other party
               materially breaches any provision of this Agreement and fails to
               cure such breach (if curable) within 30 days after receiving
               notice thereof from the non-breaching party.
             </li>
             <li className={classes.li}>
-              Effect of Termination. Termination of this Agreement will not
-              relieve either party of any rights or obligations accruing prior
-              to such termination. Upon any termination of this Agreement: (a)
-              all Fees owed under this Agreement prior to such termination will
-              be immediately due and payable (including, at minimum, the Fees
-              due under this Agreement pro-rated based on Offerings provided by
-              Moove prior to termination and any Fees attributable to
-              non-cancelable commitments entered into by Moove prior to such
+              <b>Effect of Termination.</b> Termination of this Agreement will
+              not relieve either party of any rights or obligations accruing
+              prior to such termination. Upon any termination of this Agreement:
+              (a) all Fees owed under this Agreement prior to such termination
+              will be immediately due and payable (including, at minimum, the
+              Fees due under this Agreement pro-rated based on Offerings
+              provided by Moove prior to termination and any Fees attributable
+              to non-cancelable commitments entered into by Moove prior to such
               termination); (b) Moove may cease providing all access to the
               Offerings under this Agreement; (c) all rights and licenses
               granted to You with respect to any Offerings under this Agreement
@@ -329,14 +334,14 @@ const TermsContent: FC = () => {
               in writing to its compliance with this Section.
             </li>
             <li className={classes.li}>
-              Survival. The following Sections will survive termination of this
-              Agreement for any reason: 1, 3, 5, 7, 8, 9.2, 9.3, 11, 12, 13, 14,
-              15, 16, 17, 18, 19, 20, and 22.
+              <b>Survival.</b> The following Sections will survive termination
+              of this Agreement for any reason: 1, 3, 5, 7, 8, 9.2, 9.3, 11, 12,
+              13, 14, 15, 16, 17, 18, 19, 20, and 22.
             </li>
           </ol>
         </li>
         <li className={classes.li}>
-          Suspension. Without limiting Moove’s right to terminate this
+          <b>Suspension.</b> Without limiting Moove’s right to terminate this
           Agreement, Moove may suspend Your access to the Offerings or convert
           Your Offerings to Free Offerings, upon Your breach or suspected breach
           of this Agreement or if deemed necessary by Moove to prevent damage,
@@ -346,21 +351,21 @@ const TermsContent: FC = () => {
           this Agreement and/or that such threat has been addressed.
         </li>
         <li className={classes.li}>
-          Your Additional Commitments. You represent, warrant and covenant to
-          Moove that: (1) You have full power and authority to enter into this
-          Agreement; (2) this Agreement will not conflict with, result in a
-          breach of, or constitute a default under any other agreement to which
-          You are a party or by which You are bound; (3) this Agreement is a
-          legal and valid obligation binding upon You and enforceable in
+          <b>Your Additional Commitments.</b> You represent, warrant and
+          covenant to Moove that: (1) You have full power and authority to enter
+          into this Agreement; (2) this Agreement will not conflict with, result
+          in a breach of, or constitute a default under any other agreement to
+          which You are a party or by which You are bound; (3) this Agreement is
+          a legal and valid obligation binding upon You and enforceable in
           accordance with its terms; (4) You will comply with all laws, rules,
           and regulations (“Laws”) applicable to Your performance under this
           Agreement; and (5) Your performance under this Agreement will not
           cause Moove to violate any applicable Laws.
         </li>
         <li className={classes.li}>
-          Disclaimer. YOU ACKNOWLEDGE THAT THE OFFERINGS ARE PROVIDED BY MOOVE
-          AND its LICENSORS “AS IS”, “AS AVAILABLE”, “WITH ALL DEFECTS”, AND
-          WITHOUT ANY REPRESENTATIONS, WARRANTIES OR COVENANTS OF ANY KIND.
+          <b>Disclaimer.</b> YOU ACKNOWLEDGE THAT THE OFFERINGS ARE PROVIDED BY
+          MOOVE AND its LICENSORS “AS IS”, “AS AVAILABLE”, “WITH ALL DEFECTS”,
+          AND WITHOUT ANY REPRESENTATIONS, WARRANTIES OR COVENANTS OF ANY KIND.
           MOOVE EXPRESSLY DISCLAIMS, AND YOU DISCLAIM ANY RELIANCE UPON, ALL
           REPRESENTATIONS, WARRANTIES AND COVENANTS, WHETHER EXPRESSED OR
           IMPLIED, REGARDING THIS AGREEMENT AND any OFFERING, INCLUDING ANY
@@ -377,43 +382,44 @@ const TermsContent: FC = () => {
           AMENDMENT TO THIS AGREEMENT.
         </li>
         <li className={classes.li}>
-          Indemnification. You hereby agree to indemnify, defend, and hold
-          harmless Moove and its members, officers, directors, shareholders,
-          affiliates, employees, agents, contractors, assigns, customers,
-          providers, licensees, and successors in interest (“Indemnified
-          Parties”) from any and all claims, losses, liabilities, damages, fees,
-          expenses and costs (including attorneys&apos; fees, court costs,
-          damage awards, and settlement amounts) that result from any claim or
-          allegation against any Indemnified Party arising in any manner from:
-          (1) Your access to or use of the Offerings, including any Moove Data;
-          (2) Your Data; and (3) Your breach of any representation, warranty, or
-          other provision of this Agreement. Moove will provide You with notice
-          of any such claim or allegation, and Moove will have the right to
-          participate in the defense of any such claim at its expense.
+          <b>Indemnification.</b> You hereby agree to indemnify, defend, and
+          hold harmless Moove and its members, officers, directors,
+          shareholders, affiliates, employees, agents, contractors, assigns,
+          customers, providers, licensees, and successors in interest
+          (“Indemnified Parties”) from any and all claims, losses, liabilities,
+          damages, fees, expenses and costs (including attorneys&apos; fees,
+          court costs, damage awards, and settlement amounts) that result from
+          any claim or allegation against any Indemnified Party arising in any
+          manner from: (1) Your access to or use of the Offerings, including any
+          Moove Data; (2) Your Data; and (3) Your breach of any representation,
+          warranty, or other provision of this Agreement. Moove will provide You
+          with notice of any such claim or allegation, and Moove will have the
+          right to participate in the defense of any such claim at its expense.
         </li>
         <li className={classes.li}>
-          Limitation of Liability. MOOVE will not BE LIABLE TO YOU OR ANY THIRD
-          PARTY FOR ANY LOST DATA, LOST PROFITS, LOST OPPORTUNITIES, BUSINESS
-          INTERUPTION, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY
-          INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES,
-          HOWEVER CAUSED, UNDER ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-          STRICT LIABILITY OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE), ARISING
-          IN CONNECTION WITH OR OUT OF THE USE OF THE OFFERINGS, EVEN IF MOOVE
-          HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. MOOVE’S TOTAL
-          CUMULATIVE LIABILITY IN CONNECTION WITH THIS AGREEMENT and its
-          provision of the OFFERINGS, WHETHER IN CONTRACT OR TORT OR OTHERWISE,
-          WILL NOT EXCEED THE GREATER OF (1) AMOUNTS YOU ACTUALLY PAID TO MOOVE
-          FOR USE OF THE OFFERINGS IN THE PRECEDING 3 MONTHS OR (2) $100. You
-          agree THAT MOOVE WOULD NOT ENTER INTO THIS AGREEMENT WITHOUT THESE
-          LIMITATIONS ON ITS LIABILITY. IN JURISDICTIONS WHERE LIMITing
-          LIABILITY FOR CONSEQUENTIAL OR INCIDENTAL DAMAGES IS NOT PERMITTED,
-          MOOVE’S LIABILITY IS LIMITED TO THE MAXIMUM EXTENT PERMITTED BY LAW.
-          ALL CLAIMS BY EITHER PARTY AGAINST THE OTHER PARTY RELATING TO THIS
-          AGREEMENT OR THE OFFERINGS MUST BE BROUGHT WITHIN 18 MONTHS AFTER THE
-          CLAIM ARISES, OR ANY SHORTER PERIOD SPECIFIED BY APPLICABLE LAW.
+          <b>Limitation of Liability.</b> MOOVE will not BE LIABLE TO YOU OR ANY
+          THIRD PARTY FOR ANY LOST DATA, LOST PROFITS, LOST OPPORTUNITIES,
+          BUSINESS INTERUPTION, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR
+          FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL
+          DAMAGES, HOWEVER CAUSED, UNDER ANY THEORY OF LIABILITY, WHETHER IN
+          CONTRACT, STRICT LIABILITY OR TORT (INCLUDING NEGLIGENCE OR
+          OTHERWISE), ARISING IN CONNECTION WITH OR OUT OF THE USE OF THE
+          OFFERINGS, EVEN IF MOOVE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+          DAMAGES. MOOVE’S TOTAL CUMULATIVE LIABILITY IN CONNECTION WITH THIS
+          AGREEMENT and its provision of the OFFERINGS, WHETHER IN CONTRACT OR
+          TORT OR OTHERWISE, WILL NOT EXCEED THE GREATER OF (1) AMOUNTS YOU
+          ACTUALLY PAID TO MOOVE FOR USE OF THE OFFERINGS IN THE PRECEDING 3
+          MONTHS OR (2) $100. You agree THAT MOOVE WOULD NOT ENTER INTO THIS
+          AGREEMENT WITHOUT THESE LIMITATIONS ON ITS LIABILITY. IN JURISDICTIONS
+          WHERE LIMITing LIABILITY FOR CONSEQUENTIAL OR INCIDENTAL DAMAGES IS
+          NOT PERMITTED, MOOVE’S LIABILITY IS LIMITED TO THE MAXIMUM EXTENT
+          PERMITTED BY LAW. ALL CLAIMS BY EITHER PARTY AGAINST THE OTHER PARTY
+          RELATING TO THIS AGREEMENT OR THE OFFERINGS MUST BE BROUGHT WITHIN 18
+          MONTHS AFTER THE CLAIM ARISES, OR ANY SHORTER PERIOD SPECIFIED BY
+          APPLICABLE LAW.
         </li>
         <li className={classes.li}>
-          Confidentiality. For purposes of this Agreement, “Confidential
+          <b>Confidentiality.</b> For purposes of this Agreement, “Confidential
           Information” means the Technology, including the Platform and Moove
           Data, and all documentation, information, data, and materials relating
           to, downloaded from, or otherwise obtained from the Platform,
@@ -431,16 +437,16 @@ const TermsContent: FC = () => {
           Information other than as expressly permitted in this Agreement.
         </li>
         <li className={classes.li}>
-          Export Controls. The Offerings may be subject to U.S. export control
-          Laws and may be subject to export or import regulations in other
-          countries. You agree to strictly comply with all such Laws and
+          <b>Export Controls.</b> The Offerings may be subject to U.S. export
+          control Laws and may be subject to export or import regulations in
+          other countries. You agree to strictly comply with all such Laws and
           acknowledge that You have the responsibility to obtain such licenses
           to export, re-export, or import as may be required.
         </li>
         <li className={classes.li}>
-          Dispute Resolution. The parties will attempt to resolve all disputes,
-          controversies, or claims arising under, out of, or relating to this
-          Agreement, including the formation, validity, binding effect,
+          <b>Dispute Resolution.</b> The parties will attempt to resolve all
+          disputes, controversies, or claims arising under, out of, or relating
+          to this Agreement, including the formation, validity, binding effect,
           interpretation, performance, breach or termination, of this Agreement
           and the arbitrability of the issues submitted to arbitration hereunder
           and non-contractual claims relating to this Agreement (each, a
@@ -475,40 +481,40 @@ const TermsContent: FC = () => {
           enforcement.
         </li>
         <li className={classes.li}>
-          Choice of Laws; Venue. This Agreement will be governed by the laws of
-          the State of Colorado (USA), without regard to conflicts of law
-          principles thereof. The federal and state courts located in Denver,
-          Colorado (USA) will have sole and exclusive jurisdiction over any
-          disputes arising hereunder and the parties hereby irrevocably submit
-          to the personal jurisdiction of such courts. The parties expressly
-          waive any applications of the U.N. Convention on Contracts for the
-          International Sale of Goods with respect to the performance or
+          <b>Choice of Laws; Venue.</b> This Agreement will be governed by the
+          laws of the State of Colorado (USA), without regard to conflicts of
+          law principles thereof. The federal and state courts located in
+          Denver, Colorado (USA) will have sole and exclusive jurisdiction over
+          any disputes arising hereunder and the parties hereby irrevocably
+          submit to the personal jurisdiction of such courts. The parties
+          expressly waive any applications of the U.N. Convention on Contracts
+          for the International Sale of Goods with respect to the performance or
           interpretations of this Agreement.
         </li>
         <li className={classes.li}>
-          Injunctive Relief. Without prejudice to the parties’ right to proceed
-          with arbitration, nothing in this Agreement will limit either party’s
-          right to seek immediate injunctive or other equitable relief in any
-          court of competent jurisdiction. Each party acknowledges and agrees
-          that due to the unique nature of the Technology and the IPR relating
-          thereto, there can be no adequate remedy at law for any breach by You
-          of Your obligations hereunder, that any such breach may allow You or
-          third parties to unfairly compete with Moove resulting in irreparable
-          harm, and therefore, that upon any such breach of this Agreement or
-          threat thereof, You will not oppose any attempt by Moove to obtain, in
-          addition to whatever remedies it may have at law, an injunction or
-          other appropriate equitable relief without making any additional
-          showing of irreparable harm (and agrees to support the waiver of any
-          requirement that Moove be required to post a bond prior to the
-          issuance of any such injunction or other appropriate equitable
+          <b>Injunctive Relief.</b> Without prejudice to the parties’ right to
+          proceed with arbitration, nothing in this Agreement will limit either
+          party’s right to seek immediate injunctive or other equitable relief
+          in any court of competent jurisdiction. Each party acknowledges and
+          agrees that due to the unique nature of the Technology and the IPR
+          relating thereto, there can be no adequate remedy at law for any
+          breach by You of Your obligations hereunder, that any such breach may
+          allow You or third parties to unfairly compete with Moove resulting in
+          irreparable harm, and therefore, that upon any such breach of this
+          Agreement or threat thereof, You will not oppose any attempt by Moove
+          to obtain, in addition to whatever remedies it may have at law, an
+          injunction or other appropriate equitable relief without making any
+          additional showing of irreparable harm (and agrees to support the
+          waiver of any requirement that Moove be required to post a bond prior
+          to the issuance of any such injunction or other appropriate equitable
           relief).
         </li>
         <li className={classes.li}>
-          Notice. Unless otherwise specified in this Agreement, any notices
-          required or allowed under this Agreement will be provided to Moove by
-          postal mail to the address for Moove listed on the Platform and
-          Moove’s website. Moove may provide You with any notices required or
-          allowed under this Agreement by sending You an email to any email
+          <b>Notice.</b> Unless otherwise specified in this Agreement, any
+          notices required or allowed under this Agreement will be provided to
+          Moove by postal mail to the address for Moove listed on the Platform
+          and Moove’s website. Moove may provide You with any notices required
+          or allowed under this Agreement by sending You an email to any email
           address You provide to Moove in connection with Your Account, provided
           that in the case of any notice applicable both to You and other users
           of Platform, Moove may instead provide such notice by posting on
@@ -519,55 +525,55 @@ const TermsContent: FC = () => {
           invalid.
         </li>
         <li className={classes.li}>
-          Modifications. Moove reserves the right, at any time, to modify the
-          Platform, Moove Data or any other Offering, as well as the terms of
-          this Agreement, whether by making those modifications available on the
-          Platform or by providing notice to You as specified in this Agreement.
-          Any modifications will be effective upon posting to the Platform or
-          delivery of such other notice. You may cease using any Offering or
-          terminate this Agreement at any time if you do not agree to any
-          modification. However, You will be deemed to have agreed to any and
-          all modifications through Your continued use of the Offerings
+          <b>Modifications.</b> Moove reserves the right, at any time, to modify
+          the Platform, Moove Data or any other Offering, as well as the terms
+          of this Agreement, whether by making those modifications available on
+          the Platform or by providing notice to You as specified in this
+          Agreement. Any modifications will be effective upon posting to the
+          Platform or delivery of such other notice. You may cease using any
+          Offering or terminate this Agreement at any time if you do not agree
+          to any modification. However, You will be deemed to have agreed to any
+          and all modifications through Your continued use of the Offerings
           following such notice.
         </li>
         <li className={classes.li}>
-          Additional Terms. This Agreement represents the entire understanding
-          and agreement between the parties with respect to the subject matter
-          of this Agreement and supersedes any and all oral or written
-          agreements or understandings, whether written or verbal, between the
-          parties as to the subject matter of the Agreement. Except as noted
-          herein, this Agreement may be amended or changed only by a writing
-          signed by both parties. You may not assign, transfer or delegate, in
-          whole or in part, whether by assignment, sale, merger, reorganization,
-          operation of law, or otherwise, this Agreement or any of Your rights
-          or obligations under this Agreement, to any third party without the
-          prior written consent of Moove. Any assignment in violation of the
-          foregoing will be null and void. The waiver of a breach of any
-          provision of this Agreement will not operate or be interpreted as a
-          waiver of any other or subsequent breach. The parties are independent
-          contractors, and nothing in this Agreement will be construed as
-          creating an employer-employee relationship, a partnership, or a joint
-          venture between the parties. Neither party is an agent of the other
-          and neither party is authorized to make any representation, contract,
-          or commitment on behalf of the other party. Each and every right and
-          remedy hereunder is cumulative with each and every other right and
-          remedy herein or in any other agreement between the parties or under
-          applicable Law. If any provision of this Agreement is held by an
-          arbitrator or a court of competent jurisdiction to be unenforceable,
-          such provision will be changed and interpreted to accomplish the
-          objectives of such provision to the greatest extent possible under
-          applicable law and the remaining provisions of this Agreement will
-          continue in full force and effect. No term of this Agreement will be
-          construed to confer any third-party beneficiary rights on any
-          non-party. Neither party will not be liable for any failure to perform
-          under this Agreement, to the extent that such party’s failure results
-          from causes beyond such party’s reasonable control. The words
-          “include,” “includes” and “including” will mean “include,” “includes,”
-          or “including,” in each case, “without limitation.” This Agreement may
-          be executed simultaneously in one or more counterparts (including by
-          facsimile or electronic .pdf submission), each of which when executed
-          will be deemed to be an original, but all of which will constitute one
-          and the same agreement.
+          <b>Additional Terms.</b> This Agreement represents the entire
+          understanding and agreement between the parties with respect to the
+          subject matter of this Agreement and supersedes any and all oral or
+          written agreements or understandings, whether written or verbal,
+          between the parties as to the subject matter of the Agreement. Except
+          as noted herein, this Agreement may be amended or changed only by a
+          writing signed by both parties. You may not assign, transfer or
+          delegate, in whole or in part, whether by assignment, sale, merger,
+          reorganization, operation of law, or otherwise, this Agreement or any
+          of Your rights or obligations under this Agreement, to any third party
+          without the prior written consent of Moove. Any assignment in
+          violation of the foregoing will be null and void. The waiver of a
+          breach of any provision of this Agreement will not operate or be
+          interpreted as a waiver of any other or subsequent breach. The parties
+          are independent contractors, and nothing in this Agreement will be
+          construed as creating an employer-employee relationship, a
+          partnership, or a joint venture between the parties. Neither party is
+          an agent of the other and neither party is authorized to make any
+          representation, contract, or commitment on behalf of the other party.
+          Each and every right and remedy hereunder is cumulative with each and
+          every other right and remedy herein or in any other agreement between
+          the parties or under applicable Law. If any provision of this
+          Agreement is held by an arbitrator or a court of competent
+          jurisdiction to be unenforceable, such provision will be changed and
+          interpreted to accomplish the objectives of such provision to the
+          greatest extent possible under applicable law and the remaining
+          provisions of this Agreement will continue in full force and effect.
+          No term of this Agreement will be construed to confer any third-party
+          beneficiary rights on any non-party. Neither party will not be liable
+          for any failure to perform under this Agreement, to the extent that
+          such party’s failure results from causes beyond such party’s
+          reasonable control. The words “include,” “includes” and “including”
+          will mean “include,” “includes,” or “including,” in each case,
+          “without limitation.” This Agreement may be executed simultaneously in
+          one or more counterparts (including by facsimile or electronic .pdf
+          submission), each of which when executed will be deemed to be an
+          original, but all of which will constitute one and the same agreement.
         </li>
       </ol>
     </>
