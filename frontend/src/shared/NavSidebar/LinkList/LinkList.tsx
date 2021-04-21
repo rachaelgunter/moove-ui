@@ -6,7 +6,7 @@ import { SvgIconComponent } from '@material-ui/icons';
 import { Role } from 'src/shared/types';
 import { checkOrgMembership, haveAccess } from 'src/shared/authorization/utils';
 import { UserContext } from 'src/auth/UserProvider';
-import theme from 'src/app/styles';
+import DisabledLinkTooltip from 'src/shared/DisabledLinkTooltip/DisabledLinkTooltip';
 import { LinkListItem } from './ListItem';
 
 export interface NavLink {
@@ -18,39 +18,9 @@ export interface NavLink {
   organizationMembershipRequired?: boolean;
 }
 
-const BUY_PAID_ACCOUNT_URL = 'http://moove.ai';
-
 interface LinkListProps {
   links: NavLink[];
 }
-
-const getDisabledTooltip = (
-  isOrganisationMember: boolean,
-  hasRoles: boolean,
-  label: string,
-) => {
-  if (!hasRoles) {
-    return (
-      <>
-        {label}
-        <br />
-        <br />
-        Sign up for a paid account at{' '}
-        <a
-          style={{ color: theme.palette.secondary.main }}
-          href={BUY_PAID_ACCOUNT_URL}
-        >
-          {BUY_PAID_ACCOUNT_URL}
-        </a>
-      </>
-    );
-  }
-  if (!isOrganisationMember) {
-    return <>You have to be an organization member to view this section</>;
-  }
-
-  return <></>;
-};
 
 const LinkList: React.FC<LinkListProps> = ({ links }: LinkListProps) => {
   const { pathname } = useLocation();
@@ -73,15 +43,15 @@ const LinkList: React.FC<LinkListProps> = ({ links }: LinkListProps) => {
             ? checkOrgMembership(user)
             : true;
 
-          const disabledLabel = getDisabledTooltip(
-            isUserOrgMember,
-            hasUserAccess,
-            label,
-          );
-
           return (
             <LinkListItem
-              disabledLabel={disabledLabel}
+              disabledLabel={
+                <DisabledLinkTooltip
+                  isOrganisationMember={isUserOrgMember}
+                  hasRoles={hasUserAccess}
+                  label={label}
+                />
+              }
               data-testid={`link-list-item__${label}`}
               disabled={!hasUserAccess || !isUserOrgMember}
               onClick={onClick}
