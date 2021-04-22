@@ -101,8 +101,8 @@ export class DatasetsResolver {
   @UseGuards(GqlAuthGuard)
   @Mutation(() => RemovedDataset, { nullable: true })
   async deleteDataset(
-    @Args() { GCPProjectName, datasetId }: RemovingDatasetParams,
+    @Args() { analysisName }: RemovingDatasetParams,
   ): Promise<RemovedDataset> {
-    return this.datasetsService.deleteDataset(GCPProjectName, datasetId);
+    return this.datasetsService.deleteDataset(analysisName);
   }
 }

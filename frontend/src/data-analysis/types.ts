@@ -102,3 +102,11 @@ export type SegmentData = {
   error?: ApolloError | undefined;
   loading: boolean;
 };
+
+export type RemovedDataset = {
+  analysisName: string;
+};
+
+export type DatasetRemovalResponse = {
+  deleteDataset: RemovedDataset;
+};
