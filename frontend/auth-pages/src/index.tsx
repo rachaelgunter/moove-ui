@@ -11,14 +11,11 @@ import Terms from './Terms';
 import EmailVerification from './EmailVerification';
 import WebAuthProvider from './WebAuthProvider';
 import ForgotPassword from './ForgotPassword';
-import ResetPassword from './ResetPassword';
 
 function getAuthOptions() {
   const config = JSON.parse(
     decodeURIComponent(escape(window.atob('@@config@@'))),
   );
-
-  console.warn(config);
 
   const { leeway } = config.internalOptions;
   if (leeway) {
@@ -87,9 +84,6 @@ ReactDOM.render(
           </Route>
           <Route exact path="/forgot-password">
             <ForgotPassword />
-          </Route>
-          <Route exact path="/reset-password">
-            <ResetPassword />
           </Route>
         </Switch>
       </HashRouter>
