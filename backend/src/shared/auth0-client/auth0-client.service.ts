@@ -24,7 +24,7 @@ export class Auth0ClientService {
       clientId: this.configService.get('AUTH0_CLIENT_ID'),
       clientSecret: this.configService.get('AUTH0_CLIENT_SECRET'),
       scope: 'read:user_idp_tokens',
-      audience: this.configService.get('AUTH0_AUDIENCE'),
+      audience: this.configService.get('AUTH0_MANAGEMENT_API'),
     });
     this.authClient = new AuthenticationClient({
       domain: this.configService.get('AUTH0_DOMAIN'),

@@ -112,8 +112,6 @@ export class BigQueryService {
       );
     }
 
-    this.logger.log(`getColumnsTable: ${JSON.stringify(columnsData.headers)}`);
-
     return this.mapColumnsTable(columnsData, emptyColumnsData);
   }
 
@@ -150,8 +148,6 @@ export class BigQueryService {
         column = {} as BigQueryColumnTable;
       }
     });
-
-    this.logger.log(`res amount: ${res.length}`);
 
     return res.map((column) => ({
       ...column,
