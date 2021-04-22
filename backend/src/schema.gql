@@ -148,8 +148,7 @@ type Dataset {
 }
 
 type RemovedDataset {
-  datasetId: String!
-  GCPProjectName: String!
+  analysisName: String!
 }
 
 type Query {
@@ -178,7 +177,7 @@ type Mutation {
   createUser(createUserPayload: CreateUserPayload!): User!
   createDataset(datasetParams: DatasetParamsInput!): String!
   createLocalFileDataset(datasetParams: FileDatasetParamsInput!): String!
-  deleteDataset(datasetId: String!, GCPProjectName: String!): RemovedDataset
+  deleteDataset(analysisName: String!): RemovedDataset
 }
 
 input UserInput {
