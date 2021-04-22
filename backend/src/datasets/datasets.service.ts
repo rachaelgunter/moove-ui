@@ -51,6 +51,12 @@ export class DatasetsService {
       organizationName,
       analysisProject,
       assetsBucket,
+      primaryTimestamp,
+      groupBy,
+      jenksCols,
+      lat,
+      lon,
+      primaryGeography,
     } = datasetParams;
     const headers = await this.getRequestHeaders(this.ingestorUrl);
     this.logger.log(
@@ -71,6 +77,12 @@ export class DatasetsService {
           client: organizationName,
           analysis_project: analysisProject,
           visual_asset_bucket: assetsBucket,
+          primary_ts: primaryTimestamp,
+          groupby_col: groupBy || undefined,
+          jenks_cols: jenksCols.length ? jenksCols : undefined,
+          lat: lat || undefined,
+          lon: lon || undefined,
+          primary_geography: primaryGeography || undefined,
         },
         {
           headers,

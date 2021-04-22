@@ -158,6 +158,7 @@ type Query {
   tables(tablesParams: BigQueryTablesParams!): [BigQueryTable]
   tableData(offset: Int = 0, limit: Int = 5, projectId: String!, datasetId: String!, tableId: String!, selectedFields: [String]): BigQueryTableData!
   tableInfo(projectId: String!, datasetId: String!, tableId: String!): BigQueryTableInfo!
+  tableColumns(projectId: String!, datasetId: String!, tableId: String!): [BigQueryPreviewHeaders!]!
   previewTable(offset: Int = 0, limit: Int = 5, projectId: String!, datasetId: String!, tableId: String!, selectedFields: [String]): BigQueryPreviewTable!
   columnsTable(offset: Int = 0, limit: Int = 5, projectId: String!, datasetId: String!, tableId: String!, selectedFields: [String]): [BigQueryColumnTable]
   previewSegment(segmentId: String!): PreviewSegment!
@@ -203,6 +204,12 @@ input DatasetParamsInput {
   organizationName: String!
   analysisProject: String!
   assetsBucket: String!
+  primaryTimestamp: String!
+  primaryGeography: String
+  groupBy: String!
+  jenksCols: [String!]!
+  lat: String!
+  lon: String!
 }
 
 input FileDatasetParamsInput {
@@ -212,4 +219,10 @@ input FileDatasetParamsInput {
   organizationName: String!
   analysisProject: String!
   assetsBucket: String!
+  primaryTimestamp: String!
+  primaryGeography: String
+  groupBy: String!
+  jenksCols: [String!]!
+  lat: String!
+  lon: String!
 }

@@ -103,6 +103,17 @@ export type SegmentData = {
   loading: boolean;
 };
 
+export type ColumnData = {
+  name: string;
+  type: string;
+};
+
+export enum ColumnType {
+  TIMESTAMP = 'TIMESTAMP',
+  FLOAT = 'FLOAT',
+  GEOGRAPHY = 'GEOGRAPHY',
+}
+
 export type RemovedDataset = {
   analysisName: string;
 };
