@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { TableIdentity } from 'src/data-analysis/types';
 
 export type LatLonData = {

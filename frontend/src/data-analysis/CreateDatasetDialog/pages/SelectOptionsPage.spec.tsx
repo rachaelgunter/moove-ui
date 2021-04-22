@@ -1,34 +1,35 @@
 import React from 'react';
 import { act, fireEvent, render, RenderResult } from '@testing-library/react';
-import { MockedProvider, MockedResponse } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing';
 import { ThemeProvider } from '@material-ui/core';
 
 import theme from 'src/app/styles';
-import { BIG_QUERY_TABLE_COLUMNS_QUERY } from 'src/data-analysis/queries';
 import CreateDatasetContext, {
   CreateDatasetType,
 } from '../CreateDatasetContext';
 import SelectOptionsPage from './SelectOptionsPage';
 
 jest.mock('src/index', () => Promise.resolve());
-
-const columnsMock: MockedResponse = {
-  request: {
-    query: BIG_QUERY_TABLE_COLUMNS_QUERY,
-    variables: {
-      projectId: 'moove-platform-testing-data',
-      datasetId: `dataset_galileo_analysis`,
-      tableId: `dataset_general_stats`,
+jest.mock('@apollo/client', () => ({
+  useLazyQuery: () => [
+    jest.fn(),
+    {
+      data: {
+        tableColumns: [
+          { name: 'geography', type: 'GEOGRAPHY' },
+          { name: 'timestamp', type: 'TIMESTAMP' },
+          { name: 'float', type: 'FLOAT' },
+        ],
+      },
+      loading: false,
     },
-  },
-  result: {
-    data: { tableColumns: [] },
-  },
-};
+  ],
+  gql: jest.fn(),
+}));
 
 const createWrapper = async (contextValue: CreateDatasetType) =>
   render(
-    <MockedProvider mocks={[columnsMock]} addTypename={false}>
+    <MockedProvider>
       <ThemeProvider theme={theme}>
         <CreateDatasetContext.Provider value={contextValue}>
           <SelectOptionsPage />
@@ -110,24 +111,19 @@ describe('SelectOptionsPage', () => {
           .querySelector('input') || ({} as HTMLElement);
 
       await act(async () => {
-        fireEvent.change(latSelectEl, { target: { value: 'latitude' } });
-        fireEvent.focusOut(latSelectEl);
-
-        fireEvent.change(lonSelectEl, { target: { value: 'longitude' } });
-        fireEvent.focusOut(lonSelectEl);
-
+        fireEvent.change(latSelectEl, { target: { value: 'float' } });
+        fireEvent.change(lonSelectEl, { target: { value: 'float' } });
         fireEvent.change(timestampSelectEl, { target: { value: 'timestamp' } });
-        fireEvent.focusOut(timestampSelectEl);
       });
 
       expect(handleTimestampColumnChange).toHaveBeenLastCalledWith('timestamp');
       expect(handleLatLonColumnsChange).toHaveBeenCalledWith({
         lon: '',
-        lat: 'latitude',
+        lat: 'float',
       });
-      expect(handleTimestampColumnChange).toHaveBeenLastCalledWith({
-        lon: 'longitude',
-        lat: 'latitude',
+      expect(handleLatLonColumnsChange).toHaveBeenLastCalledWith({
+        lon: 'float',
+        lat: '',
       });
     });
   });

@@ -116,6 +116,15 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
   const handleClose = () => {
     onClose();
 
+    setGeographyColumn('');
+    setLatLonColumns({
+      lat: '',
+      lon: '',
+    });
+    setTimestampColumn('');
+    setGroupByColumn('');
+    setJenkColsColumns([]);
+
     if (!BQCreationLoading || fileCreationLoading) {
       // timeout to avoid visible content changes during close transition
       setTimeout(() => {
@@ -127,14 +136,6 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
         setCreationError(null);
         setPageError(false);
         setCurrentStep(0);
-        setGeographyColumn('');
-        setLatLonColumns({
-          lat: '',
-          lon: '',
-        });
-        setTimestampColumn('');
-        setGroupByColumn('');
-        setJenkColsColumns([]);
       }, 200);
     }
   };

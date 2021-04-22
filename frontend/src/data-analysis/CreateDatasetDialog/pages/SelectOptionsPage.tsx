@@ -1,11 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useLazyQuery } from '@apollo/client';
-import { FormLabel, Grid, MenuItem } from '@material-ui/core';
+import {
+  Box,
+  CircularProgress,
+  FormLabel,
+  Grid,
+  MenuItem,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { Theme } from '@material-ui/core/styles';
 
 import { BIG_QUERY_TABLE_COLUMNS_QUERY } from 'src/data-analysis/queries';
-import TableOverlay from 'src/shared/TableOverlay/TableOverlay';
 import Selector from 'src/shared/Selector';
 import { ColumnType } from 'src/data-analysis/types';
 import LatLonSelector from '../LatLonSelector';
@@ -15,6 +20,15 @@ import CreateDatasetContext from '../CreateDatasetContext';
 const useStyles = makeStyles((theme: Theme) => ({
   label: {
     marginBottom: theme.spacing(1),
+  },
+  overlay: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    width: '100%',
+    flex: '1 1 auto',
+    display: 'flex',
+    minHeight: 492,
   },
 }));
 
@@ -29,6 +43,8 @@ const SelectOptionsPage: React.FC = () => {
   const classes = useStyles();
 
   const [timestampError, setTimestampError] = useState(false);
+  const [groupByError, setGroupByError] = useState(false);
+  const [jenkColsError, setJenkColsError] = useState(false);
   const {
     selectedTable,
     latLonColumns,
@@ -43,7 +59,7 @@ const SelectOptionsPage: React.FC = () => {
   } = useContext(CreateDatasetContext);
   const [
     getColumnsData,
-    { data: columnsData, loading: columnsLoading, error },
+    { data: columnsData, loading: columnsLoading },
   ] = useLazyQuery(BIG_QUERY_TABLE_COLUMNS_QUERY);
 
   useEffect(() => {
@@ -64,7 +80,9 @@ const SelectOptionsPage: React.FC = () => {
     handleErrorStatusChange(
       Boolean(
         ((!latLonColumns.lat || !latLonColumns.lon) && !geographyColumn) ||
-          !timestampColumn,
+          !timestampColumn ||
+          !groupByColumn ||
+          !jenkColsColumns.length,
       ),
     );
   }, [
@@ -72,6 +90,8 @@ const SelectOptionsPage: React.FC = () => {
     geographyColumn,
     handleErrorStatusChange,
     timestampColumn,
+    groupByColumn,
+    jenkColsColumns.length,
   ]);
 
   const onTimestampColumnChange = (
@@ -79,21 +99,24 @@ const SelectOptionsPage: React.FC = () => {
   ) => {
     handleTimestampColumnChange(event.target.value as string);
   };
-
   const onTimestampBlur = () => {
     setTimestampError(!timestampColumn);
   };
-
   const onGroupByColumnChange = (
     event: React.ChangeEvent<{ value: unknown }>,
   ) => {
     handleGroupByColumnChange(event.target.value as string);
   };
-
+  const onGroupByBlur = () => {
+    setGroupByError(!groupByColumn);
+  };
   const onJenkColsColumnsChange = (
     event: React.ChangeEvent<{ value: unknown }>,
   ) => {
     handleJenkColsColumnsChange(event.target.value as Array<string>);
+  };
+  const onJenkColsBlur = () => {
+    setJenkColsError(!jenkColsColumns.length);
   };
 
   const tableColumns = columnsData?.tableColumns || [];
@@ -112,24 +135,38 @@ const SelectOptionsPage: React.FC = () => {
       label: 'Groupby col',
       value: groupByColumn,
       onChange: onGroupByColumnChange,
+      onBlur: onGroupByBlur,
       menuItems: ADMIN_AREAS,
+      required: true,
+      error: groupByError,
     },
     {
       label: 'Jenks cols',
       value: jenkColsColumns,
       onChange: onJenkColsColumnsChange,
+      onBlur: onJenkColsBlur,
       menuItems: getColumnNamesByType(tableColumns, ''),
       multiple: true,
+      required: true,
+      error: jenkColsError,
     },
   ];
 
+  if (columnsLoading) {
+    return (
+      <Box className={classes.overlay}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
-    <TableOverlay loading={columnsLoading} error={!!error} data={columnsData}>
-      <Grid container direction="column">
-        <Grid item>
-          <LatLonSelector tableColumns={tableColumns} />
-        </Grid>
-        {selectors.map(
+    <Grid container direction="column">
+      <Grid item>
+        <LatLonSelector tableColumns={tableColumns} />
+      </Grid>
+      {tableColumns &&
+        selectors.map(
           ({
             label,
             menuItems,
@@ -156,8 +193,7 @@ const SelectOptionsPage: React.FC = () => {
             </Grid>
           ),
         )}
-      </Grid>
-    </TableOverlay>
+    </Grid>
   );
 };
 
