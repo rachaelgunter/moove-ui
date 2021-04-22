@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tooltipPlacementRight: {
     margin: theme.spacing(0),
+    marginLeft: theme.spacing(1),
   },
 }));
 

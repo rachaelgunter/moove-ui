@@ -113,3 +113,11 @@ export enum ColumnType {
   FLOAT = 'FLOAT',
   GEOGRAPHY = 'GEOGRAPHY',
 }
+
+export type RemovedDataset = {
+  analysisName: string;
+};
+
+export type DatasetRemovalResponse = {
+  deleteDataset: RemovedDataset;
+};

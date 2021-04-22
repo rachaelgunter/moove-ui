@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useContext, useEffect } from 'react';
 import { makeStyles, Theme, Typography } from '@material-ui/core';
 
 import AuthPage from './AuthPage';
@@ -6,6 +6,7 @@ import Footer from './Footer';
 import SignInForm from './SignInForm';
 import Link from './Link';
 import GoogleAuth from './GoogleAuth/GoogleAuth';
+import { SignUpFormContext } from './SignUpForm/SignUpFormContext';
 
 const SIGN_IN_HINT = 'SIGN IN TO YOUR ACCOUNT';
 const SIGN_IN_BUTTON_TEXT = 'Log In with Google';
@@ -29,6 +30,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const SignIn: FC<SignInProps> = ({ hasGoogleAuth = false }: SignInProps) => {
   const classes = useStyles();
+  const { dispatch } = useContext(SignUpFormContext);
+
+  useEffect(() => {
+    dispatch({
+      email: '',
+      fullName: '',
+      businessVertical: '',
+      password: '',
+      repeatedPassword: '',
+    });
+  }, [dispatch]);
 
   return (
     <AuthPage>
