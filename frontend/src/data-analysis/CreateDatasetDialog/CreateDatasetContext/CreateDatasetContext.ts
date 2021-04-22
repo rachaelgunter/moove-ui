@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
 
 import { TableIdentity } from 'src/data-analysis/types';
 
@@ -7,7 +7,7 @@ export type LatLonData = {
   lon: string;
 };
 
-export type CreateDatasetType = {
+export type CreateDatasetFormState = {
   name: string;
   description: string;
   pageHaveError: boolean;
@@ -22,24 +22,36 @@ export type CreateDatasetType = {
   timestampColumn: string;
   groupByColumn: string;
   jenkColsColumns: Array<string>;
-
-  handleNameChange: (name: string) => void;
-  handleDescriptionChange: (description: string) => void;
-  handleErrorStatusChange: (value: boolean) => void;
-  handleStepChange: (step: number) => void;
-  handleTableSelect: (params: TableIdentity | null) => void;
-  handleFileSelect: (file: File | null) => void;
-  handleClose: () => void;
-  handleDatasetCreation: () => void;
-  handleGeographyColumnChange: (column: string) => void;
-  handleLatLonColumnsChange: (columns: LatLonData) => void;
-  handleTimestampColumnChange: (column: string) => void;
-  handleGroupByColumnChange: (column: string) => void;
-  handleJenkColsColumnsChange: (columns: Array<string>) => void;
 };
 
-const CreateDatasetContext = React.createContext<CreateDatasetType>(
-  {} as CreateDatasetType,
-);
+export interface CreateDatasetProvider {
+  state: CreateDatasetFormState;
+  dispatch: Dispatch<Partial<CreateDatasetFormState>>;
+}
+
+export const initialState: CreateDatasetFormState = {
+  name: '',
+  description: '',
+  pageHaveError: false,
+  selectedTable: null,
+  selectedFile: null,
+  creationTerminated: false,
+  loading: false,
+  currentStep: 0,
+  stepAmount: 0,
+  geographyColumn: '',
+  latLonColumns: {
+    lat: '',
+    lon: '',
+  },
+  timestampColumn: '',
+  groupByColumn: '',
+  jenkColsColumns: [],
+};
+
+const CreateDatasetContext = React.createContext<CreateDatasetProvider>({
+  state: initialState,
+  dispatch: () => {},
+});
 
 export default CreateDatasetContext;

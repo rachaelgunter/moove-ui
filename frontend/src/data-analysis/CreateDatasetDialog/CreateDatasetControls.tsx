@@ -26,39 +26,42 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const CreateDatasetControls: React.FC = () => {
-  const classes = useStyles();
-  const {
-    pageHaveError,
-    creationTerminated,
-    loading,
-    currentStep,
-    stepAmount,
-    handleClose,
-    handleDatasetCreation,
-    handleStepChange,
-  } = useContext(CreateDatasetContext);
+interface CreateDatasetControlsProps {
+  handleDatasetCreation: () => void;
+  handleClose: () => void;
+}
 
-  const isLastStep = currentStep === stepAmount - 1;
-  const isFirstStep = currentStep === 0;
+const CreateDatasetControls: React.FC<CreateDatasetControlsProps> = ({
+  handleDatasetCreation,
+  handleClose,
+}: CreateDatasetControlsProps) => {
+  const classes = useStyles();
+  const { state, dispatch } = useContext(CreateDatasetContext);
+
+  const isLastStep = state.currentStep === state.stepAmount - 1;
+  const isFirstStep = state.currentStep === 0;
 
   const handleStepIncrease = () => {
-    handleStepChange(currentStep + 1);
+    dispatch({
+      currentStep: state.currentStep + 1,
+    });
   };
 
   const handleStepDecrease = () => {
-    handleStepChange(currentStep - 1);
+    dispatch({
+      currentStep: state.currentStep - 1,
+    });
   };
 
   const getPreviousButton = () => {
-    if (creationTerminated) {
+    if (state.creationTerminated) {
       return null;
     }
 
     return (
       <Button
         data-testid="create-dataset__button-previous"
-        disabled={isFirstStep || loading}
+        disabled={isFirstStep || state.loading}
         className={classes.dialogButton}
         onClick={handleStepDecrease}
       >
@@ -68,12 +71,12 @@ const CreateDatasetControls: React.FC = () => {
   };
 
   const getNextButton = () => {
-    if (creationTerminated) {
+    if (state.creationTerminated) {
       return null;
     }
 
     let buttonContent;
-    if (loading) {
+    if (state.loading) {
       buttonContent = <CircularProgress size="1em" />;
     } else if (!isLastStep) {
       buttonContent = 'Next';
@@ -84,7 +87,7 @@ const CreateDatasetControls: React.FC = () => {
     return (
       <Button
         data-testid="create-dataset__button-next"
-        disabled={pageHaveError || loading}
+        disabled={state.pageHaveError || state.loading}
         className={classes.dialogButton}
         onClick={isLastStep ? handleDatasetCreation : handleStepIncrease}
       >
@@ -96,11 +99,11 @@ const CreateDatasetControls: React.FC = () => {
   return (
     <Box className={classes.dialogControls}>
       <Button
-        disabled={loading}
+        disabled={state.loading}
         className={classes.dialogButton}
         onClick={handleClose}
       >
-        {creationTerminated ? 'Close' : 'Cancel'}
+        {state.creationTerminated ? 'Close' : 'Cancel'}
       </Button>
       {getPreviousButton()}
       {getNextButton()}

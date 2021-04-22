@@ -5,7 +5,8 @@ import { ThemeProvider } from '@material-ui/core';
 
 import theme from 'src/app/styles';
 import CreateDatasetContext, {
-  CreateDatasetType,
+  CreateDatasetFormState,
+  CreateDatasetProvider,
 } from '../CreateDatasetContext';
 import SelectOptionsPage from './SelectOptionsPage';
 
@@ -27,7 +28,7 @@ jest.mock('@apollo/client', () => ({
   gql: jest.fn(),
 }));
 
-const createWrapper = async (contextValue: CreateDatasetType) =>
+const createWrapper = async (contextValue: CreateDatasetProvider) =>
   render(
     <MockedProvider>
       <ThemeProvider theme={theme}>
@@ -41,13 +42,8 @@ const createWrapper = async (contextValue: CreateDatasetType) =>
 describe('SelectOptionsPage', () => {
   let wrapper: RenderResult;
 
-  const handleTimestampColumnChange = jest.fn();
-  const handleGroupByColumnChange = jest.fn();
-  const handleJenkColsColumnsChange = jest.fn();
-  const handleErrorStatusChange = jest.fn();
-  const handleLatLonColumnsChange = jest.fn();
-
-  const context = {
+  const dispatch = jest.fn();
+  const state = {
     selectedTable: {
       projectId: 'moove-platform-testing-data',
       datasetId: `dataset_galileo_analysis`,
@@ -61,11 +57,6 @@ describe('SelectOptionsPage', () => {
     timestampColumn: '',
     groupByColumn: '',
     jenkColsColumns: [],
-    handleTimestampColumnChange,
-    handleGroupByColumnChange,
-    handleJenkColsColumnsChange,
-    handleErrorStatusChange,
-    handleLatLonColumnsChange,
 
     name: '',
     description: '',
@@ -75,25 +66,22 @@ describe('SelectOptionsPage', () => {
     loading: false,
     currentStep: 1,
     stepAmount: 2,
-    handleNameChange: jest.fn(),
-    handleDescriptionChange: jest.fn(),
-    handleStepChange: jest.fn(),
-    handleTableSelect: jest.fn(),
-    handleFileSelect: jest.fn(),
-    handleClose: jest.fn(),
-    handleDatasetCreation: jest.fn(),
-    handleGeographyColumnChange: jest.fn(),
-  } as CreateDatasetType;
+  } as CreateDatasetFormState;
 
   beforeEach(async () => {
     await act(async () => {
-      wrapper = await createWrapper(context);
+      wrapper = await createWrapper({
+        state,
+        dispatch,
+      });
     });
   });
 
   describe('required fields are not filled', () => {
     it('should set error to true', () => {
-      expect(handleErrorStatusChange).toBeCalledWith(true);
+      expect(dispatch).toBeCalledWith({
+        pageHaveError: true,
+      });
     });
   });
 
@@ -116,14 +104,20 @@ describe('SelectOptionsPage', () => {
         fireEvent.change(timestampSelectEl, { target: { value: 'timestamp' } });
       });
 
-      expect(handleTimestampColumnChange).toHaveBeenLastCalledWith('timestamp');
-      expect(handleLatLonColumnsChange).toHaveBeenCalledWith({
-        lon: '',
-        lat: 'float',
+      expect(dispatch).toHaveBeenCalledWith({
+        timestampColumn: 'timestamp',
       });
-      expect(handleLatLonColumnsChange).toHaveBeenLastCalledWith({
-        lon: 'float',
-        lat: '',
+      expect(dispatch).toHaveBeenCalledWith({
+        latLonColumns: {
+          lon: '',
+          lat: 'float',
+        },
+      });
+      expect(dispatch).toHaveBeenCalledWith({
+        latLonColumns: {
+          lon: 'float',
+          lat: '',
+        },
       });
     });
   });

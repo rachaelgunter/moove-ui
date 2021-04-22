@@ -16,41 +16,37 @@ const SelectSourcePage: React.FC = () => {
   const [descriptionError, setDescriptionError] = useState('');
   const [nameError, setNameError] = useState('');
 
-  const {
-    name,
-    description,
-    selectedTable,
-    selectedFile,
-    handleNameChange,
-    handleDescriptionChange,
-    handleErrorStatusChange,
-  } = useContext(CreateDatasetContext);
+  const { state, dispatch } = useContext(CreateDatasetContext);
 
   useEffect(() => {
-    handleErrorStatusChange(
-      Boolean(
+    dispatch({
+      pageHaveError: Boolean(
         nameError ||
           descriptionError ||
-          (!selectedTable && !selectedFile) ||
-          !name.length,
+          (!state.selectedTable && !state.selectedFile) ||
+          !state.name.length,
       ),
-    );
+    });
   }, [
-    descriptionError,
-    handleErrorStatusChange,
-    name.length,
+    dispatch,
     nameError,
-    selectedFile,
-    selectedTable,
+    descriptionError,
+    state.name.length,
+    state.selectedFile,
+    state.selectedTable,
   ]);
 
   const onNameChangeWrapper = (updatedName: string) => {
-    handleNameChange(updatedName);
+    dispatch({
+      name: updatedName,
+    });
     updateNameErrorState(updatedName);
   };
 
   const onDescriptionChangeWrapper = (updatedDescription: string) => {
-    handleDescriptionChange(updatedDescription);
+    dispatch({
+      description: updatedDescription,
+    });
     updateDescriptionErrorState(updatedDescription);
   };
 
@@ -74,14 +70,14 @@ const SelectSourcePage: React.FC = () => {
     <>
       <TextField
         label="Name"
-        value={name}
+        value={state.name}
         onChange={onNameChangeWrapper}
         error={!!nameError.length}
         errorText={nameError}
       />
       <TextField
         label="Description"
-        value={description}
+        value={state.description}
         onChange={onDescriptionChangeWrapper}
         error={!!descriptionError.length}
         errorText={descriptionError}

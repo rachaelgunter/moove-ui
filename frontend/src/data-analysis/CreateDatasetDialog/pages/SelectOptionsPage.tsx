@@ -32,12 +32,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const ADMIN_AREAS = [
-  'adminarea_0',
-  'adminarea_1',
-  'adminarea_2',
-  'adminarea_3',
-];
+export const ADMIN_AREAS_MAP: { [key: string]: string } = {
+  Country: 'adminarea_0',
+  Province: 'adminarea_1',
+  County: 'adminarea_2',
+  'Postal Code': 'adminarea_3',
+};
 
 const SelectOptionsPage: React.FC = () => {
   const classes = useStyles();
@@ -45,85 +45,82 @@ const SelectOptionsPage: React.FC = () => {
   const [timestampError, setTimestampError] = useState(false);
   const [groupByError, setGroupByError] = useState(false);
   const [jenkColsError, setJenkColsError] = useState(false);
-  const {
-    selectedTable,
-    latLonColumns,
-    geographyColumn,
-    timestampColumn,
-    groupByColumn,
-    jenkColsColumns,
-    handleTimestampColumnChange,
-    handleGroupByColumnChange,
-    handleJenkColsColumnsChange,
-    handleErrorStatusChange,
-  } = useContext(CreateDatasetContext);
+  const { state, dispatch } = useContext(CreateDatasetContext);
   const [
     getColumnsData,
     { data: columnsData, loading: columnsLoading },
   ] = useLazyQuery(BIG_QUERY_TABLE_COLUMNS_QUERY);
 
   useEffect(() => {
-    if (!selectedTable) {
+    if (!state.selectedTable) {
       return;
     }
 
     getColumnsData({
       variables: {
-        projectId: selectedTable?.projectId,
-        datasetId: selectedTable?.datasetId,
-        tableId: selectedTable?.tableId,
+        projectId: state.selectedTable?.projectId,
+        datasetId: state.selectedTable?.datasetId,
+        tableId: state.selectedTable?.tableId,
       },
     });
-  }, [getColumnsData, selectedTable]);
+  }, [getColumnsData, state.selectedTable]);
 
   useEffect(() => {
-    handleErrorStatusChange(
-      Boolean(
-        ((!latLonColumns.lat || !latLonColumns.lon) && !geographyColumn) ||
-          !timestampColumn ||
-          !groupByColumn ||
-          !jenkColsColumns.length,
+    dispatch({
+      pageHaveError: Boolean(
+        ((!state.latLonColumns.lat || !state.latLonColumns.lon) &&
+          !state.geographyColumn) ||
+          !state.timestampColumn ||
+          !state.groupByColumn ||
+          !state.jenkColsColumns.length,
       ),
-    );
+    });
   }, [
-    latLonColumns,
-    geographyColumn,
-    handleErrorStatusChange,
-    timestampColumn,
-    groupByColumn,
-    jenkColsColumns.length,
+    dispatch,
+    state.geographyColumn,
+    state.groupByColumn,
+    state.jenkColsColumns.length,
+    state.latLonColumns.lat,
+    state.latLonColumns.lon,
+    state.timestampColumn,
   ]);
 
   const onTimestampColumnChange = (
     event: React.ChangeEvent<{ value: unknown }>,
   ) => {
-    handleTimestampColumnChange(event.target.value as string);
+    dispatch({
+      timestampColumn: event.target.value as string,
+    });
   };
   const onTimestampBlur = () => {
-    setTimestampError(!timestampColumn);
+    setTimestampError(!state.timestampColumn);
   };
   const onGroupByColumnChange = (
     event: React.ChangeEvent<{ value: unknown }>,
   ) => {
-    handleGroupByColumnChange(event.target.value as string);
+    dispatch({
+      groupByColumn: event.target.value as string,
+    });
   };
   const onGroupByBlur = () => {
-    setGroupByError(!groupByColumn);
+    setGroupByError(!state.groupByColumn);
   };
   const onJenkColsColumnsChange = (
     event: React.ChangeEvent<{ value: unknown }>,
   ) => {
-    handleJenkColsColumnsChange(event.target.value as Array<string>);
+    dispatch({
+      jenkColsColumns: event.target.value as Array<string>,
+    });
   };
   const onJenkColsBlur = () => {
-    setJenkColsError(!jenkColsColumns.length);
+    setJenkColsError(!state.jenkColsColumns.length);
   };
 
   const tableColumns = columnsData?.tableColumns || [];
   const selectors = [
     {
       label: 'Timestamp',
-      value: timestampColumn,
+      value: state.timestampColumn,
       onChange: onTimestampColumnChange,
       onBlur: onTimestampBlur,
       menuItems: getColumnNamesByType(tableColumns, ColumnType.TIMESTAMP),
@@ -133,16 +130,16 @@ const SelectOptionsPage: React.FC = () => {
     },
     {
       label: 'Groupby col',
-      value: groupByColumn,
+      value: state.groupByColumn,
       onChange: onGroupByColumnChange,
       onBlur: onGroupByBlur,
-      menuItems: ADMIN_AREAS,
+      menuItems: Object.keys(ADMIN_AREAS_MAP),
       required: true,
       error: groupByError,
     },
     {
       label: 'Jenks cols',
-      value: jenkColsColumns,
+      value: state.jenkColsColumns,
       onChange: onJenkColsColumnsChange,
       onBlur: onJenkColsBlur,
       menuItems: getColumnNamesByType(tableColumns, ''),
