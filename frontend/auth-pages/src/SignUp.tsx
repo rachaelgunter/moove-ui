@@ -5,7 +5,7 @@ import AuthPage from './AuthPage';
 import Footer from './Footer';
 import SignUpForm from './SignUpForm';
 import Link from './Link';
-import TermsProvider from './TermsProvider';
+import { SignUpFormContext } from './SignUpForm/SignUpFormContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const SignUp: FC = () => {
   const classes = useStyles();
-  const { termsAccepted } = useContext(TermsProvider);
+  const { termsAccepted } = useContext(SignUpFormContext).state;
 
   return (
     <AuthPage>
@@ -37,7 +37,11 @@ const SignUp: FC = () => {
       )}
       <SignUpForm />
       <Footer>
-        <Typography classes={classes} variant="body2" component="p">
+        <Typography
+          classes={{ root: classes.root }}
+          variant="body2"
+          component="p"
+        >
           Already have an account?&nbsp;
           <Link href="/" variant="body2">
             Sign In
