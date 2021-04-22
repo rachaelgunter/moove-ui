@@ -67,7 +67,7 @@ const NavSidebar: React.FC = () => {
       allowedRoles: routes.dashboard.allowedRoles,
     },
     {
-      label: 'Data Analysis',
+      label: 'Analytics',
       path: routes.dataAnalysis.path,
       onClick: () => history.push(routes.dataAnalysis.path),
       Icon: ViewAgendaIcon,
@@ -75,7 +75,7 @@ const NavSidebar: React.FC = () => {
       organizationMembershipRequired: true,
     },
     {
-      label: 'RoadIQ',
+      label: 'Map',
       onClick: () => history.push(routes.roadIQ.path),
       Icon: ViewWeekOutlinedIcon,
       allowedRoles: routes.roadIQ.allowedRoles,

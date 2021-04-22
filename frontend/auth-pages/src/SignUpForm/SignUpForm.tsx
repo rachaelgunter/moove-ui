@@ -1,6 +1,7 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { MenuItem } from '@material-ui/core';
+import TermsProvider from '../TermsProvider';
 import Selector from '../Selector/Selector';
 import {
   EMAIL_ERROR_TEXT,
@@ -25,6 +26,7 @@ const SignUpForm: FC = () => {
   const [businessVertical, setBusinessVertical] = useState('');
   const [repeatedPassword, setRepeatedPassword] = useState(''); // TODO to rename
   const [serverSideError, setServerSideError] = useState('');
+  const { termsAccepted } = useContext(TermsProvider);
 
   const history = useHistory();
 
@@ -37,10 +39,18 @@ const SignUpForm: FC = () => {
       isValidEmail(email) &&
       isValidPassword(password) &&
       repeatedPassword === password &&
+      termsAccepted &&
       businessVertical !== '';
 
     setDisableSubmit(!formIsValid);
-  }, [fullName, email, password, repeatedPassword, businessVertical]);
+  }, [
+    fullName,
+    email,
+    password,
+    repeatedPassword,
+    businessVertical,
+    termsAccepted,
+  ]);
 
   const onFullNameChange = (newValue: string) => {
     setFullName(newValue);

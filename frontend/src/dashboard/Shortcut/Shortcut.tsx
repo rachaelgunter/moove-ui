@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   makeStyles,
   Paper,
@@ -7,11 +7,17 @@ import {
   Typography,
 } from '@material-ui/core';
 import { darken } from '@material-ui/core/styles/colorManipulator';
+import { Role } from 'src/shared/types';
+import Tooltip from 'src/shared/NavSidebar/Tooltip';
+import { UserContext } from 'src/auth/UserProvider';
+import DisabledLinkTooltip from 'src/shared/DisabledLinkTooltip/DisabledLinkTooltip';
+import { haveAccess } from 'src/shared/authorization/utils';
 
-interface ShortcutProps {
+export interface ShortcutProps {
   Icon: React.FC;
   label: string;
   onClick: () => void;
+  allowedRoles: Role[];
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -45,30 +51,47 @@ const Shortcut: React.FC<ShortcutProps> = ({
   Icon,
   label,
   onClick,
+  allowedRoles,
 }: ShortcutProps) => {
   const classes = useStyles();
+  const { roles } = useContext(UserContext);
 
   return (
-    <Paper
-      classes={{
-        root: classes.root,
-        outlined: classes.outlined,
-      }}
-      variant="outlined"
-      onClick={onClick}
+    <Tooltip
+      interactive
+      title={
+        haveAccess(roles, allowedRoles) ? (
+          ''
+        ) : (
+          <DisabledLinkTooltip
+            isOrganisationMember
+            hasRoles={haveAccess(roles, allowedRoles)}
+            label={label}
+          />
+        )
+      }
     >
-      <SvgIcon
+      <Paper
         classes={{
-          root: classes.icon,
-          fontSizeLarge: classes.fontSizeLarge,
+          root: classes.root,
+          outlined: classes.outlined,
         }}
-        fontSize="large"
-        component={Icon}
-      />
-      <Typography display="block" variant="h6">
-        {label}
-      </Typography>
-    </Paper>
+        variant="outlined"
+        onClick={onClick}
+      >
+        <SvgIcon
+          classes={{
+            root: classes.icon,
+            fontSizeLarge: classes.fontSizeLarge,
+          }}
+          fontSize="large"
+          component={Icon}
+        />
+        <Typography display="block" variant="h6">
+          {label}
+        </Typography>
+      </Paper>
+    </Tooltip>
   );
 };
 
