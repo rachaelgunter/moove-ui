@@ -17,6 +17,7 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.6.3",
     "cesium": "^1.79.1",
+    "clsx": "^1.1.1",
     "graphql": "^15.5.0",
     "kepler.gl": "^2.5.0",
     "mapbox-gl": "^1.13.1",

@@ -10,6 +10,7 @@ import {
   CloudFunctionDatasetStatus,
   ColumnVisualizations,
   FileDatasetParamsInput,
+  RemovedDataset,
 } from './datasets.types';
 import { google } from 'googleapis';
 import { GCSClient } from 'src/gcs/gcs-client';
@@ -50,6 +51,12 @@ export class DatasetsService {
       organizationName,
       analysisProject,
       assetsBucket,
+      primaryTimestamp,
+      groupBy,
+      jenksCols,
+      lat,
+      lon,
+      primaryGeography,
     } = datasetParams;
     const headers = await this.getRequestHeaders(this.ingestorUrl);
     this.logger.log(
@@ -70,6 +77,12 @@ export class DatasetsService {
           client: organizationName,
           analysis_project: analysisProject,
           visual_asset_bucket: assetsBucket,
+          primary_ts: primaryTimestamp,
+          groupby_col: groupBy || undefined,
+          jenks_cols: jenksCols.length ? jenksCols : undefined,
+          lat: lat || undefined,
+          lon: lon || undefined,
+          primary_geography: primaryGeography || undefined,
         },
         {
           headers,
@@ -256,7 +269,23 @@ export class DatasetsService {
     }
   }
 
-  deleteDataset(GCPProjectName: string, datasetId: string) {
-    return { GCPProjectName, datasetId };
+  async deleteDataset(analysisName: string): Promise<RemovedDataset> {
+    const url = this.configService.get('DELETE_DATASET_CLOUD_FUNCTION_URL');
+    const headers = await this.getRequestHeaders(url);
+
+    return this.httpService
+      .post(url, { analysis_name: analysisName }, { headers })
+      .pipe(
+        map(() => ({
+          analysisName,
+        })),
+        catchError((e) => {
+          this.logger.error(
+            `Failed to delete dataset ${analysisName} ${JSON.stringify(e)}`,
+          );
+          return throwError(e);
+        }),
+      )
+      .toPromise();
   }
 }

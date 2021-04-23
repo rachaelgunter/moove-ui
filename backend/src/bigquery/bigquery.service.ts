@@ -12,6 +12,7 @@ import {
   BigQueryPreviewSegmentStatistics,
   BigQuerySegment,
   SegmentStatisticsFields,
+  BigQueryPreviewHeaders,
 } from './bigquery.types';
 import { ConfigService } from '@nestjs/config';
 import { SegmentNotFound } from 'src/errors';
@@ -222,5 +223,21 @@ export class BigQueryService {
     return fields.map((field) => {
       return { name: field, value: segment && segment[field] };
     });
+  }
+
+  async getColumnsData(
+    projectId: string,
+    datasetId: string,
+    tableId: string,
+  ): Promise<BigQueryPreviewHeaders[]> {
+    const columnsData = await this.bigqueryClientService.getPreviewTable(
+      projectId,
+      datasetId,
+      tableId,
+      0,
+      0,
+    );
+
+    return columnsData.headers;
   }
 }

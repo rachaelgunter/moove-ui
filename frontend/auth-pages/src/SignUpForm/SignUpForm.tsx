@@ -1,7 +1,6 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { MenuItem } from '@material-ui/core';
-import TermsProvider from '../TermsProvider';
+import { MenuItem, Tooltip } from '@material-ui/core';
 import Selector from '../Selector/Selector';
 import {
   EMAIL_ERROR_TEXT,
@@ -15,18 +14,24 @@ import { isValidEmail, isValidPassword } from '../utils';
 import SubmitButton from '../SubmitButton';
 import WebAuthProvider from '../WebAuthProvider';
 import ServerSideError from '../ServerSideError/ServerSideError';
+import { SignUpFormContext } from './SignUpFormContext';
+import Link from '../Link';
 
 export const submitButtonTitle = 'SIGN UP';
 const SIGN_UP_ERROR = 'Unable to sign up. User with this email already exists.';
 
 const SignUpForm: FC = () => {
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [businessVertical, setBusinessVertical] = useState('');
-  const [repeatedPassword, setRepeatedPassword] = useState(''); // TODO to rename
+  const { state, dispatch } = useContext(SignUpFormContext);
+  const {
+    fullName,
+    email,
+    password,
+    businessVertical,
+    repeatedPassword,
+    termsAccepted,
+  } = state;
+
   const [serverSideError, setServerSideError] = useState('');
-  const { termsAccepted } = useContext(TermsProvider);
 
   const history = useHistory();
 
@@ -53,23 +58,23 @@ const SignUpForm: FC = () => {
   ]);
 
   const onFullNameChange = (newValue: string) => {
-    setFullName(newValue);
+    dispatch({ fullName: newValue });
   };
 
   const onEmailChange = (newValue: string) => {
-    setEmail(newValue);
+    dispatch({ email: newValue });
   };
 
   const onPasswordChange = (newValue: string) => {
-    setPassword(newValue);
+    dispatch({ password: newValue });
   };
 
   const onRepeatedPasswordChange = (newValue: string) => {
-    setRepeatedPassword(newValue);
+    dispatch({ repeatedPassword: newValue });
   };
 
   const onBusinessVerticalChange = (newValue: string) => {
-    setBusinessVertical(newValue);
+    dispatch({ businessVertical: newValue });
   };
 
   const onSubmit = () => {
@@ -94,14 +99,16 @@ const SignUpForm: FC = () => {
         if (err) {
           setServerSideError(SIGN_UP_ERROR);
         } else {
+          dispatch({
+            fullName: '',
+            email: '',
+            password: '',
+            repeatedPassword: '',
+            businessVertical: '',
+          });
           history.push('/verification');
         }
         setDisableSubmit(false);
-        setFullName('');
-        setEmail('');
-        setPassword('');
-        setRepeatedPassword('');
-        setBusinessVertical('');
       },
     );
 
@@ -151,9 +158,26 @@ const SignUpForm: FC = () => {
             </MenuItem>
           ))}
         </Selector>
-        <SubmitButton onClick={onSubmit} disabled={disableSubmit}>
-          {submitButtonTitle}
-        </SubmitButton>
+        <Tooltip
+          interactive
+          title={
+            <>
+              You must accept our <Link href="terms">Terms</Link> before signing
+              up
+            </>
+          }
+          disableHoverListener={termsAccepted}
+          disableFocusListener={termsAccepted}
+          disableTouchListener={termsAccepted}
+          placement="top"
+          arrow
+        >
+          <div>
+            <SubmitButton onClick={onSubmit} disabled={disableSubmit}>
+              {submitButtonTitle}
+            </SubmitButton>
+          </div>
+        </Tooltip>
       </form>
       <ServerSideError serverSideErrorText={serverSideError} />
     </>

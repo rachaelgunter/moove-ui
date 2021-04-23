@@ -102,3 +102,22 @@ export type SegmentData = {
   error?: ApolloError | undefined;
   loading: boolean;
 };
+
+export type ColumnData = {
+  name: string;
+  type: string;
+};
+
+export enum ColumnType {
+  TIMESTAMP = 'TIMESTAMP',
+  FLOAT = 'FLOAT',
+  GEOGRAPHY = 'GEOGRAPHY',
+}
+
+export type RemovedDataset = {
+  analysisName: string;
+};
+
+export type DatasetRemovalResponse = {
+  deleteDataset: RemovedDataset;
+};

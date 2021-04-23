@@ -260,3 +260,15 @@ export class BigQueryColumnTable {
   @Field({ nullable: true })
   count?: number;
 }
+
+@ArgsType()
+export class BigQueryTableColumnsParams {
+  @Field()
+  projectId: string;
+
+  @Field()
+  datasetId: string;
+
+  @Field()
+  tableId: string;
+}
