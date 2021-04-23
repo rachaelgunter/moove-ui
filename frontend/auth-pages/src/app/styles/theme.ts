@@ -63,6 +63,11 @@ const theme = createMuiTheme({
         fontFamily: 'Roboto',
       },
     },
+    MuiTooltip: {
+      tooltip: {
+        fontSize: 12,
+      },
+    },
   },
 });
 

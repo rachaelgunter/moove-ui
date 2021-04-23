@@ -32,6 +32,24 @@ export class DatasetParamsInput {
 
   @Field()
   assetsBucket: string;
+
+  @Field()
+  primaryTimestamp: string;
+
+  @Field({ nullable: true })
+  primaryGeography: string;
+
+  @Field()
+  groupBy: string;
+
+  @Field(() => [String])
+  jenksCols: string[];
+
+  @Field()
+  lat: string;
+
+  @Field()
+  lon: string;
 }
 
 @InputType()
@@ -56,6 +74,24 @@ export class FileDatasetParamsInput {
 
   @Field()
   assetsBucket: string;
+
+  @Field()
+  primaryTimestamp: string;
+
+  @Field({ nullable: true })
+  primaryGeography: string;
+
+  @Field()
+  groupBy: string;
+
+  @Field(() => [String])
+  jenksCols: string[];
+
+  @Field()
+  lat: string;
+
+  @Field()
+  lon: string;
 }
 
 @ArgsType()
@@ -150,17 +186,11 @@ export enum CloudFunctionDatasetStatus {
 @ArgsType()
 export class RemovingDatasetParams {
   @Field()
-  datasetId: string;
-
-  @Field()
-  GCPProjectName: string;
+  analysisName: string;
 }
 
 @ObjectType()
 export class RemovedDataset {
   @Field()
-  datasetId: string;
-
-  @Field()
-  GCPProjectName: string;
+  analysisName: string;
 }

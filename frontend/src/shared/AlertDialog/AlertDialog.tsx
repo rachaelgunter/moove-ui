@@ -6,6 +6,7 @@ import {
   DialogContent,
   Theme,
   Button,
+  CircularProgress,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
@@ -24,8 +25,10 @@ interface AlertDialogProps {
   title: string;
   message: string;
   onClose: () => void;
-  onAction: () => void;
-  actionButtonTitle: string;
+  loading?: boolean;
+  actionButtonTitle?: string;
+  hasAction?: boolean;
+  onAction?: () => void;
   type?: AlertDialogType;
 }
 
@@ -57,6 +60,12 @@ const useStyles = (type: AlertDialogType) =>
       primaryButton: {
         color: colorMap[type],
       },
+      loader: {
+        width: theme.spacing(4),
+        height: theme.spacing(4),
+        marginRight: 'auto',
+        marginLeft: 'auto',
+      },
     };
   })();
 
@@ -68,6 +77,8 @@ const AlertDialog: FC<AlertDialogProps> = ({
   onAction,
   actionButtonTitle,
   type = AlertDialogType.INFORMATION,
+  hasAction = false,
+  loading = false,
 }: AlertDialogProps) => {
   const classes = useStyles(type);
 
@@ -94,16 +105,27 @@ const AlertDialog: FC<AlertDialogProps> = ({
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button classes={{ root: classes.dialogButton }} onClick={onClose}>
-            Canсel
-          </Button>
-          <Button
-            classes={{ root: classes.dialogButton }}
-            className={classes.primaryButton}
-            onClick={onAction}
-          >
-            {actionButtonTitle}
-          </Button>
+          {loading ? (
+            <CircularProgress className={classes.loader} size="36px" />
+          ) : (
+            <>
+              <Button
+                classes={{ root: classes.dialogButton }}
+                onClick={onClose}
+              >
+                Canсel
+              </Button>
+              {hasAction && (
+                <Button
+                  classes={{ root: classes.dialogButton }}
+                  className={classes.primaryButton}
+                  onClick={onAction}
+                >
+                  {actionButtonTitle}
+                </Button>
+              )}
+            </>
+          )}
         </DialogActions>
       </Dialog>
     </>
@@ -112,6 +134,10 @@ const AlertDialog: FC<AlertDialogProps> = ({
 
 AlertDialog.defaultProps = {
   type: AlertDialogType.INFORMATION,
+  hasAction: false,
+  onAction: () => {},
+  actionButtonTitle: '',
+  loading: false,
 };
 
 export default AlertDialog;

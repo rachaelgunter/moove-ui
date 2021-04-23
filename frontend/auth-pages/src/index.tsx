@@ -1,16 +1,8 @@
 import React from 'react';
-import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import auth0 from 'auth0-js';
 import ReactDOM from 'react-dom';
-import { HashRouter, Route, Switch } from 'react-router-dom';
 
-import theme from './app/styles';
-import SignIn from './SignIn';
-import SignUp from './SignUp';
-import Terms from './Terms';
-import EmailVerification from './EmailVerification';
-import WebAuthProvider from './WebAuthProvider';
-import ForgotPassword from './ForgotPassword';
+import App from './app/App';
 
 function getAuthOptions() {
   const config = JSON.parse(
@@ -62,32 +54,6 @@ const options =
 const webAuth = new auth0.WebAuth(options);
 
 ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <CssBaseline />
-    <WebAuthProvider.Provider value={{ webAuth, options }}>
-      <HashRouter>
-        <Switch>
-          <Route exact path="/premium">
-            <SignIn hasGoogleAuth />
-          </Route>
-          <Route exact path="/">
-            <SignIn />
-          </Route>
-          <Route path="/sign-up">
-            <SignUp />
-          </Route>
-          <Route path="/terms">
-            <Terms />
-          </Route>
-          <Route path="/verification">
-            <EmailVerification />
-          </Route>
-          <Route exact path="/forgot-password">
-            <ForgotPassword />
-          </Route>
-        </Switch>
-      </HashRouter>
-    </WebAuthProvider.Provider>
-  </ThemeProvider>,
+  <App webAuth={webAuth} options={options} />,
   document.getElementById('root'),
 );

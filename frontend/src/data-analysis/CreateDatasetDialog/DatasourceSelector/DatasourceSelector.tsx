@@ -1,17 +1,14 @@
+import React, { FC, useContext } from 'react';
 import { Box, Divider, makeStyles, Tab, Tabs, Theme } from '@material-ui/core';
-import React, { FC } from 'react';
+
 import { FontFamily } from 'src/app/styles/fonts';
 import TablesTreeView from 'src/data-analysis/TablesTreeView/TablesTreeView';
-import { TableIdentity } from 'src/data-analysis/types';
 import Typography from 'src/shared/Typography';
 import { ReactComponent as UploadIcon } from 'src/assets/icons/upload.svg';
 import { ReactComponent as BigQueryIcon } from 'src/assets/icons/database.svg';
 import Dropzone from 'src/shared/Dropzone/Dropzone';
-
-interface DatasourceSelectorProps {
-  onTableSelect: (params: TableIdentity | null) => void;
-  onFileSelect: (file: File | null) => void;
-}
+import { TableIdentity } from 'src/data-analysis/types';
+import CreateDatasetContext from '../CreateDatasetContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
   datasourceSelector: {
@@ -72,12 +69,11 @@ TabPanel.defaultProps = {
   children: null,
 };
 
-const DatasourceSelector: FC<DatasourceSelectorProps> = ({
-  onTableSelect,
-  onFileSelect,
-}: DatasourceSelectorProps) => {
+const DatasourceSelector: FC = () => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+
+  const { dispatch } = useContext(CreateDatasetContext);
 
   const handleChange = (
     event: React.ChangeEvent<Record<string, unknown>>,
@@ -86,9 +82,23 @@ const DatasourceSelector: FC<DatasourceSelectorProps> = ({
     if (newValue === value) {
       return;
     }
-    onTableSelect(null);
-    onFileSelect(null);
+    dispatch({
+      selectedTable: null,
+      selectedFile: null,
+    });
     setValue(newValue);
+  };
+
+  const handleTableSelect = (table: TableIdentity) => {
+    dispatch({
+      selectedTable: table,
+    });
+  };
+
+  const handleFileSelect = (file: File) => {
+    dispatch({
+      selectedFile: file,
+    });
   };
 
   return (
@@ -116,11 +126,11 @@ const DatasourceSelector: FC<DatasourceSelectorProps> = ({
       </Tabs>
       <Divider className={classes.divider} />
       <TabPanel value={value} index={0}>
-        <TablesTreeView onTableSelect={onTableSelect} />
+        <TablesTreeView onTableSelect={handleTableSelect} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Box className={classes.fileUploader}>
-          <Dropzone onDrop={(files) => onFileSelect(files[0] ?? null)} />
+          <Dropzone onDrop={(files) => handleFileSelect(files[0] ?? null)} />
         </Box>
       </TabPanel>
     </Box>

@@ -1,38 +1,29 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Divider,
-} from '@material-ui/core';
-import React, { FC, useContext, useState } from 'react';
+import { Dialog, DialogContent, DialogTitle, Divider } from '@material-ui/core';
+import React, { FC, useContext, useEffect, useReducer, useState } from 'react';
+
 import { FontFamily } from 'src/app/styles/fonts';
 import { UserContext } from 'src/auth/UserProvider';
-import TextField from 'src/shared/TextField';
 import Typography from 'src/shared/Typography';
 import { ReactComponent as CheckIcon } from 'src/assets/icons/check.svg';
 import { ReactComponent as ErrorIcon } from 'src/assets/images/warning.svg';
-
+import { ADMIN_AREAS_MAP } from 'src/data-analysis/CreateDatasetDialog/pages/SelectOptionsPage';
+import { SelectOptionsPage, SelectSourcePage } from './pages';
+import CreateDatasetControls from './CreateDatasetControls';
+import CreateDatasetStepper from './CreateDatasetStepper';
 import {
   CREATE_BQ_DATASET_MUTATION,
   CREATE_FILE_DATASET_MUTATION,
 } from '../mutations';
 import { DATASET_FILE_UPLOAD_LINK_QUERY } from '../queries';
-import { TableIdentity } from '../types';
 import CreateDatasetMessage, {
   CreateDatasetMessageProps,
 } from './CreateDatasetMessage';
-import DatasourceSelector from './DatasourceSelector/DatasourceSelector';
 import useStyles from './useStyles';
-
-const MAX_DESCRIPTION_LENGTH = 16384;
-export const DESCRIPTION_MAX_LENGTH_ERROR =
-  'Maximum description length is limited to 16384 characters';
-export const DATASET_NAME_ERROR =
-  'Name should contain only alphanumeric characters, underscores or dashes';
+import CreateDatasetContext, {
+  CreateDatasetFormState,
+  initialState,
+} from './CreateDatasetContext';
 
 interface CreateDatasetDialogProps {
   open: boolean;
@@ -47,16 +38,35 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
 }: CreateDatasetDialogProps) => {
   const classes = useStyles();
 
-  const [description, setDescription] = useState('');
-  const [descriptionError, setDescriptionError] = useState('');
-  const [name, setName] = useState('');
-  const [nameError, setNameError] = useState('');
-  const [selectedTable, setSelectedTable] = useState<TableIdentity | null>(
-    null,
+  const steps = [
+    {
+      label: 'Select source',
+      component: SelectSourcePage,
+    },
+    {
+      label: 'Select options',
+      component: SelectOptionsPage,
+    },
+  ];
+
+  const [state, dispatch] = useReducer<
+    (
+      state: CreateDatasetFormState,
+      action: Partial<CreateDatasetFormState>,
+    ) => CreateDatasetFormState
+  >(
+    (currentState, action): CreateDatasetFormState => ({
+      ...currentState,
+      ...action,
+    }),
+    {
+      ...initialState,
+      stepAmount: steps.length,
+    },
   );
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [creationCompleted, setCreationCompleted] = useState(false);
   const [creationError, setCreationError] = useState<string | null>(null);
+
   const { GCPProjectName, GCSBucketName, organization } = useContext(
     UserContext,
   );
@@ -90,100 +100,77 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
         createFileDataset({
           variables: {
             datasetParams: {
-              name,
-              description,
+              name: state.name,
+              description: state.description,
               organizationName: organization,
               analysisProject: GCPProjectName,
               assetsBucket: GCSBucketName,
-              fileName: selectedFile?.name ?? '',
+              fileName: state.selectedFile?.name ?? '',
             },
           },
         }),
       ),
   });
 
+  useEffect(() => {
+    dispatch({
+      stepAmount: steps.length,
+    });
+  }, [steps.length]);
+
+  useEffect(() => {
+    dispatch({
+      loading: Boolean(fileCreationLoading || BQCreationLoading),
+    });
+  }, [fileCreationLoading, BQCreationLoading]);
+
+  useEffect(() => {
+    dispatch({
+      creationTerminated: Boolean(creationCompleted || creationError),
+    });
+  }, [creationCompleted, creationError]);
+
   const handleClose = () => {
     onClose();
-
     if (!BQCreationLoading || fileCreationLoading) {
-      // timeout to avoid visible content changes during close transition
       setTimeout(() => {
-        setName('');
-        setDescription('');
-        setSelectedTable(null);
-        setSelectedFile(null);
+        dispatch({
+          ...initialState,
+          stepAmount: steps.length,
+        });
         setCreationCompleted(false);
         setCreationError(null);
       }, 200);
     }
   };
 
-  const onNameChange = (updatedName: string) => {
-    setName(updatedName);
-    updateNameErrorState(updatedName);
-  };
-
-  const onDescriptionChange = (updatedDescription: string) => {
-    setDescription(updatedDescription);
-    updateDescriptionErrorState(updatedDescription);
-  };
-
-  const updateDescriptionErrorState = (updatedDescription: string) => {
-    if (updatedDescription.length > MAX_DESCRIPTION_LENGTH) {
-      setDescriptionError(DESCRIPTION_MAX_LENGTH_ERROR);
-    } else {
-      setDescriptionError('');
-    }
-  };
-
-  const updateNameErrorState = (updatedName: string) => {
-    if (updatedName.match(/^[a-zA-Z0-9-_]*$/)) {
-      setNameError('');
-    } else {
-      setNameError(DATASET_NAME_ERROR);
-    }
-  };
-
-  const handleTableSelect = (tableIdentity: TableIdentity | null) => {
-    if (tableIdentity) {
-      const { projectId, datasetId, tableId } = tableIdentity;
-      setSelectedTable({ projectId, datasetId, tableId });
-      return;
-    }
-    setSelectedTable(null);
-  };
-
-  const isCreateButtonEnabled = () => {
-    return (
-      name.length &&
-      !descriptionError.length &&
-      (selectedTable !== null || selectedFile !== null) &&
-      !(fileCreationLoading || BQCreationLoading)
-    );
-  };
-
   const handleDatasetCreationFromBQTable = () => {
     createBQDataset({
       variables: {
         datasetParams: {
-          name,
-          description,
+          name: state.name,
+          description: state.description,
           organizationName: organization,
           analysisProject: GCPProjectName,
           assetsBucket: GCSBucketName,
-          ...selectedTable,
+          primaryTimestamp: state.timestampColumn,
+          primaryGeography: state.geographyColumn,
+          groupBy: ADMIN_AREAS_MAP[state.groupByColumn],
+          jenksCols: state.jenkColsColumns,
+          ...state.latLonColumns,
+          ...state.selectedTable,
         },
       },
     });
   };
 
   const handleDatasetCreationFromFile = () => {
-    if (selectedFile) {
+    if (state.selectedFile) {
       getUploadLink({
         variables: {
-          fileName: selectedFile?.name ?? '',
+          fileName: state.selectedFile?.name ?? '',
           organizationName: organization,
-          analysisName: name,
+          analysisName: state.name,
         },
       });
     }
@@ -195,12 +182,12 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
         'Content-Type': 'application/octet-stream',
       },
       method: 'PUT',
-      body: selectedFile,
+      body: state.selectedFile,
     });
   };
 
   const handleDatasetCreation = () => {
-    if (selectedFile) {
+    if (state.selectedFile) {
       handleDatasetCreationFromFile();
       return;
     }
@@ -220,6 +207,8 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
     };
   };
 
+  const PageComponent = steps[state.currentStep].component;
+
   return (
     <Dialog
       maxWidth="lg"
@@ -238,56 +227,31 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
         </Typography>
       </DialogTitle>
       <DialogContent className={classes.contentRoot}>
-        {creationCompleted || creationError ? (
-          <CreateDatasetMessage {...getCreationMessageProps()} />
-        ) : (
-          <>
-            <TextField
-              label="Name"
-              value={name}
-              onChange={onNameChange}
-              error={!!nameError.length}
-              errorText={nameError}
-            />
-            <TextField
-              label="Description"
-              value={description}
-              onChange={onDescriptionChange}
-              error={!!descriptionError.length}
-              errorText={descriptionError}
-              multiline
-            />
-            <Divider className={classes.divider} />
-            <DatasourceSelector
-              onTableSelect={handleTableSelect}
-              onFileSelect={setSelectedFile}
-            />
-          </>
-        )}
-
-        <Divider className={classes.divider} />
-        <Box className={classes.dialogControls}>
-          <Button
-            disabled={fileCreationLoading || BQCreationLoading}
-            className={classes.dialogButton}
-            onClick={handleClose}
-          >
-            {creationCompleted || creationError ? 'Close' : 'Cancel'}
-          </Button>
-          {!(creationCompleted || creationError) && (
-            <Button
-              disabled={!isCreateButtonEnabled()}
-              className={classes.dialogButton}
-              onClick={handleDatasetCreation}
-            >
-              {!(fileCreationLoading || BQCreationLoading) ? (
-                'Create'
-              ) : (
-                <CircularProgress size="1em" />
-              )}
-            </Button>
+        <CreateDatasetContext.Provider
+          value={{
+            state,
+            dispatch,
+          }}
+        >
+          {creationCompleted || creationError ? (
+            <CreateDatasetMessage {...getCreationMessageProps()} />
+          ) : (
+            <>
+              <CreateDatasetStepper
+                steps={steps.map(({ label }) => label)}
+                currentStep={state.currentStep}
+              />
+              <div className={classes.pageWrapper}>
+                <PageComponent />
+              </div>
+            </>
           )}
-        </Box>
+          <Divider />
+          <CreateDatasetControls
+            handleClose={handleClose}
+            handleDatasetCreation={handleDatasetCreation}
+          />
+        </CreateDatasetContext.Provider>
       </DialogContent>
     </Dialog>
   );
