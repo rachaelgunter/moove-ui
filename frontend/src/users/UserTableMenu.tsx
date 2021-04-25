@@ -14,6 +14,7 @@ import { User } from 'src/auth/UserProvider';
 import { FontFamily } from 'src/app/styles/fonts';
 import AlertDialog from 'src/shared/AlertDialog';
 import { AlertDialogType } from 'src/shared/AlertDialog/AlertDialog';
+import useDeleteUser from './hooks/useDeleteUser';
 
 interface UserTableMenuProps {
   user: User;
@@ -52,9 +53,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 const UserTableMenu: FC<UserTableMenuProps> = ({
   user,
 }: UserTableMenuProps) => {
+  const { email, sub } = user;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [open, setOpen] = useState(false);
+  const [deleteUser] = useDeleteUser();
 
   const onMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -66,7 +69,9 @@ const UserTableMenu: FC<UserTableMenuProps> = ({
   const onSwitch = () => setOpen(!open);
 
   const onDelete = () => {
-    console.warn('DELETED!!!');
+    deleteUser({
+      variables: { deleteUserPayload: { email, sub } },
+    });
     onSwitch();
   };
 

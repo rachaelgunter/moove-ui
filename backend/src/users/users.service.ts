@@ -14,6 +14,8 @@ import {
   CreateUserPayload,
   User,
   auth0RolesMap,
+  DeletedUser,
+  DeleteUserPayload,
 } from './users.types';
 
 @Injectable()
@@ -215,5 +217,11 @@ export class UsersService {
       createdAt: user.created_at,
       lastLogin: user.last_login,
     };
+  }
+
+  async deleteUser(deleteUserPayload: DeleteUserPayload): Promise<DeletedUser> {
+    const { email } = deleteUserPayload;
+
+    return { email };
   }
 }
