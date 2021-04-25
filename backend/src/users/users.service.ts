@@ -220,7 +220,9 @@ export class UsersService {
   }
 
   async deleteUser(deleteUserPayload: DeleteUserPayload): Promise<DeletedUser> {
-    const { email } = deleteUserPayload;
+    const { email, sub } = deleteUserPayload;
+
+    await this.auth0ClientService.deleteUser(sub);
 
     return { email };
   }

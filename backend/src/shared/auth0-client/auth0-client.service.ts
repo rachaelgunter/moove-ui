@@ -90,4 +90,8 @@ export class Auth0ClientService {
       connection: 'Username-Password-Authentication',
     });
   }
+
+  async deleteUser(sub: string): Promise<void> {
+    return this.client.deleteUser({ id: sub });
+  }
 }
