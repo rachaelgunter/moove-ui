@@ -222,7 +222,10 @@ export class UsersService {
   async deleteUser(deleteUserPayload: DeleteUserPayload): Promise<DeletedUser> {
     const { email, sub } = deleteUserPayload;
 
-    await this.auth0ClientService.deleteUser(sub);
+    this.logger.log(`Deleting user: ${sub}`);
+    await this.auth0ClientService
+      .deleteUser(sub)
+      .then(() => this.prisma.user.delete({ where: { email } }));
 
     return { email };
   }
