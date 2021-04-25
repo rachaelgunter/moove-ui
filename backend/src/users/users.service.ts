@@ -227,7 +227,6 @@ export class UsersService {
     return this.auth0ClientService
       .deleteUser(sub)
       .then(async () => {
-        console.warn('i am here');
         const deletedUser = await this.prisma.user.delete({ where: { email } });
 
         return { email: deletedUser.email };
