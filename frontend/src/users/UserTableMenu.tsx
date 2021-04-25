@@ -12,6 +12,8 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { User } from 'src/auth/UserProvider';
 import { FontFamily } from 'src/app/styles/fonts';
+import AlertDialog from 'src/shared/AlertDialog';
+import { AlertDialogType } from 'src/shared/AlertDialog/AlertDialog';
 
 interface UserTableMenuProps {
   user: User;
@@ -52,13 +54,20 @@ const UserTableMenu: FC<UserTableMenuProps> = ({
 }: UserTableMenuProps) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [open, setOpen] = useState(false);
 
   const onMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
   const onMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const onSwitch = () => setOpen(!open);
+
+  const onDelete = () => {
+    console.warn('DELETED!!!');
+    onSwitch();
   };
 
   console.warn(user);
@@ -84,7 +93,7 @@ const UserTableMenu: FC<UserTableMenuProps> = ({
         open={Boolean(anchorEl)}
         onClose={onMenuClose}
       >
-        <MenuItem className={classes.actionsMenuItem}>
+        <MenuItem className={classes.actionsMenuItem} onClick={onSwitch}>
           <Link className={classes.link} component="button">
             <Typography color="textPrimary" variant="body1">
               Delete
@@ -92,6 +101,16 @@ const UserTableMenu: FC<UserTableMenuProps> = ({
           </Link>
         </MenuItem>
       </Menu>
+      <AlertDialog
+        open={open}
+        title="You are about to delete this user."
+        message="This action cannot be undone. Do you want to proceed?"
+        actionButtonTitle="Delete"
+        hasAction
+        onAction={onDelete}
+        onClose={onSwitch}
+        type={AlertDialogType.DANGER}
+      />
     </>
   );
 };
