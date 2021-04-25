@@ -57,7 +57,8 @@ const UserTableMenu: FC<UserTableMenuProps> = ({
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [open, setOpen] = useState(false);
-  const [deleteUser] = useDeleteUser();
+  const [deletionError, setDeletionError] = useState('');
+  const [deleteUser, { loading }] = useDeleteUser();
 
   const onMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -71,11 +72,14 @@ const UserTableMenu: FC<UserTableMenuProps> = ({
   const onDelete = () => {
     deleteUser({
       variables: { deleteUserPayload: { email, sub } },
-    });
-    onSwitch();
+    })
+      .catch(() =>
+        setDeletionError('Unable to delete this user. Please try again later.'),
+      )
+      .finally(() => {
+        onSwitch();
+      });
   };
-
-  console.warn(user);
 
   return (
     <>
@@ -83,7 +87,7 @@ const UserTableMenu: FC<UserTableMenuProps> = ({
         <MoreVertIcon />
       </IconButton>
       <Menu
-        id="simple-menu"
+        id="user-menu"
         classes={{ list: classes.actionsMenu }}
         anchorEl={anchorEl}
         getContentAnchorEl={null}
@@ -114,6 +118,14 @@ const UserTableMenu: FC<UserTableMenuProps> = ({
         hasAction
         onAction={onDelete}
         onClose={onSwitch}
+        loading={loading}
+        type={AlertDialogType.DANGER}
+      />
+      <AlertDialog
+        open={!!deletionError.length}
+        title="Error"
+        message={deletionError}
+        onClose={() => setDeletionError('')}
         type={AlertDialogType.DANGER}
       />
     </>

@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { AppMetadata, UserMetadata, User as Auth0User } from 'auth0';
+
 import { OrganizationsService } from 'src/organizations/organizations.service';
 import { matchRoles } from 'src/shared/users/roles-matcher';
 import { Auth0ClientService } from '../shared/auth0-client/auth0-client.service';
@@ -222,11 +223,20 @@ export class UsersService {
   async deleteUser(deleteUserPayload: DeleteUserPayload): Promise<DeletedUser> {
     const { email, sub } = deleteUserPayload;
 
-    this.logger.log(`Deleting user: ${sub}`);
-    await this.auth0ClientService
+    this.logger.log(`Deleting user: ${email}`);
+    return this.auth0ClientService
       .deleteUser(sub)
-      .then(() => this.prisma.user.delete({ where: { email } }));
+      .then(async () => {
+        console.warn('i am here');
+        const deletedUser = await this.prisma.user.delete({ where: { email } });
 
-    return { email };
+        return { email: deletedUser.email };
+      })
+      .catch((e) => {
+        this.logger.error(
+          `Failed to delete user ${email}: ${JSON.stringify(e)}`,
+        );
+        return e;
+      });
   }
 }
