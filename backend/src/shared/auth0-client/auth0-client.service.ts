@@ -12,6 +12,7 @@ import {
 import { Organization } from 'src/organizations/organizations.types';
 import { Role } from 'src/users/users.types';
 import * as crypto from 'crypto';
+import Auth0ClientError from './Auth0ClientError';
 
 @Injectable()
 export class Auth0ClientService {
@@ -93,5 +94,19 @@ export class Auth0ClientService {
 
   async deleteUser(sub: string): Promise<void> {
     return this.client.deleteUser({ id: sub });
+  }
+
+  async isExistUser(sub: string): Promise<Auth0User> {
+    return this.client.getUser({ id: sub });
+  }
+
+  async isDeletedUser(sub: string): Promise<boolean> {
+    try {
+      await this.client.getUser({ id: sub });
+    } catch (e) {
+      return true;
+    }
+
+    throw new Auth0ClientError('Failed to delete user from Auth0');
   }
 }

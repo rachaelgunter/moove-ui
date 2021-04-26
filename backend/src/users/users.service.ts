@@ -224,18 +224,21 @@ export class UsersService {
     const { email, sub } = deleteUserPayload;
 
     this.logger.log(`Deleting user: ${email}`);
-    return this.auth0ClientService
-      .deleteUser(sub)
-      .then(async () => {
-        const deletedUser = await this.prisma.user.delete({ where: { email } });
 
-        return { email: deletedUser.email };
-      })
-      .catch((e) => {
-        this.logger.error(
-          `Failed to delete user ${email}: ${JSON.stringify(e)}`,
-        );
-        return e;
-      });
+    try {
+      await this.auth0ClientService.isExistUser(sub);
+
+      await this.auth0ClientService.deleteUser(sub);
+
+      await this.auth0ClientService.isDeletedUser(sub);
+
+      const deletedUser = await this.prisma.user.delete({ where: { email } });
+
+      return { email: deletedUser.email };
+    } catch (e) {
+      this.logger.error(`Failed to delete user ${email}: ${JSON.stringify(e)}`);
+
+      throw e;
+    }
   }
 }
