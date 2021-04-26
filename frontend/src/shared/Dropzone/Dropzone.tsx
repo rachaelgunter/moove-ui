@@ -1,9 +1,10 @@
 import { Button, makeStyles, Theme, Typography } from '@material-ui/core';
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { ReactComponent as UploadIcon } from 'src/assets/icons/upload-to-cloud.svg';
 
 interface DropzoneProps {
+  files: File[];
   onDrop: <T extends File>(acceptedFiles: T[]) => void;
 }
 
@@ -32,12 +33,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Dropzone: FC<DropzoneProps> = ({ onDrop }: DropzoneProps) => {
-  const [files, setFiles] = useState<File[]>([]);
+const Dropzone: FC<DropzoneProps> = ({ onDrop, files }: DropzoneProps) => {
   const classes = useStyles();
 
   const updateFiles = (updated: File[]) => {
-    setFiles(updated);
     onDrop(updated);
   };
 

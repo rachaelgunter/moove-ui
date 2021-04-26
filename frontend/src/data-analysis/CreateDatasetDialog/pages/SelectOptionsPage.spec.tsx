@@ -7,6 +7,7 @@ import theme from 'src/app/styles';
 import CreateDatasetContext, {
   CreateDatasetFormState,
   CreateDatasetProvider,
+  DatasourceSelectorMode,
 } from '../CreateDatasetContext';
 import SelectOptionsPage from './SelectOptionsPage';
 
@@ -66,6 +67,8 @@ describe('SelectOptionsPage', () => {
     loading: false,
     currentStep: 1,
     stepAmount: 2,
+    bigQuerySelectorExpandedRows: [],
+    datasourceSelectorMode: DatasourceSelectorMode.BIG_QUERY,
   } as CreateDatasetFormState;
 
   beforeEach(async () => {

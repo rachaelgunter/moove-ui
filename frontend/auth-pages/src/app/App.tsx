@@ -11,6 +11,7 @@ import SignIn from '../SignIn';
 import SignUp from '../SignUp';
 import Terms from '../Terms';
 import theme from './styles';
+import ForgotPassword from '../ForgotPassword';
 
 interface AppProps {
   webAuth: WebAuth;
@@ -39,6 +40,9 @@ const App: FC<AppProps> = ({ webAuth, options }: AppProps) => {
               </Route>
               <Route path="/verification">
                 <EmailVerification />
+              </Route>
+              <Route exact path="/forgot-password">
+                <ForgotPassword />
               </Route>
             </Switch>
           </HashRouter>

@@ -93,6 +93,9 @@ createAuth0Client({
         Dataset: {
           keyFields: ['analysisName'],
         },
+        User: {
+          keyFields: ['email'],
+        },
       },
     }),
   });

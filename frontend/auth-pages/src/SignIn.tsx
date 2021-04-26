@@ -1,5 +1,5 @@
 import React, { FC, useContext, useEffect } from 'react';
-import { makeStyles, Theme, Typography } from '@material-ui/core';
+import { Box, makeStyles, Theme, Typography } from '@material-ui/core';
 
 import AuthPage from './AuthPage';
 import Footer from './Footer';
@@ -23,8 +23,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 400,
     lineHeight: 1.43,
   },
-  marginBottom: {
+  margin: {
     marginBottom: theme.spacing(2),
+    marginLeft: -theme.spacing(6),
+    marginRight: -theme.spacing(6),
+  },
+  marginBetween: {
+    marginLeft: '16px',
   },
 }));
 
@@ -48,7 +53,7 @@ const SignIn: FC<SignInProps> = ({ hasGoogleAuth = false }: SignInProps) => {
         <>
           <GoogleAuth hint={SIGN_IN_HINT} buttonText={SIGN_IN_BUTTON_TEXT} />
           <Typography
-            className={classes.marginBottom}
+            className={classes.margin}
             variant="body2"
             component="p"
             align="center"
@@ -76,7 +81,7 @@ const SignIn: FC<SignInProps> = ({ hasGoogleAuth = false }: SignInProps) => {
           <SignInForm />
           <Footer>
             <Typography
-              className={classes.marginBottom}
+              className={classes.margin}
               variant="body2"
               component="span"
               align="center"
@@ -85,6 +90,11 @@ const SignIn: FC<SignInProps> = ({ hasGoogleAuth = false }: SignInProps) => {
               <Link href="/sign-up" variant="body2">
                 Sign Up
               </Link>
+              <Box className={classes.marginBetween} component="span">
+                <Link href="/forgot-password" variant="body2">
+                  Forgot Password?
+                </Link>
+              </Box>
             </Typography>
             <Typography variant="body2" component="span" align="center">
               Have a paid account?&nbsp;

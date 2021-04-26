@@ -1,5 +1,5 @@
 {
-  "name": "local-uploads-ingestion-trigger",
+  "name": "validate-csv",
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
@@ -21,6 +21,9 @@
     "@google-cloud/functions-framework": "^1.7.1",
     "@google-cloud/storage": "^5.8.3",
     "axios": "^0.21.1",
-    "google-auth-library": "^7.0.4"
+    "csv-parse": "^4.15.4",
+    "dayjs": "^1.10.4",
+    "google-auth-library": "^7.0.4",
+    "wkt": "^0.1.1"
   }
 }
