@@ -6,6 +6,7 @@ import {
   FormLabel,
   Grid,
   MenuItem,
+  Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { Theme } from '@material-ui/core/styles';
@@ -50,6 +51,7 @@ const SelectOptionsPage: React.FC = () => {
   const [timestampError, setTimestampError] = useState(false);
   const [groupByError, setGroupByError] = useState(false);
   const [jenkColsError, setJenkColsError] = useState(false);
+  const [csvColumnsLoading, setCsvColumnsLoading] = useState(false);
   const { state, dispatch } = useContext(CreateDatasetContext);
   const [
     getColumnsData,
@@ -57,29 +59,28 @@ const SelectOptionsPage: React.FC = () => {
   ] = useLazyQuery(BIG_QUERY_TABLE_COLUMNS_QUERY);
   const [
     getCsvColumnData,
-    { data: csvDatasourceColumnsData, loading: csvColumnsLoading },
+    { data: csvDatasourceColumnsData, error },
   ] = useLazyQuery(DATASOURCE_VALIDATED_COLUMNS_QUERY, {
+    onCompleted: () => setCsvColumnsLoading(false),
+    onError: () => setCsvColumnsLoading(false),
     fetchPolicy: 'no-cache',
   });
 
   const { organization } = useContext(UserContext);
 
-  const [getUploadLink, { loading: linkLoading }] = useLazyQuery(
-    DATASET_FILE_UPLOAD_LINK_QUERY,
-    {
-      fetchPolicy: 'no-cache',
-      onCompleted: ({ datasetFileSignedUploadUrl }) =>
-        uploadFile(datasetFileSignedUploadUrl).then(() =>
-          getCsvColumnData({
-            variables: {
-              organizationName: organization,
-              analysisName: state.name,
-              fileName: state.selectedFile?.name,
-            },
-          }),
-        ),
-    },
-  );
+  const [getUploadLink] = useLazyQuery(DATASET_FILE_UPLOAD_LINK_QUERY, {
+    fetchPolicy: 'no-cache',
+    onCompleted: ({ datasetFileSignedUploadUrl }) =>
+      uploadFile(datasetFileSignedUploadUrl).then(() =>
+        getCsvColumnData({
+          variables: {
+            organizationName: organization,
+            analysisName: state.name,
+            fileName: state.selectedFile?.name,
+          },
+        }),
+      ),
+  });
 
   const uploadFile = async (link: string) => {
     return fetch(link, {
@@ -109,6 +110,7 @@ const SelectOptionsPage: React.FC = () => {
     if (!state.selectedFile) {
       return;
     }
+    setCsvColumnsLoading(true);
     getUploadLink({
       variables: {
         fileName: state.selectedFile?.name ?? '',
@@ -205,10 +207,18 @@ const SelectOptionsPage: React.FC = () => {
     },
   ];
 
-  if (bigQueryColumnsLoading || csvColumnsLoading || linkLoading) {
+  if (bigQueryColumnsLoading || csvColumnsLoading) {
     return (
       <Box className={classes.overlay}>
         <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box className={classes.overlay}>
+        <Typography variant="body2">{error.message}</Typography>
       </Box>
     );
   }

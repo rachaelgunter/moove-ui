@@ -57,7 +57,7 @@ export class DatasetsCreationService {
           ),
         ),
         catchError((err) =>
-          throwError(new DatasourceValidationError(err.message)),
+          throwError(new DatasourceValidationError(err.response.data.error)),
         ),
       )
       .toPromise();
