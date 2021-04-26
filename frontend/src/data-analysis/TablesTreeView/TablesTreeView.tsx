@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useState } from 'react';
+import React, { ChangeEvent, FC, useContext } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import TreeView from '@material-ui/lab/TreeView';
 
@@ -12,8 +12,10 @@ import StyledTreeItem from './TreeItem';
 import GCPProjectIcon from '../icons/GCPProjectIcon';
 import { BIG_QUERY_PROJECTS_QUERY } from '../queries';
 import DatasetSubtree from './DatasetSubtree';
+import CreateDatasetContext from '../CreateDatasetDialog/CreateDatasetContext';
 
 interface TablesTreeViewProps {
+  selected: TableIdentity | null;
   onTableSelect: (params: TableIdentity) => void;
 }
 
@@ -36,10 +38,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const TablesTreeView: FC<TablesTreeViewProps> = ({
   onTableSelect,
+  selected,
 }: TablesTreeViewProps) => {
   const classes = useStyles();
-  const [selected, setSelected] = useState('');
-  const [expanded, setExpanded] = useState<string[]>([]);
+  const { state, dispatch } = useContext(CreateDatasetContext);
 
   const { data } = useQuery<BigQueryProjectsResponse>(BIG_QUERY_PROJECTS_QUERY);
 
@@ -49,7 +51,6 @@ const TablesTreeView: FC<TablesTreeViewProps> = ({
   ) => {
     if (value.includes('table')) {
       const [projectId, datasetId, tableId] = value.split(':');
-      setSelected(value);
       onTableSelect({ projectId, datasetId, tableId });
     }
   };
@@ -58,11 +59,11 @@ const TablesTreeView: FC<TablesTreeViewProps> = ({
     _: ChangeEvent<Record<string, unknown>>,
     ids: string[],
   ) => {
-    setExpanded(ids);
+    dispatch({ bigQuerySelectorExpandedRows: ids });
   };
 
   const checkExpanded = (id: string) => {
-    return expanded.includes(id);
+    return state.bigQuerySelectorExpandedRows.includes(id);
   };
 
   const getDatasetTreeItemId = (
@@ -110,8 +111,8 @@ const TablesTreeView: FC<TablesTreeViewProps> = ({
       defaultCollapseIcon={<ExpandMoreIcon />}
       defaultExpandIcon={<NavigateNextIcon />}
       defaultEndIcon={<div style={{ width: 24 }} />}
-      selected={selected}
-      expanded={expanded}
+      selected={selected ? `${Object.values(selected).join(':')}:table` : ''}
+      expanded={state.bigQuerySelectorExpandedRows}
       onNodeSelect={handleNodeSelect}
       onNodeToggle={handleNodeToggle}
     >

@@ -160,7 +160,7 @@ export class Dataset {
 }
 
 @ArgsType()
-export class DatasetFileSignedUploadUrlParams {
+export class FileUploadDatasourceParams {
   @Field()
   fileName: string;
 

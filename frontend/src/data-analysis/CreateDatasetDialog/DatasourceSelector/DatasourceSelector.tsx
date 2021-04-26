@@ -71,22 +71,21 @@ TabPanel.defaultProps = {
 
 const DatasourceSelector: FC = () => {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
-
-  const { dispatch } = useContext(CreateDatasetContext);
+  const { state, dispatch } = useContext(CreateDatasetContext);
 
   const handleChange = (
     event: React.ChangeEvent<Record<string, unknown>>,
     newValue: number,
   ) => {
-    if (newValue === value) {
+    if (newValue === state.datasourceSelectorMode) {
       return;
     }
     dispatch({
       selectedTable: null,
       selectedFile: null,
+      datasourceSelectorMode: newValue,
+      bigQuerySelectorExpandedRows: [],
     });
-    setValue(newValue);
   };
 
   const handleTableSelect = (table: TableIdentity) => {
@@ -107,7 +106,7 @@ const DatasourceSelector: FC = () => {
         Select location to import data from
       </Typography>
       <Tabs
-        value={value}
+        value={state.datasourceSelectorMode}
         onChange={handleChange}
         classes={{ root: classes.tabs, indicator: classes.tabsIndicator }}
         variant="fullWidth"
@@ -125,12 +124,18 @@ const DatasourceSelector: FC = () => {
         />
       </Tabs>
       <Divider className={classes.divider} />
-      <TabPanel value={value} index={0}>
-        <TablesTreeView onTableSelect={handleTableSelect} />
+      <TabPanel value={state.datasourceSelectorMode} index={0}>
+        <TablesTreeView
+          selected={state.selectedTable}
+          onTableSelect={handleTableSelect}
+        />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={state.datasourceSelectorMode} index={1}>
         <Box className={classes.fileUploader}>
-          <Dropzone onDrop={(files) => handleFileSelect(files[0] ?? null)} />
+          <Dropzone
+            files={state.selectedFile ? [state.selectedFile] : []}
+            onDrop={(files) => handleFileSelect(files[0] ?? null)}
+          />
         </Box>
       </TabPanel>
     </Box>

@@ -169,6 +169,7 @@ type Query {
   getDatasets(GCPProjectName: String!): [Dataset]
   datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!, organizationName: String!): ColumnVisualizations!
   datasetFileSignedUploadUrl(fileName: String!, organizationName: String!, analysisName: String!): String!
+  datasourceValidatedColumns(fileName: String!, organizationName: String!, analysisName: String!): [BigQueryPreviewHeaders!]!
   organizations: [Organization!]!
 }
 

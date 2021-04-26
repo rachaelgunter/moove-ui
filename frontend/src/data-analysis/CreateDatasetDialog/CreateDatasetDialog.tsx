@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Dialog, DialogContent, DialogTitle, Divider } from '@material-ui/core';
 import React, { FC, useContext, useEffect, useReducer, useState } from 'react';
 
@@ -15,7 +15,6 @@ import {
   CREATE_BQ_DATASET_MUTATION,
   CREATE_FILE_DATASET_MUTATION,
 } from '../mutations';
-import { DATASET_FILE_UPLOAD_LINK_QUERY } from '../queries';
 import CreateDatasetMessage, {
   CreateDatasetMessageProps,
 } from './CreateDatasetMessage';
@@ -93,25 +92,6 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
     },
   );
 
-  const [getUploadLink] = useLazyQuery(DATASET_FILE_UPLOAD_LINK_QUERY, {
-    fetchPolicy: 'no-cache',
-    onCompleted: ({ datasetFileSignedUploadUrl }) =>
-      uploadFile(datasetFileSignedUploadUrl).then(() =>
-        createFileDataset({
-          variables: {
-            datasetParams: {
-              name: state.name,
-              description: state.description,
-              organizationName: organization,
-              analysisProject: GCPProjectName,
-              assetsBucket: GCSBucketName,
-              fileName: state.selectedFile?.name ?? '',
-            },
-          },
-        }),
-      ),
-  });
-
   useEffect(() => {
     dispatch({
       stepAmount: steps.length,
@@ -166,24 +146,24 @@ const CreateDatasetDialog: FC<CreateDatasetDialogProps> = ({
 
   const handleDatasetCreationFromFile = () => {
     if (state.selectedFile) {
-      getUploadLink({
+      createFileDataset({
         variables: {
-          fileName: state.selectedFile?.name ?? '',
-          organizationName: organization,
-          analysisName: state.name,
+          datasetParams: {
+            name: state.name,
+            description: state.description,
+            organizationName: organization,
+            analysisProject: GCPProjectName,
+            assetsBucket: GCSBucketName,
+            fileName: state.selectedFile?.name ?? '',
+            primaryTimestamp: state.timestampColumn,
+            primaryGeography: state.geographyColumn,
+            groupBy: ADMIN_AREAS_MAP[state.groupByColumn],
+            jenksCols: state.jenkColsColumns,
+            ...state.latLonColumns,
+          },
         },
       });
     }
-  };
-
-  const uploadFile = async (link: string) => {
-    return fetch(link, {
-      headers: {
-        'Content-Type': 'application/octet-stream',
-      },
-      method: 'PUT',
-      body: state.selectedFile,
-    });
   };
 
   const handleDatasetCreation = () => {

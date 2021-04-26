@@ -7,6 +7,11 @@ export type LatLonData = {
   lon: string;
 };
 
+export enum DatasourceSelectorMode {
+  BIG_QUERY,
+  LOCAL_FILES_UPLOAD,
+}
+
 export type CreateDatasetFormState = {
   name: string;
   description: string;
@@ -22,6 +27,8 @@ export type CreateDatasetFormState = {
   timestampColumn: string;
   groupByColumn: string;
   jenkColsColumns: Array<string>;
+  datasourceSelectorMode: DatasourceSelectorMode;
+  bigQuerySelectorExpandedRows: string[];
 };
 
 export interface CreateDatasetProvider {
@@ -47,6 +54,8 @@ export const initialState: CreateDatasetFormState = {
   timestampColumn: '',
   groupByColumn: '',
   jenkColsColumns: [],
+  datasourceSelectorMode: DatasourceSelectorMode.BIG_QUERY,
+  bigQuerySelectorExpandedRows: [],
 };
 
 const CreateDatasetContext = React.createContext<CreateDatasetProvider>({
