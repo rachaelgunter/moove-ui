@@ -28,6 +28,10 @@ type PaginatedUsers {
   totalCount: Int!
 }
 
+type DeletedUser {
+  email: String!
+}
+
 type BigQueryTable {
   datasetId: String!
   tableId: String!
@@ -176,6 +180,7 @@ input BigQueryTablesParams {
 type Mutation {
   syncUserData(signedInUser: UserInput!): User!
   createUser(createUserPayload: CreateUserPayload!): User!
+  deleteUser(deleteUserPayload: DeleteUserPayload!): DeletedUser
   createDataset(datasetParams: DatasetParamsInput!): String!
   createLocalFileDataset(datasetParams: FileDatasetParamsInput!): String!
   deleteDataset(analysisName: String!): RemovedDataset
@@ -193,6 +198,11 @@ input CreateUserPayload {
   email: String!
   role: String!
   organizationId: Float
+}
+
+input DeleteUserPayload {
+  email: String!
+  sub: String!
 }
 
 input DatasetParamsInput {

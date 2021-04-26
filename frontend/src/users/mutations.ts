@@ -12,4 +12,12 @@ const CREATE_USER_MUTATION = gql`
   }
 `;
 
+export const DELETE_USER_MUTATION = gql`
+  mutation DeleteUser($deleteUserPayload: DeleteUserPayload!) {
+    deleteUser(deleteUserPayload: $deleteUserPayload) {
+      email
+    }
+  }
+`;
+
 export default CREATE_USER_MUTATION;
