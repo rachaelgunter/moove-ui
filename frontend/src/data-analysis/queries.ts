@@ -200,3 +200,20 @@ export const BIG_QUERY_TABLE_COLUMNS_QUERY = gql`
     }
   }
 `;
+
+export const DATASOURCE_VALIDATED_COLUMNS_QUERY = gql`
+  query datasourceValidatedColumns(
+    $organizationName: String!
+    $analysisName: String!
+    $fileName: String!
+  ) {
+    datasourceValidatedColumns(
+      organizationName: $organizationName
+      analysisName: $analysisName
+      fileName: $fileName
+    ) {
+      name
+      type
+    }
+  }
+`;

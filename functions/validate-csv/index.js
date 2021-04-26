@@ -41,7 +41,7 @@ const createReadGCSFileStream = (organizationName, analysisName, fileName) => {
 
 const createParseCSVContentsStream = result => {
   const parserStream = parse({
-    delimiter: [',', ':', ';', '\t'],
+    delimiter: [',', '\t', ';'],
     columns: true,
     cast: true,
   });

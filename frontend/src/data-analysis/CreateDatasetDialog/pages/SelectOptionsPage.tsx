@@ -10,9 +10,14 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import { Theme } from '@material-ui/core/styles';
 
-import { BIG_QUERY_TABLE_COLUMNS_QUERY } from 'src/data-analysis/queries';
+import {
+  BIG_QUERY_TABLE_COLUMNS_QUERY,
+  DATASET_FILE_UPLOAD_LINK_QUERY,
+  DATASOURCE_VALIDATED_COLUMNS_QUERY,
+} from 'src/data-analysis/queries';
 import Selector from 'src/shared/Selector';
 import { ColumnType } from 'src/data-analysis/types';
+import { UserContext } from 'src/auth/UserProvider';
 import LatLonSelector from '../LatLonSelector';
 import { getColumnNamesByType } from '../utils';
 import CreateDatasetContext from '../CreateDatasetContext';
@@ -48,8 +53,43 @@ const SelectOptionsPage: React.FC = () => {
   const { state, dispatch } = useContext(CreateDatasetContext);
   const [
     getColumnsData,
-    { data: columnsData, loading: columnsLoading },
+    { data: bigQueryDatasourceColumnsData, loading: bigQueryColumnsLoading },
   ] = useLazyQuery(BIG_QUERY_TABLE_COLUMNS_QUERY);
+  const [
+    getCsvColumnData,
+    { data: csvDatasourceColumnsData, loading: csvColumnsLoading },
+  ] = useLazyQuery(DATASOURCE_VALIDATED_COLUMNS_QUERY, {
+    fetchPolicy: 'no-cache',
+  });
+
+  const { organization } = useContext(UserContext);
+
+  const [getUploadLink, { loading: linkLoading }] = useLazyQuery(
+    DATASET_FILE_UPLOAD_LINK_QUERY,
+    {
+      fetchPolicy: 'no-cache',
+      onCompleted: ({ datasetFileSignedUploadUrl }) =>
+        uploadFile(datasetFileSignedUploadUrl).then(() =>
+          getCsvColumnData({
+            variables: {
+              organizationName: organization,
+              analysisName: state.name,
+              fileName: state.selectedFile?.name,
+            },
+          }),
+        ),
+    },
+  );
+
+  const uploadFile = async (link: string) => {
+    return fetch(link, {
+      headers: {
+        'Content-Type': 'application/octet-stream',
+      },
+      method: 'PUT',
+      body: state.selectedFile,
+    });
+  };
 
   useEffect(() => {
     if (!state.selectedTable) {
@@ -64,6 +104,19 @@ const SelectOptionsPage: React.FC = () => {
       },
     });
   }, [getColumnsData, state.selectedTable]);
+
+  useEffect(() => {
+    if (!state.selectedFile) {
+      return;
+    }
+    getUploadLink({
+      variables: {
+        fileName: state.selectedFile?.name ?? '',
+        organizationName: organization,
+        analysisName: state.name,
+      },
+    });
+  }, [getUploadLink, organization, state.name, state.selectedFile]);
 
   useEffect(() => {
     dispatch({
@@ -116,7 +169,10 @@ const SelectOptionsPage: React.FC = () => {
     setJenkColsError(!state.jenkColsColumns.length);
   };
 
-  const tableColumns = columnsData?.tableColumns || [];
+  const tableColumns =
+    bigQueryDatasourceColumnsData?.tableColumns ||
+    csvDatasourceColumnsData?.datasourceValidatedColumns ||
+    [];
   const selectors = [
     {
       label: 'Timestamp',
@@ -149,7 +205,7 @@ const SelectOptionsPage: React.FC = () => {
     },
   ];
 
-  if (columnsLoading) {
+  if (bigQueryColumnsLoading || csvColumnsLoading || linkLoading) {
     return (
       <Box className={classes.overlay}>
         <CircularProgress />
