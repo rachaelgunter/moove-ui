@@ -4,10 +4,11 @@ import { FontFamily } from 'src/app/styles/fonts';
 import DialogWrapper from 'src/shared/DialogWrapper/DialogWrapper';
 import ColumnViewBreadcrumbs from './ColumnViewBreadcrumbs';
 import ColumnViewTabPanel from './ColumnViewTabPanel';
-import ColumnViewMap from './ColumnViewMap';
 import ColumnViewAnalytics from './ColumnViewAnalytics';
 import ColumnViewRelationships from './ColumnViewRelationships';
 import { ColumnModel } from '../types';
+
+const ColumnViewMap = React.lazy(() => import('./ColumnViewMap'));
 
 interface DetailedColumnViewProps {
   open: boolean;
@@ -105,7 +106,9 @@ const DetailedColumnView: FC<DetailedColumnViewProps> = ({
         <ColumnViewAnalytics column={column} analysisName={datasetName} />
       </ColumnViewTabPanel>
       <ColumnViewTabPanel value={value} index={1}>
-        <ColumnViewMap columnName={column.name} analysisName={datasetName} />
+        <React.Suspense fallback={null}>
+          <ColumnViewMap columnName={column.name} analysisName={datasetName} />
+        </React.Suspense>
       </ColumnViewTabPanel>
       <ColumnViewTabPanel value={value} index={2}>
         <ColumnViewRelationships column={column} analysisName={datasetName} />
