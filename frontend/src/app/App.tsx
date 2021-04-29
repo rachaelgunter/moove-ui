@@ -15,6 +15,7 @@ import AuthCallBackHandler from 'src/auth/AuthCallbackHandler';
 import PrivateRoute from 'src/app/PrivateRoute';
 import UserProvider from 'src/auth/UserProvider';
 import { LoadScript } from '@react-google-maps/api';
+import RouterLoadingFallback from 'src/shared/RouterLoadingFallback/RouterLoadingFallback';
 
 const DataAnalysis = React.lazy(() => import('src/data-analysis'));
 const Users = React.lazy(() => import('src/users'));
@@ -49,7 +50,7 @@ const App: React.FC = () => {
                   <NavSidebarProvider>
                     <NavSidebar />
                   </NavSidebarProvider>
-                  <React.Suspense fallback={null}>
+                  <React.Suspense fallback={<RouterLoadingFallback />}>
                     <Switch>
                       <Redirect exact from="/" to={routes.dashboard.path} />
                       <Route exact path={routes.dashboard.path}>
