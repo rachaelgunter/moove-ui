@@ -1,6 +1,7 @@
 import React from 'react';
 import auth0 from 'auth0-js';
 import ReactDOM from 'react-dom';
+
 import App from './app/App';
 
 function getAuthOptions() {

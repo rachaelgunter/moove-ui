@@ -1,16 +1,17 @@
 import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { Switch, Route } from 'react-router';
 import { HashRouter } from 'react-router-dom';
 import { AuthOptions, WebAuth } from 'auth0-js';
-import TermsProvider from '../TermsProvider';
+import SignUpStateProvider from '../SignUpForm/SignUpFormContext';
 import EmailVerification from '../EmailVerification';
 import WebAuthProvider from '../WebAuthProvider';
 import SignIn from '../SignIn';
 import SignUp from '../SignUp';
 import Terms from '../Terms';
 import theme from './styles';
+import ForgotPassword from '../ForgotPassword';
 
 interface AppProps {
   webAuth: WebAuth;
@@ -18,19 +19,11 @@ interface AppProps {
 }
 
 const App: FC<AppProps> = ({ webAuth, options }: AppProps) => {
-  const [termsAccepted, setTermsAccepted] = useState(false);
-
-  const handleTermsAcceptance = (newValue: boolean) => {
-    setTermsAccepted(newValue);
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <WebAuthProvider.Provider value={{ webAuth, options }}>
-        <TermsProvider.Provider
-          value={{ termsAccepted, handleTermsAcceptance }}
-        >
+        <SignUpStateProvider>
           <HashRouter>
             <Switch>
               <Route exact path="/premium">
@@ -48,9 +41,12 @@ const App: FC<AppProps> = ({ webAuth, options }: AppProps) => {
               <Route path="/verification">
                 <EmailVerification />
               </Route>
+              <Route exact path="/forgot-password">
+                <ForgotPassword />
+              </Route>
             </Switch>
           </HashRouter>
-        </TermsProvider.Provider>
+        </SignUpStateProvider>
       </WebAuthProvider.Provider>
     </ThemeProvider>
   );

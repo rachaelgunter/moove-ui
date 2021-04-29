@@ -4,14 +4,17 @@ import { fireEvent, render, RenderResult } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
 
 import theme from 'src/app/styles';
-
-import CreateDatasetDialog, {
+import {
   DATASET_NAME_ERROR,
   DESCRIPTION_MAX_LENGTH_ERROR,
-} from './CreateDatasetDialog';
+} from './pages/SelectSourcePage';
+import CreateDatasetDialog from './CreateDatasetDialog';
+
+jest.mock('src/index', () => Promise.resolve());
 
 describe('CreateDatasetDialog', () => {
   let wrapper: RenderResult;
+  let nextButton: HTMLElement;
 
   beforeEach(() => {
     wrapper = render(
@@ -21,6 +24,7 @@ describe('CreateDatasetDialog', () => {
         </ThemeProvider>
       </MockedProvider>,
     );
+    nextButton = wrapper.getByTestId('create-dataset__button-next');
   });
 
   describe('description error message', () => {
@@ -42,6 +46,7 @@ describe('CreateDatasetDialog', () => {
 
       const errorMessage = getErrorMessage();
       expect(errorMessage).toBeDefined();
+      expect(nextButton).toBeDisabled();
     });
 
     it('should disappear when user erases long text', () => {
@@ -75,6 +80,7 @@ describe('CreateDatasetDialog', () => {
         target: { value: '@#%@!@%' },
       });
       expect(getErrorMessage()).toBeDefined();
+      expect(nextButton).toBeDisabled();
     });
 
     it('should disappear if user fixes an error', () => {

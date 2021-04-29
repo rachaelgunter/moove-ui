@@ -8,6 +8,15 @@ const CREATE_USER_MUTATION = gql`
       picture
       createdAt
       roles
+      email
+    }
+  }
+`;
+
+export const DELETE_USER_MUTATION = gql`
+  mutation DeleteUser($deleteUserPayload: DeleteUserPayload!) {
+    deleteUser(deleteUserPayload: $deleteUserPayload) {
+      email
     }
   }
 `;

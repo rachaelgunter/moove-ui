@@ -1,16 +1,9 @@
 import React, { FC } from 'react';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { makeStyles } from '@material-ui/styles';
-import {
-  Avatar,
-  Box,
-  IconButton,
-  TableCell,
-  TableRow,
-  Theme,
-} from '@material-ui/core';
+import { Avatar, Box, TableCell, TableRow, Theme } from '@material-ui/core';
 import { User } from 'src/auth/UserProvider';
 import { Role } from 'src/shared/types';
+import UserTableMenu from './UserTableMenu';
 
 interface UsersTableRowProps {
   user: User;
@@ -82,9 +75,7 @@ const UsersTableRow: FC<UsersTableRowProps> = ({
         {formatDate(user.createdAt)}
       </TableCell>
       <TableCell className={classes.cell}>
-        <IconButton className={classes.rowActionButton}>
-          <MoreVertIcon />
-        </IconButton>
+        <UserTableMenu user={user} />
       </TableCell>
     </TableRow>
   );

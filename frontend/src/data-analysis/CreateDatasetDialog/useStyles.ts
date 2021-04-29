@@ -5,22 +5,14 @@ import { FontFamily } from 'src/app/styles/fonts';
 export default makeStyles((theme: Theme) => {
   return {
     paper: {
-      minHeight: '660px',
+      minHeight: 660,
+      minWidth: 713,
       fontFamily: FontFamily.ROBOTO,
     },
     contentRoot: {
       padding: theme.spacing(0.5, 3, 0, 3),
       display: 'flex',
       flexDirection: 'column',
-    },
-    divider: {
-      backgroundColor: theme.palette.divider,
-    },
-    dialogControls: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      height: theme.spacing(6),
     },
     dialogTitleRoot: {
       padding: theme.spacing(3),
@@ -39,6 +31,11 @@ export default makeStyles((theme: Theme) => {
       '&:disabled': {
         color: theme.palette.action.disabled,
       },
+    },
+    pageWrapper: {
+      flex: 1,
+      overflowY: 'auto',
+      paddingTop: theme.spacing(0.5),
     },
   };
 });

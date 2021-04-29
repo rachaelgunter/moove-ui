@@ -28,6 +28,10 @@ type PaginatedUsers {
   totalCount: Int!
 }
 
+type DeletedUser {
+  email: String!
+}
+
 type BigQueryTable {
   datasetId: String!
   tableId: String!
@@ -148,8 +152,7 @@ type Dataset {
 }
 
 type RemovedDataset {
-  datasetId: String!
-  GCPProjectName: String!
+  analysisName: String!
 }
 
 type Query {
@@ -159,12 +162,14 @@ type Query {
   tables(tablesParams: BigQueryTablesParams!): [BigQueryTable]
   tableData(offset: Int = 0, limit: Int = 5, projectId: String!, datasetId: String!, tableId: String!, selectedFields: [String]): BigQueryTableData!
   tableInfo(projectId: String!, datasetId: String!, tableId: String!): BigQueryTableInfo!
+  tableColumns(projectId: String!, datasetId: String!, tableId: String!): [BigQueryPreviewHeaders!]!
   previewTable(offset: Int = 0, limit: Int = 5, projectId: String!, datasetId: String!, tableId: String!, selectedFields: [String]): BigQueryPreviewTable!
   columnsTable(offset: Int = 0, limit: Int = 5, projectId: String!, datasetId: String!, tableId: String!, selectedFields: [String]): [BigQueryColumnTable]
   previewSegment(segmentId: String!): PreviewSegment!
   getDatasets(GCPProjectName: String!): [Dataset]
   datasetColumnVisualizations(bucketName: String!, analysisName: String!, columnName: String!, organizationName: String!): ColumnVisualizations!
   datasetFileSignedUploadUrl(fileName: String!, organizationName: String!, analysisName: String!): String!
+  datasourceValidatedColumns(fileName: String!, organizationName: String!, analysisName: String!): [BigQueryPreviewHeaders!]!
   organizations: [Organization!]!
 }
 
@@ -176,9 +181,10 @@ input BigQueryTablesParams {
 type Mutation {
   syncUserData(signedInUser: UserInput!): User!
   createUser(createUserPayload: CreateUserPayload!): User!
+  deleteUser(deleteUserPayload: DeleteUserPayload!): DeletedUser
   createDataset(datasetParams: DatasetParamsInput!): String!
   createLocalFileDataset(datasetParams: FileDatasetParamsInput!): String!
-  deleteDataset(datasetId: String!, GCPProjectName: String!): RemovedDataset
+  deleteDataset(analysisName: String!): RemovedDataset
 }
 
 input UserInput {
@@ -195,6 +201,11 @@ input CreateUserPayload {
   organizationId: Float
 }
 
+input DeleteUserPayload {
+  email: String!
+  sub: String!
+}
+
 input DatasetParamsInput {
   name: String!
   description: String!
@@ -204,6 +215,12 @@ input DatasetParamsInput {
   organizationName: String!
   analysisProject: String!
   assetsBucket: String!
+  primaryTimestamp: String!
+  primaryGeography: String
+  groupBy: String!
+  jenksCols: [String!]!
+  lat: String!
+  lon: String!
 }
 
 input FileDatasetParamsInput {
@@ -213,4 +230,10 @@ input FileDatasetParamsInput {
   organizationName: String!
   analysisProject: String!
   assetsBucket: String!
+  primaryTimestamp: String!
+  primaryGeography: String
+  groupBy: String!
+  jenksCols: [String!]!
+  lat: String!
+  lon: String!
 }

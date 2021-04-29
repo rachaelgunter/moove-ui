@@ -6,7 +6,7 @@ import {
   ColumnVisualizationParams,
   ColumnVisualizations,
   Dataset,
-  DatasetFileSignedUploadUrlParams,
+  FileUploadDatasourceParams,
   DatasetParamsInput,
   FileDatasetParamsInput,
   RemovedDataset,
@@ -15,10 +15,15 @@ import {
 import { Roles } from 'src/auth/roles.decorator';
 import { Role, UserTokenPayload } from 'src/users/users.types';
 import { CurrentUser } from 'src/auth/graphql-current-user.decorator';
+import { BigQueryPreviewHeaders } from 'src/bigquery/bigquery.types';
+import { DatasetsCreationService } from './datasets-creation.service';
 
 @Resolver()
 export class DatasetsResolver {
-  constructor(private readonly datasetsService: DatasetsService) {}
+  constructor(
+    private readonly datasetsService: DatasetsService,
+    private readonly datasetsCreationService: DatasetsCreationService,
+  ) {}
 
   @Roles(Role.PAID_USER, Role.ADMIN, Role.SUPER_ADMIN)
   @UseGuards(GqlAuthGuard)
@@ -85,7 +90,7 @@ export class DatasetsResolver {
   @UseGuards(GqlAuthGuard)
   @Query(() => String)
   async datasetFileSignedUploadUrl(
-    @Args() params: DatasetFileSignedUploadUrlParams,
+    @Args() params: FileUploadDatasourceParams,
     @CurrentUser() user: UserTokenPayload,
   ): Promise<string> {
     const { fileName, organizationName, analysisName } = params;
@@ -101,8 +106,22 @@ export class DatasetsResolver {
   @UseGuards(GqlAuthGuard)
   @Mutation(() => RemovedDataset, { nullable: true })
   async deleteDataset(
-    @Args() { GCPProjectName, datasetId }: RemovingDatasetParams,
+    @Args() { analysisName }: RemovingDatasetParams,
   ): Promise<RemovedDataset> {
-    return this.datasetsService.deleteDataset(GCPProjectName, datasetId);
+    return this.datasetsService.deleteDataset(analysisName);
+  }
+
+  @Roles(Role.PAID_USER, Role.ADMIN, Role.SUPER_ADMIN)
+  @UseGuards(GqlAuthGuard)
+  @Query(() => [BigQueryPreviewHeaders])
+  async datasourceValidatedColumns(
+    @Args()
+    { organizationName, analysisName, fileName }: FileUploadDatasourceParams,
+  ): Promise<BigQueryPreviewHeaders[]> {
+    return this.datasetsCreationService.getValidatedCsvColumns(
+      organizationName,
+      analysisName,
+      fileName,
+    );
   }
 }

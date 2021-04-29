@@ -8,11 +8,12 @@ import {
   fade,
 } from '@material-ui/core';
 
+import { useHistory } from 'react-router';
 import AuthPage from './AuthPage';
 import Link from './Link';
 import SubmitButton from './SubmitButton';
 import TermsContent from './TermsContent/TermsContent';
-import TermsProvider from './TermsProvider';
+import { SignUpFormContext } from './SignUpForm/SignUpFormContext';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -52,7 +53,9 @@ const Terms: FC = () => {
   const classes = useStyles();
   const [isViewed, setIsViewed] = useState(false);
   const { root } = classes;
-  const { termsAccepted, handleTermsAcceptance } = useContext(TermsProvider);
+  const { state, dispatch } = useContext(SignUpFormContext);
+  const history = useHistory();
+  const { termsAccepted } = state;
 
   const handleScroll = (e: React.UIEvent<HTMLElement>) => {
     const bottom =
@@ -61,6 +64,11 @@ const Terms: FC = () => {
     if (bottom) {
       setIsViewed(true);
     }
+  };
+
+  const handleTermsAcceptance = () => {
+    dispatch({ termsAccepted: true });
+    history.push('sign-up');
   };
 
   return (
@@ -93,7 +101,7 @@ const Terms: FC = () => {
           >
             <span>
               <SubmitButton
-                onClick={() => handleTermsAcceptance(!termsAccepted)}
+                onClick={() => handleTermsAcceptance()}
                 className={classes.agreeButton}
                 disabled={!isViewed}
               >

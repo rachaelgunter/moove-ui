@@ -1,25 +1,15 @@
 import React, { useState } from 'react';
-import {
-  Grid,
-  Link,
-  makeStyles,
-  Menu,
-  MenuItem,
-  Paper,
-  Theme,
-} from '@material-ui/core';
-import { MoreVert as MoreVertIcon } from '@material-ui/icons';
+import { Grid, makeStyles, Paper, Theme } from '@material-ui/core';
 
 import { DatasetDetailsProps } from 'src/data-analysis/DatasetDetails/DatasetDetails';
 import { DatasetStatus } from 'src/data-analysis/types';
 import { ActiveRoundedIcon } from 'src/data-analysis/icons';
-import IconButton from 'src/shared/IconButton';
 import EditableLabel from 'src/data-analysis/DatasetDetails/DatasetDetailsHeader/EditableLabel';
 import { FontFamily } from 'src/app/styles/fonts';
 import Typography from 'src/shared/Typography';
 import StatusChip from './StatusChip';
 import SpecificationColumn from './SpecificationColumn';
-import Archiver from './Archiver/Archiver';
+import DatasetDetailsMenu from './DatasetDetailsMenu/DatasetDetailsMenu';
 
 type DatasetDetailsHeaderProps = DatasetDetailsProps;
 
@@ -48,21 +38,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     minWidth: theme.spacing(6),
   },
-  actionsMenu: {
-    width: 140,
-  },
-  actionsMenuItem: {
-    fontFamily: FontFamily.ROBOTO,
-    '& > a, & > button': {
-      color: theme.palette.text.primary,
-      '&:hover': {
-        textDecoration: 'none',
-      },
-    },
-    '& > button p': {
-      fontFamily: FontFamily.ROBOTO,
-    },
-  },
 }));
 
 const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
@@ -75,8 +50,6 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
   const [description, setDescription] = useState<string>(
     datasetModel.description,
   );
-
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const onDescriptionChanged = (value: string) => {
     setDescription(value);
@@ -101,14 +74,6 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
   const totalRows = !isActive
     ? '—'
     : formatStringWithCommas(datasetModel.totalRows.toString());
-
-  const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <Paper className={classes.root} elevation={2}>
@@ -140,41 +105,11 @@ const DatasetDetailsHeader: React.FC<DatasetDetailsHeaderProps> = ({
             </SpecificationColumn>
           </Grid>
           <Grid item className={classes.actions} id="dataset-actions">
-            <>
-              <Menu
-                id="simple-menu"
-                classes={{ list: classes.actionsMenu }}
-                anchorEl={anchorEl}
-                getContentAnchorEl={null}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                {isActive && (
-                  <MenuItem className={classes.actionsMenuItem}>
-                    <Link href={process.env.REACT_APP_JUPYTERHUB_URL}>
-                      View Notebook
-                    </Link>
-                  </MenuItem>
-                )}
-                <MenuItem className={classes.actionsMenuItem}>
-                  <Archiver
-                    datasetId={datasetModel.name}
-                    resetDatasetModel={resetDatasetModel}
-                  />
-                </MenuItem>
-              </Menu>
-              <IconButton onClick={handleMenuOpen}>
-                <MoreVertIcon />
-              </IconButton>
-            </>
+            <DatasetDetailsMenu
+              isDatasetActive={isActive}
+              resetDatasetModel={resetDatasetModel}
+              datasetModel={datasetModel}
+            />
           </Grid>
         </Grid>
         <Grid item id="dataset-edit">

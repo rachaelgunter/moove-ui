@@ -11,6 +11,8 @@ import {
   Role,
   User,
   UserTokenPayload,
+  DeleteUserPayload,
+  DeletedUser,
 } from './users.types';
 
 @Resolver()
@@ -36,5 +38,14 @@ export class UsersResolver {
     @Args('createUserPayload') createUserPayload: CreateUserPayload,
   ): Promise<User> {
     return this.usersService.createUser(createUserPayload);
+  }
+
+  @Roles(Role.PAID_USER, Role.ADMIN, Role.SUPER_ADMIN)
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => DeletedUser, { nullable: true })
+  async deleteUser(
+    @Args('deleteUserPayload') deleteUserPayload: DeleteUserPayload,
+  ): Promise<DeletedUser> {
+    return this.usersService.deleteUser(deleteUserPayload);
   }
 }

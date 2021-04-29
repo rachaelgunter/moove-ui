@@ -4,7 +4,12 @@ import { GqlAuthGuard } from 'src/auth/graphql-auth.guard';
 import { CurrentUser } from 'src/auth/graphql-current-user.decorator';
 import { BigQueryService } from './bigquery.service';
 import { Role, UserTokenPayload } from 'src/users/users.types';
-import { BigQueryTableInfo, BigQueryTableInfoParams } from './bigquery.types';
+import {
+  BigQueryPreviewHeaders,
+  BigQueryTableColumnsParams,
+  BigQueryTableInfo,
+  BigQueryTableInfoParams,
+} from './bigquery.types';
 import { handleGoogleError } from './utils';
 import { Roles } from 'src/auth/roles.decorator';
 
@@ -33,6 +38,28 @@ export class BigQueryTableInfoResolver {
       handleGoogleError(
         this.logger,
         `Unable to get BigQuery tables for dataset: ${projectId}:${datasetId}`,
+        e,
+      );
+    }
+  }
+
+  @Roles(Role.PAID_USER, Role.ADMIN, Role.SUPER_ADMIN)
+  @UseGuards(GqlAuthGuard)
+  @Query(() => [BigQueryPreviewHeaders])
+  async tableColumns(
+    @Args() args: BigQueryTableColumnsParams,
+  ): Promise<BigQueryPreviewHeaders[]> {
+    const { datasetId, projectId, tableId } = args;
+    try {
+      return await this.bigQueryService.getColumnsData(
+        projectId,
+        datasetId,
+        tableId,
+      );
+    } catch (e) {
+      handleGoogleError(
+        this.logger,
+        `Unable to get BigQuery column data for table: ${projectId}:${datasetId}:${tableId}`,
         e,
       );
     }

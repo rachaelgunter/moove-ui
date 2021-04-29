@@ -81,6 +81,21 @@ export class User {
 @ObjectType()
 export class PaginatedUsers extends Paginated(User) {}
 
+@InputType()
+export class DeleteUserPayload {
+  @Field()
+  email: string;
+
+  @Field()
+  sub: string;
+}
+
+@ObjectType()
+export class DeletedUser {
+  @Field()
+  email: string;
+}
+
 export interface UserTokenPayload {
   sub: string;
 }
