@@ -15,7 +15,10 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import PaginationActions from './PaginationActions';
 import { FontFamily } from '../../app/styles/fonts';
-import PreviewSegment from '../PreviewSegment/PreviewSegment';
+
+const PreviewSegment = React.lazy(
+  () => import('../PreviewSegment/PreviewSegment'),
+);
 
 const useStylesTable = makeStyles(() => ({
   container: {
@@ -183,11 +186,14 @@ const PreviewTableContent: FC<PreviewTableContentProps> = ({
 
   return (
     <div>
-      <PreviewSegment
-        open={isPreviewSegmentOpened}
-        onClose={closePreviewSegment}
-        segment={segmentValue}
-      />
+      <React.Suspense fallback={null}>
+        <PreviewSegment
+          open={isPreviewSegmentOpened}
+          onClose={closePreviewSegment}
+          segment={segmentValue}
+        />
+      </React.Suspense>
+
       <TableContainer className={classes.container}>
         <Table
           stickyHeader
