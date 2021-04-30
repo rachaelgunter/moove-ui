@@ -126,8 +126,6 @@ describe('UsersService', () => {
         update: {
           name: 'name',
           picture: 'picture',
-          accessToken: null,
-          refreshToken: null,
         },
         where: { id: '1234' },
         include: {
@@ -158,8 +156,6 @@ describe('UsersService', () => {
         update: {
           name: null,
           picture: 'picture',
-          accessToken: null,
-          refreshToken: null,
         },
         where: { id: '1234' },
         include: {
@@ -242,8 +238,6 @@ describe('UsersService', () => {
         update: {
           name: null,
           picture: 'picture',
-          accessToken: null,
-          refreshToken: null,
         },
         where: { id: '2' },
         include: {
