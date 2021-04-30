@@ -109,4 +109,11 @@ export class Auth0ClientService {
 
     throw new Auth0ClientError('Failed to delete user from Auth0');
   }
+
+  async setEmailVerificationFlag(
+    userId: string,
+    flag: boolean,
+  ): Promise<Auth0User<AppMetadata, UserMetadata>> {
+    return this.client.updateUser({ id: userId }, { email_verified: flag });
+  }
 }
