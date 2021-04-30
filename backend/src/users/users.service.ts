@@ -77,8 +77,8 @@ export class UsersService {
         update: {
           name: userInput.name ?? null,
           picture: userInput.picture,
-          accessToken,
-          refreshToken,
+          ...(accessToken && { accessToken }),
+          ...(refreshToken && { refreshToken }),
           ...(organizationId && {
             organizationId,
           }),
