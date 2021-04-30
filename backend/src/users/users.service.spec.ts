@@ -5,6 +5,7 @@ import { OrganizationsService } from 'src/organizations/organizations.service';
 import { Auth0ClientService } from '../shared/auth0-client/auth0-client.service';
 import { prismaUserMock } from './users.mock';
 import { UsersService } from './users.service';
+import { Role } from './users.types';
 
 const usersPrismaMock = {
   user: {
@@ -51,6 +52,9 @@ const auth0ClientServiceMock = {
   getUsersByEmail: () => [{ user_id: '1234' }],
   linkUsersAccounts: () => null,
   searchUsers: () => auth0UsersMock,
+  createUser: () => null,
+  sendPasswordChangeEmail: () => null,
+  setEmailVerificationFlag: () => null,
 };
 
 const organizationsServiceMock = {
@@ -122,8 +126,6 @@ describe('UsersService', () => {
         update: {
           name: 'name',
           picture: 'picture',
-          accessToken: null,
-          refreshToken: null,
         },
         where: { id: '1234' },
         include: {
@@ -154,8 +156,6 @@ describe('UsersService', () => {
         update: {
           name: null,
           picture: 'picture',
-          accessToken: null,
-          refreshToken: null,
         },
         where: { id: '1234' },
         include: {
@@ -228,7 +228,7 @@ describe('UsersService', () => {
 
       expect(prisma.user.upsert).toHaveBeenCalledWith({
         create: {
-          id: '1234',
+          id: '2',
           email: 'email@test.com',
           name: null,
           picture: 'picture',
@@ -238,8 +238,6 @@ describe('UsersService', () => {
         update: {
           name: null,
           picture: 'picture',
-          accessToken: null,
-          refreshToken: null,
         },
         where: { id: '2' },
         include: {
@@ -330,6 +328,124 @@ describe('UsersService', () => {
           },
         ],
       });
+    });
+  });
+
+  describe('createUser', () => {
+    let createUserSpy;
+    let sendPasswordChangeEmailSpy;
+    let setEmailVerificationFlagSpy;
+    const createUserPayload = {
+      name: 'name',
+      email: 'email@test.com',
+      organizationId: null,
+    };
+
+    const paidUsersPayloads = [
+      { ...createUserPayload, role: Role.PAID_USER, email: '1' },
+      { ...createUserPayload, role: Role.ADMIN, email: '2' },
+    ];
+    const nonPaidUsersPayloads = [
+      { ...createUserPayload, role: Role.USER, email: '1' },
+      { ...createUserPayload, role: Role.API_USER, email: '2' },
+      { ...createUserPayload, role: Role.ROAD_IQ_PAID_USER, email: '3' },
+    ];
+
+    beforeEach(() => {
+      createUserSpy = jest
+        .spyOn(auth0ClientService, 'createUser')
+        .mockResolvedValue(auth0UsersMock.users[0]);
+      sendPasswordChangeEmailSpy = jest.spyOn(
+        auth0ClientService,
+        'sendPasswordChangeEmail',
+      );
+      setEmailVerificationFlagSpy = jest.spyOn(
+        auth0ClientService,
+        'setEmailVerificationFlag',
+      );
+    });
+
+    afterEach(() => {
+      setEmailVerificationFlagSpy.mockReset();
+      sendPasswordChangeEmailSpy.mockReset();
+    });
+
+    it('should set user roles correctly', async () => {
+      await service.createUser({
+        ...createUserPayload,
+        role: Role.ADMIN,
+      });
+
+      expect(createUserSpy).toHaveBeenCalledWith(
+        'email@test.com',
+        'name',
+        null,
+        [Role.ADMIN, Role.PAID_USER],
+      );
+    });
+
+    it('should assign user to an org', async () => {
+      await service.createUser({
+        ...createUserPayload,
+        organizationId: 1,
+        role: Role.PAID_USER,
+      });
+
+      expect(createUserSpy).toHaveBeenCalledWith(
+        'email@test.com',
+        'name',
+        { id: 1, name: 's' },
+        [Role.PAID_USER],
+      );
+    });
+
+    it('should send password change email for non-paid users', async () => {
+      for (const user of nonPaidUsersPayloads) {
+        createUserSpy = jest
+          .spyOn(auth0ClientService, 'createUser')
+          .mockResolvedValue({ ...auth0UsersMock.users[0], email: user.email });
+        await service.createUser(user);
+        expect(sendPasswordChangeEmailSpy).toHaveBeenLastCalledWith(user.email);
+      }
+    });
+
+    it('should not send password change email for paid users', async () => {
+      for (const user of paidUsersPayloads) {
+        createUserSpy = jest
+          .spyOn(auth0ClientService, 'createUser')
+          .mockResolvedValue({ ...auth0UsersMock.users[0], email: user.email });
+        await service.createUser(user);
+      }
+      expect(sendPasswordChangeEmailSpy).not.toHaveBeenCalled();
+    });
+
+    it('should set email_verified flag to true for paid users', async () => {
+      for (const user of paidUsersPayloads) {
+        createUserSpy = jest
+          .spyOn(auth0ClientService, 'createUser')
+          .mockResolvedValue({
+            ...auth0UsersMock.users[0],
+            user_id: user.email,
+          });
+        await service.createUser(user);
+        expect(setEmailVerificationFlagSpy).toHaveBeenLastCalledWith(
+          user.email,
+          true,
+        );
+      }
+    });
+
+    it('should not set email_verified flag to true for non-paid users', async () => {
+      for (const user of nonPaidUsersPayloads) {
+        createUserSpy = jest
+          .spyOn(auth0ClientService, 'createUser')
+          .mockResolvedValue({
+            ...auth0UsersMock.users[0],
+            user_id: user.email,
+          });
+        await service.createUser(user);
+      }
+      expect(setEmailVerificationFlagSpy).not.toHaveBeenCalled();
     });
   });
 });

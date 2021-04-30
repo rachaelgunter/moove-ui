@@ -1,6 +1,6 @@
 import { gql, useMutation } from '@apollo/client';
 import { Auth0Client } from '@auth0/auth0-spa-js';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import AuthContext from '../index';
@@ -24,7 +24,8 @@ const USER_SYNC_MUTATION = gql`
 const AuthCallBackHandler: React.FC<AuthCallBackHandlerProps> = ({
   auth0,
 }: AuthCallBackHandlerProps) => {
-  const [syncUserData, { data }] = useMutation(USER_SYNC_MUTATION);
+  const [data, setData] = useState(null);
+  const [syncUserData] = useMutation(USER_SYNC_MUTATION);
 
   useEffect(() => {
     const sendUserInfo = async () => {
@@ -42,6 +43,12 @@ const AuthCallBackHandler: React.FC<AuthCallBackHandlerProps> = ({
             name: user.name,
           },
         },
+      }).then(async (syncedUser) => {
+        const auth0User = await auth0.getUser();
+        if (syncedUser?.data?.syncUserData.sub !== auth0User?.sub) {
+          window.location.assign('/');
+        }
+        setData(syncedUser.data);
       });
     };
     sendUserInfo();

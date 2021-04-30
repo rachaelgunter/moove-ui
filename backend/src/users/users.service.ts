@@ -56,15 +56,15 @@ export class UsersService {
         );
       }
 
-      const { refreshToken, accessToken } = this.isPaidUser(freshUser)
+      const { refreshToken, accessToken } = this.isPaidUser(existingUser)
         ? this.getGoogleTokensFromAuth0User(freshUser)
         : { accessToken: null, refreshToken: null };
 
-      const organizationId = freshUser?.app_metadata?.organization?.id;
+      const organizationId = existingUser?.app_metadata?.organization?.id;
 
       const syncedUser = await this.prisma.user.upsert({
         create: {
-          id: userInput.sub,
+          id: existingUser?.user_id ?? userInput.sub,
           email: userInput.email,
           name: userInput.name ?? null,
           picture: userInput.picture,
@@ -77,8 +77,8 @@ export class UsersService {
         update: {
           name: userInput.name ?? null,
           picture: userInput.picture,
-          accessToken,
-          refreshToken,
+          ...(accessToken && { accessToken }),
+          ...(refreshToken && { refreshToken }),
           ...(organizationId && {
             organizationId,
           }),
@@ -207,6 +207,13 @@ export class UsersService {
         `Sending password change email for user: ${createUserPayload}`,
       );
       await this.auth0ClientService.sendPasswordChangeEmail(user.email);
+    }
+
+    if ([Role.PAID_USER, Role.ADMIN, Role.SUPER_ADMIN].includes(role)) {
+      await this.auth0ClientService.setEmailVerificationFlag(
+        user.user_id,
+        true,
+      );
     }
 
     return {
