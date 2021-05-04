@@ -14,6 +14,8 @@ $ npm install
 
 Create a copy of `.env.example` and rename it to `.env`, then set appropriate environment variables.
 
+Actual values can be found in [confluence](https://mooveai.atlassian.net/wiki/spaces/UU/pages/660602883/Env+variables)
+
 ```bash
 # development
 $ npm run start
@@ -41,6 +43,8 @@ $ npm run test:cov
 ## Local development with Docker
 
 Create a copy of `.env.example` and rename it to `.env`, then set appropriate environment variables.
+
+Actual values can be found in [confluence](https://mooveai.atlassian.net/wiki/spaces/UU/pages/660602883/Env+variables)
 
 ### Install dependencies locally
 
