@@ -11,6 +11,7 @@ import {
   ColumnVisualizations,
   FileDatasetParamsInput,
   RemovedDataset,
+  CloudFunctionDatasetIngestStatus,
 } from './datasets.types';
 import { google } from 'googleapis';
 import { GCSClient } from 'src/gcs/gcs-client';
@@ -165,7 +166,36 @@ export class DatasetsService {
       totalRows: datasetsResponse[key].total_rows,
       createdAt: datasetsResponse[key].created_at,
       status: this.getDatasetStatus(datasetsResponse[key].ingest_status),
+      ingestStatus: this.mapIngestStatus(datasetsResponse[key].ingest_status),
     }));
+  }
+
+  mapIngestStatus(ingestStatus: CloudFunctionDatasetIngestStatus) {
+    return {
+      sourceDataStatus: ingestStatus.source_data_status,
+      sourceDataWContextStatus: ingestStatus.source_data_w_context_status,
+      qualityStatisticsStatus: ingestStatus.quality_statistics_status,
+      nullCountsStatus: ingestStatus.null_counts_status,
+      dataSampleStatus: ingestStatus.data_sample_status,
+      trainingSampleStatus: ingestStatus.training_sample_status,
+      validationSampleStatus: ingestStatus.validation_sample_status,
+      generalStatisticsStatus: ingestStatus.general_statistics_status,
+      groupedGeneralStatisticsStatus:
+        ingestStatus.grouped_general_statistics_status,
+      binnedSourceDataWContext: ingestStatus.binned_source_data_w_context,
+      heatMap: ingestStatus.heat_map,
+      choropleth: ingestStatus.choropleth,
+      correlationMatrix: ingestStatus.correlation_matrix,
+      recordCounts: ingestStatus.record_counts,
+      distPlots: ingestStatus.dist_plots,
+      boxPlots: ingestStatus.box_plots,
+      jointPlots: ingestStatus.joint_plots,
+      violinPlots: ingestStatus.violin_plots,
+      probabilityPlots: ingestStatus.probability_plots,
+      scatterPlots: ingestStatus.scatter_plots,
+      pivotTables: ingestStatus.pivot_tables,
+      barPlotsByCategoricals: ingestStatus.bar_plots_by_categoricals,
+    };
   }
 
   async getColumnVisualizations(
@@ -212,9 +242,7 @@ export class DatasetsService {
     return subfolders.some((subfolder) => url.includes(subfolder));
   }
 
-  getDatasetStatus(
-    statuses: Record<string, CloudFunctionDatasetStatus>,
-  ): DatasetStatus {
+  getDatasetStatus(statuses: CloudFunctionDatasetIngestStatus): DatasetStatus {
     // Mocked for now since cloud function always returns failed for this
     statuses.choropleth = CloudFunctionDatasetStatus.ACTIVE;
     if (

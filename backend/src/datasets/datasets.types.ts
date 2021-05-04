@@ -132,11 +132,83 @@ export type DatasetListingResponse = Record<
     description: string;
     total_rows: string;
     created_at: string;
-    ingest_status: {
-      dataset_status: CloudFunctionDatasetStatus;
-    };
+    ingest_status: CloudFunctionDatasetIngestStatus;
   }
 >;
+
+export type CloudFunctionDatasetIngestStatus = Record<
+  string,
+  CloudFunctionDatasetStatus
+>;
+
+@ObjectType()
+export class DatasetIngestStatus {
+  @Field()
+  sourceDataStatus: CloudFunctionDatasetStatus;
+
+  @Field()
+  sourceDataWContextStatus: CloudFunctionDatasetStatus;
+
+  @Field()
+  qualityStatisticsStatus: CloudFunctionDatasetStatus;
+
+  @Field()
+  nullCountsStatus: CloudFunctionDatasetStatus;
+
+  @Field()
+  dataSampleStatus: CloudFunctionDatasetStatus;
+
+  @Field()
+  trainingSampleStatus: CloudFunctionDatasetStatus;
+
+  @Field()
+  validationSampleStatus: CloudFunctionDatasetStatus;
+
+  @Field()
+  generalStatisticsStatus: CloudFunctionDatasetStatus;
+
+  @Field()
+  groupedGeneralStatisticsStatus: CloudFunctionDatasetStatus;
+
+  @Field()
+  binnedSourceDataWContext: CloudFunctionDatasetStatus;
+
+  @Field()
+  heatMap: CloudFunctionDatasetStatus;
+
+  @Field()
+  choropleth: CloudFunctionDatasetStatus;
+
+  @Field()
+  correlationMatrix: CloudFunctionDatasetStatus;
+
+  @Field()
+  recordCounts: CloudFunctionDatasetStatus;
+
+  @Field()
+  distPlots: CloudFunctionDatasetStatus;
+
+  @Field()
+  boxPlots: CloudFunctionDatasetStatus;
+
+  @Field()
+  jointPlots: CloudFunctionDatasetStatus;
+
+  @Field()
+  violinPlots: CloudFunctionDatasetStatus;
+
+  @Field()
+  probabilityPlots: CloudFunctionDatasetStatus;
+
+  @Field()
+  scatterPlots: CloudFunctionDatasetStatus;
+
+  @Field()
+  pivotTables: CloudFunctionDatasetStatus;
+
+  @Field()
+  barPlotsByCategoricals: CloudFunctionDatasetStatus;
+}
 
 @ObjectType()
 export class Dataset {
@@ -157,6 +229,9 @@ export class Dataset {
 
   @Field()
   status: DatasetStatus;
+
+  @Field()
+  ingestStatus: DatasetIngestStatus;
 }
 
 @ArgsType()
