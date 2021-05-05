@@ -1,4 +1,4 @@
-import { DatasetModel, DatasetStatus } from './types';
+import { DatasetModel, DatasetStatus, DatasetIngestStatusModel } from './types';
 
 export interface DatasetDataProps {
   bigQueryDatasetName: string;
@@ -7,6 +7,7 @@ export interface DatasetDataProps {
   totalRows: number;
   createdAt: string;
   status: DatasetStatus;
+  ingestStatus: DatasetIngestStatusModel;
 }
 
 export const getDatasetModel = (
@@ -20,6 +21,7 @@ export const getDatasetModel = (
     totalRows: data.totalRows,
     createdAt: data.createdAt,
     status: data.status,
+    ingestStatus: data.ingestStatus,
   };
 };
 
