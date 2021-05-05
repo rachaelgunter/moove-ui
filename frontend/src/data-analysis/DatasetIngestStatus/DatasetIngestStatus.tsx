@@ -1,5 +1,5 @@
 import React, { FC, ReactNode, useState } from 'react';
-import { Button, Link, makeStyles, TableRow, Theme } from '@material-ui/core';
+import { Button, Link, makeStyles, Theme, TableRow } from '@material-ui/core';
 
 import DialogWrapper, {
   useDialogWrapperStyles,
@@ -16,11 +16,21 @@ interface DatasetIngestStatusProps {
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
     color: theme.palette.text.secondary,
-    marginBottom: '2px', // TODO Fix this
+    marginBottom: '2px',
   },
   row: {
     '&:last-child td': {
       border: 'none',
+    },
+
+    textTransform: 'uppercase',
+
+    '& td': {
+      width: '80%',
+    },
+
+    '& td:last-child': {
+      width: '20%',
     },
   },
 }));
@@ -45,19 +55,15 @@ const DatasetIngestStatus: FC<DatasetIngestStatusProps> = ({
   );
 
   const Content = () => (
-    <Table columnNames={['Status', 'Value']}>
-      {Object.keys(ingestStatus).map((key) =>
-        key !== '__typename' ? (
-          <TableRow className={classes.row} key={key}>
-            <TableCell>{key}</TableCell>
-            <TableCell>
-              <Highlighter status={ingestStatus[key]} />
-            </TableCell>
-          </TableRow>
-        ) : (
-          <></>
-        ),
-      )}
+    <Table columnNames={['Ingestion Step', 'Status']}>
+      {ingestStatus.map(({ ingestionStep, status }) => (
+        <TableRow className={classes.row} key={ingestionStep}>
+          <TableCell>{ingestionStep}</TableCell>
+          <TableCell>
+            <Highlighter status={status} />
+          </TableCell>
+        </TableRow>
+      ))}
     </Table>
   );
 
@@ -74,10 +80,11 @@ const DatasetIngestStatus: FC<DatasetIngestStatusProps> = ({
       <DialogWrapper
         open={open}
         onClose={onSwitch}
-        dialogTitle="Ingest Status"
+        dialogTitle="Ingestion Status"
         dialogControls={<Controls />}
         dialogContent={<Content />}
         isMaximizable={false}
+        width={720}
       />
     </>
   );

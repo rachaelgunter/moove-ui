@@ -7,7 +7,7 @@ const IngestionInProgressHint: React.FC<HintTemplateBaseProps> = ({
   datasetModel,
 }: HintTemplateBaseProps) => (
   <HintTemplate
-    label="Ingestion In Progress…."
+    label="Ingestion In Progress…"
     imageSrc={IngestionInProgressImage}
     datasetModel={datasetModel}
   />

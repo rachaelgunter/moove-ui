@@ -20,7 +20,7 @@ export type DatasetModel = {
   totalRows: number;
   createdAt: string;
   columns?: ColumnModel[];
-  ingestStatus: DatasetIngestStatusModel;
+  ingestStatus: DatasetIngestStatusModel[];
 };
 
 export type ColumnModel = {
@@ -37,7 +37,10 @@ export type ColumnModel = {
   sum: number;
 };
 
-export type DatasetIngestStatusModel = Record<string, DatasetIngestStatus>;
+export type DatasetIngestStatusModel = {
+  ingestionStep: string;
+  status: DatasetIngestStatus;
+};
 
 export type BigQueryProjectsResponse = {
   getUsersProjects: BigQueryProject[];

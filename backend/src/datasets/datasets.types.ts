@@ -142,75 +142,6 @@ export type CloudFunctionDatasetIngestStatus = Record<
 >;
 
 @ObjectType()
-export class DatasetIngestStatus {
-  @Field()
-  sourceDataStatus: CloudFunctionDatasetStatus;
-
-  @Field()
-  sourceDataWContextStatus: CloudFunctionDatasetStatus;
-
-  @Field()
-  qualityStatisticsStatus: CloudFunctionDatasetStatus;
-
-  @Field()
-  nullCountsStatus: CloudFunctionDatasetStatus;
-
-  @Field()
-  dataSampleStatus: CloudFunctionDatasetStatus;
-
-  @Field()
-  trainingSampleStatus: CloudFunctionDatasetStatus;
-
-  @Field()
-  validationSampleStatus: CloudFunctionDatasetStatus;
-
-  @Field()
-  generalStatisticsStatus: CloudFunctionDatasetStatus;
-
-  @Field()
-  groupedGeneralStatisticsStatus: CloudFunctionDatasetStatus;
-
-  @Field()
-  binnedSourceDataWContext: CloudFunctionDatasetStatus;
-
-  @Field()
-  heatMap: CloudFunctionDatasetStatus;
-
-  @Field()
-  choropleth: CloudFunctionDatasetStatus;
-
-  @Field()
-  correlationMatrix: CloudFunctionDatasetStatus;
-
-  @Field()
-  recordCounts: CloudFunctionDatasetStatus;
-
-  @Field()
-  distPlots: CloudFunctionDatasetStatus;
-
-  @Field()
-  boxPlots: CloudFunctionDatasetStatus;
-
-  @Field()
-  jointPlots: CloudFunctionDatasetStatus;
-
-  @Field()
-  violinPlots: CloudFunctionDatasetStatus;
-
-  @Field()
-  probabilityPlots: CloudFunctionDatasetStatus;
-
-  @Field()
-  scatterPlots: CloudFunctionDatasetStatus;
-
-  @Field()
-  pivotTables: CloudFunctionDatasetStatus;
-
-  @Field()
-  barPlotsByCategoricals: CloudFunctionDatasetStatus;
-}
-
-@ObjectType()
 export class Dataset {
   @Field()
   analysisName: string;
@@ -231,7 +162,7 @@ export class Dataset {
   status: DatasetStatus;
 
   @Field()
-  ingestStatus: DatasetIngestStatus;
+  ingestStatus: string;
 }
 
 @ArgsType()

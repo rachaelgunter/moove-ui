@@ -52,30 +52,7 @@ export const DATASET_QUERY = gql`
       totalRows
       createdAt
       status
-      ingestStatus {
-        sourceDataStatus
-        sourceDataWContextStatus
-        qualityStatisticsStatus
-        nullCountsStatus
-        dataSampleStatus
-        trainingSampleStatus
-        validationSampleStatus
-        generalStatisticsStatus
-        groupedGeneralStatisticsStatus
-        binnedSourceDataWContext
-        heatMap
-        choropleth
-        correlationMatrix
-        recordCounts
-        distPlots
-        boxPlots
-        jointPlots
-        violinPlots
-        probabilityPlots
-        scatterPlots
-        pivotTables
-        barPlotsByCategoricals
-      }
+      ingestStatus
     }
   }
 `;

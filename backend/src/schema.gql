@@ -142,31 +142,6 @@ type ColumnVisualizations {
   relationshipsVisualizations: [String!]!
 }
 
-type DatasetIngestStatus {
-  sourceDataStatus: String!
-  sourceDataWContextStatus: String!
-  qualityStatisticsStatus: String!
-  nullCountsStatus: String!
-  dataSampleStatus: String!
-  trainingSampleStatus: String!
-  validationSampleStatus: String!
-  generalStatisticsStatus: String!
-  groupedGeneralStatisticsStatus: String!
-  binnedSourceDataWContext: String!
-  heatMap: String!
-  choropleth: String!
-  correlationMatrix: String!
-  recordCounts: String!
-  distPlots: String!
-  boxPlots: String!
-  jointPlots: String!
-  violinPlots: String!
-  probabilityPlots: String!
-  scatterPlots: String!
-  pivotTables: String!
-  barPlotsByCategoricals: String!
-}
-
 type Dataset {
   analysisName: String!
   bigQueryDatasetName: String!
@@ -174,7 +149,7 @@ type Dataset {
   totalRows: String!
   createdAt: String!
   status: String!
-  ingestStatus: DatasetIngestStatus!
+  ingestStatus: String!
 }
 
 type RemovedDataset {
