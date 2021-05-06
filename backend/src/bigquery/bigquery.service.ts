@@ -230,12 +230,17 @@ export class BigQueryService {
     datasetId: string,
     tableId: string,
   ): Promise<BigQueryPreviewHeaders[]> {
+    /**
+     * We have to request one row because by default
+     * BigQuery Google API tries to return all rows at once
+     * even if 0 limit is passed
+     */
     const columnsData = await this.bigqueryClientService.getPreviewTable(
       projectId,
       datasetId,
       tableId,
       0,
-      0,
+      1,
     );
 
     return columnsData.headers;
