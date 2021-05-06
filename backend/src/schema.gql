@@ -149,6 +149,7 @@ type Dataset {
   totalRows: String!
   createdAt: String!
   status: String!
+  ingestStatus: String!
 }
 
 type RemovedDataset {

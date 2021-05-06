@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 
-interface HintTemplateProps {
-  label: string;
+import { DatasetModel } from '../types';
+import DatasetIngestStatusDetails from '../DatasetIngestStatusDetails';
+
+export interface HintTemplateBaseProps {
+  datasetModel?: DatasetModel;
+}
+interface HintTemplateProps extends HintTemplateBaseProps {
+  label: string | ReactNode;
   imageSrc: string;
 }
 
@@ -19,6 +25,7 @@ const useStyles = makeStyles({
 const HintTemplate: React.FC<HintTemplateProps> = ({
   label,
   imageSrc,
+  datasetModel,
 }: HintTemplateProps) => {
   const classes = useStyles();
 
@@ -37,6 +44,18 @@ const HintTemplate: React.FC<HintTemplateProps> = ({
       <Grid item>
         <Typography variant="body1" color="textSecondary">
           {label}
+          {datasetModel ? (
+            <>
+              {' '}
+              Click{' '}
+              <DatasetIngestStatusDetails datasetModel={datasetModel}>
+                here
+              </DatasetIngestStatusDetails>{' '}
+              for details
+            </>
+          ) : (
+            <></>
+          )}
         </Typography>
       </Grid>
     </Grid>

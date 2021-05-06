@@ -52,6 +52,7 @@ export const DATASET_QUERY = gql`
       totalRows
       createdAt
       status
+      ingestStatus
     }
   }
 `;

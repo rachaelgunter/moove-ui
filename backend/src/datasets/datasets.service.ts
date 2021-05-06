@@ -11,6 +11,7 @@ import {
   ColumnVisualizations,
   FileDatasetParamsInput,
   RemovedDataset,
+  CloudFunctionDatasetIngestStatus,
 } from './datasets.types';
 import { google } from 'googleapis';
 import { GCSClient } from 'src/gcs/gcs-client';
@@ -165,6 +166,7 @@ export class DatasetsService {
       totalRows: datasetsResponse[key].total_rows,
       createdAt: datasetsResponse[key].created_at,
       status: this.getDatasetStatus(datasetsResponse[key].ingest_status),
+      ingestStatus: JSON.stringify(datasetsResponse[key].ingest_status),
     }));
   }
 
@@ -212,9 +214,7 @@ export class DatasetsService {
     return subfolders.some((subfolder) => url.includes(subfolder));
   }
 
-  getDatasetStatus(
-    statuses: Record<string, CloudFunctionDatasetStatus>,
-  ): DatasetStatus {
+  getDatasetStatus(statuses: CloudFunctionDatasetIngestStatus): DatasetStatus {
     // Mocked for now since cloud function always returns failed for this
     statuses.choropleth = CloudFunctionDatasetStatus.ACTIVE;
     if (
