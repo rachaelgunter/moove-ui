@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const DatasetIngestStatus: FC<DatasetIngestStatusProps> = ({
+const DatasetIngestStatusDetails: FC<DatasetIngestStatusProps> = ({
   datasetModel,
   children,
 }: DatasetIngestStatusProps) => {
@@ -90,4 +90,4 @@ const DatasetIngestStatus: FC<DatasetIngestStatusProps> = ({
   );
 };
 
-export default DatasetIngestStatus;
+export default DatasetIngestStatusDetails;

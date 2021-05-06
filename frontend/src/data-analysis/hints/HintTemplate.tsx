@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 
 import { DatasetModel } from '../types';
-import DatasetIngestStatus from '../DatasetIngestStatus';
+import DatasetIngestStatusDetails from '../DatasetIngestStatusDetails';
 
 export interface HintTemplateBaseProps {
   datasetModel?: DatasetModel;
@@ -48,9 +48,9 @@ const HintTemplate: React.FC<HintTemplateProps> = ({
             <>
               {' '}
               Click{' '}
-              <DatasetIngestStatus datasetModel={datasetModel}>
+              <DatasetIngestStatusDetails datasetModel={datasetModel}>
                 here
-              </DatasetIngestStatus>{' '}
+              </DatasetIngestStatusDetails>{' '}
               for details
             </>
           ) : (
