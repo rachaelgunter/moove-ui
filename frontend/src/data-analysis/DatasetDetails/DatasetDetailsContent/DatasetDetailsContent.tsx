@@ -7,6 +7,7 @@ import Columns from 'src/data-analysis/Columns';
 import DatasetVisualization from 'src/data-analysis/DatasetVisualization';
 import PreviewTable from 'src/data-analysis/PreviewTable';
 import IngestionFailureHint from 'src/data-analysis/hints/IngestionFailureHint';
+import { HintTemplateBaseProps } from 'src/data-analysis/hints/HintTemplate';
 
 interface DatasetDetailsContentProps {
   datasetModel: DatasetModel;
@@ -29,7 +30,9 @@ const DatasetDetailsContent: React.FC<DatasetDetailsContentProps> = ({
 }: DatasetDetailsContentProps) => {
   const classes = useStyles();
 
-  const hintsStatusesMap: { [key in DatasetStatus]: React.FC | null } = {
+  const hintsStatusesMap: {
+    [key in DatasetStatus]: React.FC<HintTemplateBaseProps> | null;
+  } = {
     [DatasetStatus.ACTIVE]: null,
     [DatasetStatus.PROCESSING]: IngestionInProgressHint,
     [DatasetStatus.FAILED]: IngestionFailureHint,
@@ -40,7 +43,7 @@ const DatasetDetailsContent: React.FC<DatasetDetailsContentProps> = ({
   if (Hint) {
     return (
       <Grid item className={classes.hintWrapper}>
-        <Hint />
+        <Hint datasetModel={datasetModel} />
       </Grid>
     );
   }

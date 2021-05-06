@@ -132,10 +132,13 @@ export type DatasetListingResponse = Record<
     description: string;
     total_rows: string;
     created_at: string;
-    ingest_status: {
-      dataset_status: CloudFunctionDatasetStatus;
-    };
+    ingest_status: CloudFunctionDatasetIngestStatus;
   }
+>;
+
+export type CloudFunctionDatasetIngestStatus = Record<
+  string,
+  CloudFunctionDatasetStatus
 >;
 
 @ObjectType()
@@ -157,6 +160,9 @@ export class Dataset {
 
   @Field()
   status: DatasetStatus;
+
+  @Field()
+  ingestStatus: string;
 }
 
 @ArgsType()
