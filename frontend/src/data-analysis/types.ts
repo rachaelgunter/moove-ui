@@ -6,6 +6,12 @@ export enum DatasetStatus {
   FAILED = 'failed',
 }
 
+export enum DatasetIngestStatus {
+  ACTIVE = 'finished',
+  PROCESSING = 'pending',
+  FAILED = 'failed',
+}
+
 export type DatasetModel = {
   id: number;
   name: string;
@@ -14,6 +20,7 @@ export type DatasetModel = {
   totalRows: number;
   createdAt: string;
   columns?: ColumnModel[];
+  ingestStatus: DatasetIngestStatusModel[];
 };
 
 export type ColumnModel = {
@@ -28,6 +35,11 @@ export type ColumnModel = {
   variance: number;
   count: number;
   sum: number;
+};
+
+export type DatasetIngestStatusModel = {
+  ingestionStep: string;
+  status: DatasetIngestStatus;
 };
 
 export type BigQueryProjectsResponse = {

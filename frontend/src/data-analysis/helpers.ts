@@ -7,6 +7,7 @@ export interface DatasetDataProps {
   totalRows: number;
   createdAt: string;
   status: DatasetStatus;
+  ingestStatus: string;
 }
 
 export const getDatasetModel = (
@@ -20,6 +21,7 @@ export const getDatasetModel = (
     totalRows: data.totalRows,
     createdAt: data.createdAt,
     status: data.status,
+    ingestStatus: mapIngestStatus(data.ingestStatus),
   };
 };
 
@@ -27,3 +29,12 @@ export const getDatasetModels = (data: DatasetDataProps[]): DatasetModel[] =>
   data.map((item: DatasetDataProps, index: number) =>
     getDatasetModel(item, index),
   );
+
+const mapIngestStatus = (ingestStatusData: string) => {
+  const ingestStatus = JSON.parse(ingestStatusData);
+
+  return Object.keys(ingestStatus).map((key) => ({
+    ingestionStep: key.replaceAll('_', ' '),
+    status: ingestStatus[key],
+  }));
+};

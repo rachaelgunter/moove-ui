@@ -39,6 +39,9 @@ const useStyles = makeStyles<
     display: 'flex',
     flexDirection: 'column',
   },
+}));
+
+export const useDialogWrapperStyles = makeStyles((theme: Theme) => ({
   divider: {
     backgroundColor: theme.palette.divider,
   },
@@ -84,6 +87,8 @@ const DialogWrapper: FC<DialogWrapperProps> = ({
   isMaximizable = true,
 }: DialogWrapperProps) => {
   const classes = useStyles({ height, width });
+  const dialogWrapperClasses = useDialogWrapperStyles();
+
   const [isFullScreen, setIsFullScreen] = useState(false);
   const onChangeSize = (value: boolean): void => {
     setIsFullScreen(value);
@@ -99,12 +104,12 @@ const DialogWrapper: FC<DialogWrapperProps> = ({
       open={open}
       onClose={onClose}
     >
-      <DialogTitle className={classes.dialogTitleRoot}>
-        <Box className={classes.dialogTitleContainer}>
+      <DialogTitle className={dialogWrapperClasses.dialogTitleRoot}>
+        <Box className={dialogWrapperClasses.dialogTitleContainer}>
           <Typography
             color="textPrimary"
             fontFamily={FontFamily.ROBOTO}
-            className={classes.dialogTitle}
+            className={dialogWrapperClasses.dialogTitle}
           >
             {dialogTitle}
           </Typography>
@@ -118,7 +123,9 @@ const DialogWrapper: FC<DialogWrapperProps> = ({
       <DialogContent className={classes.contentRoot}>
         {dialogContent}
         <Divider />
-        <Box className={classes.dialogControls}>{dialogControls}</Box>
+        <Box className={dialogWrapperClasses.dialogControls}>
+          {dialogControls}
+        </Box>
       </DialogContent>
     </Dialog>
   );

@@ -10,7 +10,12 @@ import {
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import { User, UserContext } from 'src/auth/UserProvider';
 import Columns, { INIT_NUMBER_OF_ROWS, STEP } from './Columns';
-import { ColumnModel, DatasetModel, DatasetStatus } from '../types';
+import {
+  ColumnModel,
+  DatasetIngestStatus,
+  DatasetModel,
+  DatasetStatus,
+} from '../types';
 import { DATASET_COLUMNS_QUERY } from '../queries';
 
 function createData(
@@ -46,6 +51,12 @@ const dataset: DatasetModel = {
   totalRows: 15,
   name: 'dataset',
   status: DatasetStatus.ACTIVE,
+  ingestStatus: [
+    {
+      ingestionStep: 'test status',
+      status: DatasetIngestStatus.PROCESSING,
+    },
+  ],
 };
 
 const columnsMock: MockedResponse = {
