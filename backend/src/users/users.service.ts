@@ -122,6 +122,9 @@ export class UsersService {
   getGoogleTokensFromAuth0User(
     auth0User: Auth0User<AppMetadata, UserMetadata>,
   ): TokenPair | null {
+    if (!auth0User.identities) {
+      return null;
+    }
     const googleIdentity = auth0User.identities.find(
       (identity) => identity.provider === 'google-oauth2',
     );
