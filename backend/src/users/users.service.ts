@@ -56,9 +56,9 @@ export class UsersService {
         );
       }
 
-      const { refreshToken, accessToken } = this.isPaidUser(existingUser)
-        ? this.getGoogleTokensFromAuth0User(freshUser)
-        : { accessToken: null, refreshToken: null };
+      const { refreshToken, accessToken } = this.getGoogleTokensFromAuth0User(
+        freshUser,
+      ) ?? { accessToken: null, refreshToken: null };
 
       const organizationId = existingUser?.app_metadata?.organization?.id;
 
@@ -121,16 +121,22 @@ export class UsersService {
 
   getGoogleTokensFromAuth0User(
     auth0User: Auth0User<AppMetadata, UserMetadata>,
-  ): TokenPair {
+  ): TokenPair | null {
+    if (!auth0User.identities) {
+      return null;
+    }
     const googleIdentity = auth0User.identities.find(
       (identity) => identity.provider === 'google-oauth2',
     );
 
-    return {
-      accessToken: googleIdentity.access_token,
-      refreshToken: ((googleIdentity as unknown) as { refresh_token: string })
-        .refresh_token,
-    };
+    return googleIdentity
+      ? {
+          accessToken: googleIdentity.access_token,
+          refreshToken: ((googleIdentity as unknown) as {
+            refresh_token: string;
+          }).refresh_token,
+        }
+      : null;
   }
 
   isPaidUser(user: Auth0User<AppMetadata, UserMetadata>): boolean {
