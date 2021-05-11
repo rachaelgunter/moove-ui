@@ -1,0 +1,15 @@
+substitutions:
+  _REGION: ""
+
+steps:
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  args:
+  - gcloud
+  - functions
+  - deploy
+  - validate-csv
+  - --region=$_REGION
+  - --source=./functions/validate-csv
+  - --entry-point=main 
+  - --runtime=nodejs12
+  - --trigger-http
