@@ -1,5 +1,6 @@
 substitutions:
   _REGION: ""
+  _ENVIRONMENT: ""
 
 steps:
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -10,6 +11,7 @@ steps:
   - validate-csv
   - --region=$_REGION
   - --source=./functions/validate-csv
+  - --env-vars-file=./functions/validate-csv/.env.$_ENVIRONMENT.yml
   - --entry-point=main 
   - --runtime=nodejs12
   - --trigger-http
