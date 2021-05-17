@@ -49,7 +49,6 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
       freeSolo
       forcePopupIcon
       disableClearable
-      debug
       value={value}
       options={autocompleteOptions}
       onChange={(_event, newValue) => {

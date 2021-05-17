@@ -64,6 +64,15 @@ const main = async () => {
     data: businessVerticalValues.map((name) => ({ name })),
     skipDuplicates: true,
   });
+  await prisma.jobFunction.deleteMany({
+    where: {
+      NOT: {
+        name: {
+          in: jobFunctionValues,
+        },
+      },
+    },
+  });
   await prisma.jobFunction.createMany({
     data: jobFunctionValues.map((name) => ({ name })),
     skipDuplicates: true,
