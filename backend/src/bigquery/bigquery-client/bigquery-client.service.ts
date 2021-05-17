@@ -149,7 +149,7 @@ export class BigqueryClientService extends GoogleClientService {
     datasetId: string,
     tableId: string,
     startIndex: number,
-    maxResults: number,
+    maxResults?: number,
     selectedFields?: string[],
   ): Promise<BigQueryPreviewTable> {
     const auth = await this.getAuthClient();

@@ -104,7 +104,6 @@ export class BigQueryService {
         datasetId,
         analysisName,
         offset,
-        limit,
       );
     } catch (e) {
       this.logger.log(
@@ -154,7 +153,7 @@ export class BigQueryService {
       populated: emptyColumnsData
         ? this.getColumnPopulatedValue(
             column.name,
-            data.tableMetadata.totalRows,
+            column.count,
             emptyColumnsData,
           )
         : 100,
@@ -169,6 +168,7 @@ export class BigQueryService {
     const rowIndex = emptyColumnsData.rows.findIndex(
       ([name]) => name === columnName,
     );
+
     const percentage =
       (1 - +emptyColumnsData.rows[rowIndex]?.[1] / totalRows) * 100;
 
