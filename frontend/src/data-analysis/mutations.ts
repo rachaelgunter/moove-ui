@@ -13,9 +13,13 @@ export const CREATE_FILE_DATASET_MUTATION = gql`
 `;
 
 export const DELETE_DATASET_MUTATION = gql`
-  mutation DeleteDataset($analysisName: String!) {
-    deleteDataset(analysisName: $analysisName) {
+  mutation DeleteDataset($analysisName: String!, $analysisProject: String!) {
+    deleteDataset(
+      analysisName: $analysisName
+      analysisProject: $analysisProject
+    ) {
       analysisName
+      analysisProject
     }
   }
 `;
