@@ -4,10 +4,9 @@ const { Storage } = require('@google-cloud/storage');
 const bigquery = new BigQuery();
 const storage = new Storage();
 
-// TODO: extract to env variables
-const LOCAL_FILES_BUCKET_NAME = 'galileo-datasets-files';
-const LOCAL_FILES_PROJECT_NAME = 'moove-platform-lineate-dev';
-const LOCAL_FILES_DATASET_NAME = 'galileo_ingestions_user_uploads';
+const LOCAL_FILES_BUCKET_NAME = process.env.LOCAL_FILES_BUCKET_NAME;
+const LOCAL_FILES_PROJECT_NAME = process.env.LOCAL_FILES_PROJECT_NAME;
+const LOCAL_FILES_DATASET_NAME = process.env.LOCAL_FILES_DATASET_NAME;
 
 async function createTableFromCSV(organizationName, analysisName, fileName) {
   const tableId = `${organizationName}_${analysisName}_${Date.now()}`;

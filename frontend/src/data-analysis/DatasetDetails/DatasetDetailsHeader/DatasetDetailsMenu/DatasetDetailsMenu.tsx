@@ -6,13 +6,14 @@ import {
   MenuItem,
   Theme,
 } from '@material-ui/core';
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { FontFamily } from 'src/app/styles/fonts';
 import { MoreVert as MoreVertIcon } from '@material-ui/icons';
 import { DatasetModel } from 'src/data-analysis/types';
 import { AlertDialogType } from 'src/shared/AlertDialog/AlertDialog';
 import AlertDialog from 'src/shared/AlertDialog';
 import Typography from 'src/shared/Typography';
+import { UserContext } from 'src/auth/UserProvider';
 import useDeleteDataset from '../hooks/useDeleteDataset';
 
 interface DatasetDetailsMenuProps {
@@ -59,6 +60,7 @@ const DatasetDetailsMenu: FC<DatasetDetailsMenuProps> = ({
   const [deleteDataset, { loading }] = useDeleteDataset();
 
   const [open, setOpen] = useState(false);
+  const user = useContext(UserContext);
 
   const onSwitch = () => setOpen(!open);
 
@@ -72,7 +74,10 @@ const DatasetDetailsMenu: FC<DatasetDetailsMenuProps> = ({
 
   const onDelete = () => {
     deleteDataset({
-      variables: { analysisName: datasetModel.name },
+      variables: {
+        analysisName: datasetModel.name,
+        analysisProject: user.GCPProjectName,
+      },
     })
       .then(() => {
         resetDatasetModel();
