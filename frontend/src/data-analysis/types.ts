@@ -128,6 +128,7 @@ export enum ColumnType {
 
 export type RemovedDataset = {
   analysisName: string;
+  analysisProject: string;
 };
 
 export type DatasetRemovalResponse = {

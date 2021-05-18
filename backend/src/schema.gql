@@ -154,6 +154,7 @@ type Dataset {
 
 type RemovedDataset {
   analysisName: String!
+  analysisProject: String!
 }
 
 type BusinessVertical {
@@ -197,7 +198,7 @@ type Mutation {
   deleteUser(deleteUserPayload: DeleteUserPayload!): DeletedUser
   createDataset(datasetParams: DatasetParamsInput!): String!
   createLocalFileDataset(datasetParams: FileDatasetParamsInput!): String!
-  deleteDataset(analysisName: String!): RemovedDataset
+  deleteDataset(analysisName: String!, analysisProject: String!): RemovedDataset
 }
 
 input UserInput {

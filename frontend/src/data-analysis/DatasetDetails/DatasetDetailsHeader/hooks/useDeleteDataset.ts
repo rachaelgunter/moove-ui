@@ -2,11 +2,16 @@ import { useMutation, StoreObject, MutationTuple } from '@apollo/client';
 import { DELETE_DATASET_MUTATION } from 'src/data-analysis/mutations';
 import { DatasetRemovalResponse } from 'src/data-analysis/types';
 
+type DeleteDatasetParams = {
+  analysisName: string;
+  analysisProject?: string;
+};
+
 const useDeleteDataset = (): MutationTuple<
   DatasetRemovalResponse,
-  { analysisName: string }
+  DeleteDatasetParams
 > =>
-  useMutation<DatasetRemovalResponse, { analysisName: string }>(
+  useMutation<DatasetRemovalResponse, DeleteDatasetParams>(
     DELETE_DATASET_MUTATION,
     {
       update(cache, { data }) {
