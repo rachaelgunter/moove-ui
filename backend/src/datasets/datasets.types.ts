@@ -193,10 +193,16 @@ export enum CloudFunctionDatasetStatus {
 export class RemovingDatasetParams {
   @Field()
   analysisName: string;
+
+  @Field()
+  analysisProject: string;
 }
 
 @ObjectType()
 export class RemovedDataset {
   @Field()
   analysisName: string;
+
+  @Field()
+  analysisProject: string;
 }

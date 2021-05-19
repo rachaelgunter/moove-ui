@@ -20,7 +20,7 @@ const DataTypes = Object.freeze({
   STRING: 'STRING',
 });
 
-const LOCAL_FILES_BUCKET_NAME = 'galileo-datasets-files';
+const LOCAL_FILES_BUCKET_NAME = process.env.LOCAL_FILES_BUCKET_NAME;
 
 const createReadGCSFileStream = (organizationName, analysisName, fileName) => {
   const bucket = storage.bucket(LOCAL_FILES_BUCKET_NAME);

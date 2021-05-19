@@ -1,5 +1,6 @@
 substitutions:
   _REGION: ""
+  _ENVIRONMENT: ""
 
 steps:
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -10,6 +11,7 @@ steps:
   - local-uploads-ingestion-trigger
   - --region=$_REGION
   - --source=./functions/local-uploads-ingestion-trigger
+  - --env-vars-file=./functions/local-uploads-ingestion-trigger/.env.$_ENVIRONMENT.yml
   - --entry-point=main 
   - --runtime=nodejs12
   - --trigger-http

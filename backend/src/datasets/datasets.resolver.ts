@@ -106,9 +106,9 @@ export class DatasetsResolver {
   @UseGuards(GqlAuthGuard)
   @Mutation(() => RemovedDataset, { nullable: true })
   async deleteDataset(
-    @Args() { analysisName }: RemovingDatasetParams,
+    @Args() { analysisName, analysisProject }: RemovingDatasetParams,
   ): Promise<RemovedDataset> {
-    return this.datasetsService.deleteDataset(analysisName);
+    return this.datasetsService.deleteDataset(analysisName, analysisProject);
   }
 
   @Roles(Role.PAID_USER, Role.ADMIN, Role.SUPER_ADMIN)

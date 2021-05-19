@@ -269,15 +269,23 @@ export class DatasetsService {
     }
   }
 
-  async deleteDataset(analysisName: string): Promise<RemovedDataset> {
+  async deleteDataset(
+    analysisName: string,
+    analysisProject: string,
+  ): Promise<RemovedDataset> {
     const url = this.configService.get('DELETE_DATASET_CLOUD_FUNCTION_URL');
     const headers = await this.getRequestHeaders(url);
 
     return this.httpService
-      .post(url, { analysis_name: analysisName }, { headers })
+      .post(
+        url,
+        { analysis_name: analysisName, analysis_project: analysisProject },
+        { headers },
+      )
       .pipe(
         map(() => ({
           analysisName,
+          analysisProject,
         })),
         catchError((e) => {
           this.logger.error(

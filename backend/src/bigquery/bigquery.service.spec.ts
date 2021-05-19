@@ -36,21 +36,6 @@ const mockData = {
   },
 };
 
-const mockEpmtyColumnsData = {
-  rows: [
-    ['rand_num', '0'],
-    ['headlights', '0'],
-    ['received_time', '0'],
-    ['heading_deg', '0'],
-    ['geog', '0'],
-  ],
-  headers: [
-    { name: 'column_name', type: 'STRING' },
-    { name: 'null_count', type: 'INTEGER' },
-  ],
-  tableMetadata: { totalRows: 17 },
-};
-
 describe('BigQueryService', () => {
   let client: BigQueryService;
 
@@ -76,9 +61,7 @@ describe('BigQueryService', () => {
 
   describe('mapColumnsTable', () => {
     it('should map data for column table correctly', () => {
-      expect(
-        client.mapColumnsTable(mockData, mockEpmtyColumnsData),
-      ).toStrictEqual([
+      expect(client.mapColumnsTable(mockData)).toStrictEqual([
         {
           average: '39.707948396093066',
           min: '39.370502',
