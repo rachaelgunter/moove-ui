@@ -92,32 +92,11 @@ export class BigQueryService {
       offset,
       limit,
     );
-    /**
-     * Replace here is a dirty hack since we don't know the analysis name on the backend
-     * TODO: move tables names composing from FE to BE, so that we pass only analysis name as a query param
-     *  */
-    const analysisName = datasetId.replace('galileo_analysis', 'null_counts');
-    let emptyColumnsData: BigQueryPreviewTable | null = null;
-    try {
-      emptyColumnsData = await this.bigqueryClientService.getPreviewTable(
-        projectId,
-        datasetId,
-        analysisName,
-        offset,
-      );
-    } catch (e) {
-      this.logger.log(
-        `Null counts table for dataset ${analysisName} is not present`,
-      );
-    }
 
-    return this.mapColumnsTable(columnsData, emptyColumnsData);
+    return this.mapColumnsTable(columnsData);
   }
 
-  mapColumnsTable(
-    data: BigQueryPreviewTable,
-    emptyColumnsData: BigQueryPreviewTable | null,
-  ) {
+  mapColumnsTable(data: BigQueryPreviewTable) {
     const markers = {
       min: '_MIN',
       max: '_MAX',
@@ -130,8 +109,13 @@ export class BigQueryService {
 
     const res: BigQueryColumnTable[] = [];
     let column = {} as BigQueryColumnTable;
+    let totalRowsCount: number;
 
     data.headers.forEach((header, index) => {
+      if (header.name === 'total_count') {
+        totalRowsCount = +data.rows[0][index];
+        return;
+      }
       Object.keys(markers).forEach((key) => {
         if (header.name.endsWith(markers[key])) {
           column[key] = data.rows[0][index];
@@ -150,27 +134,12 @@ export class BigQueryService {
 
     return res.map((column) => ({
       ...column,
-      populated: emptyColumnsData
-        ? this.getColumnPopulatedValue(
-            column.name,
-            column.count,
-            emptyColumnsData,
-          )
-        : 100,
+      populated: this.getColumnPopulatedValue(totalRowsCount, column.count),
     }));
   }
 
-  getColumnPopulatedValue(
-    columnName: string,
-    totalRows: number,
-    emptyColumnsData: BigQueryPreviewTable,
-  ): number {
-    const rowIndex = emptyColumnsData.rows.findIndex(
-      ([name]) => name === columnName,
-    );
-
-    const percentage =
-      (1 - +emptyColumnsData.rows[rowIndex]?.[1] / totalRows) * 100;
+  getColumnPopulatedValue(totalRowsCount: number, rowsCount: number): number {
+    const percentage = (rowsCount / totalRowsCount) * 100;
 
     if (Number.isNaN(percentage)) {
       return 100;
