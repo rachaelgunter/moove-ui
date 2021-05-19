@@ -118,8 +118,20 @@ export class DatasetsService {
     const localUploadsTriggerURL = this.configService.get(
       'LOCAL_UPLOADS_INGESTION_TRIGGER_URL',
     );
+    this.logger.log(
+      `Extra logging for dataset: ${JSON.stringify(
+        datasetParams,
+      )}`,
+    );
     const headers = await this.getRequestHeaders(localUploadsTriggerURL);
 
+    this.logger.log(
+      `Extra logging triggerurl: ${localUploadsTriggerURL}`,
+    );
+
+    this.logger.log(
+      `Extra logging headers: ${headers}`,
+    );
     const { tableId, datasetId, projectId } = await this.httpService
       .post(
         localUploadsTriggerURL,
@@ -129,6 +141,9 @@ export class DatasetsService {
       .pipe(
         map((response) => response.data),
         catchError((e) => {
+          this.logger.log(
+            `Extra logging fileName: ${fileName}, orgName: ${organizationName}, datasetId: ${datasetId}, projectId: ${projectId}`,
+          );
           this.logger.error(
             `Failed to prepare file ${fileName} for ingestion`,
             e,
