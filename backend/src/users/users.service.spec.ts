@@ -380,7 +380,7 @@ describe('UsersService', () => {
         'email@test.com',
         'name',
         null,
-        [Role.ADMIN, Role.PAID_USER],
+        [Role.USER, Role.PAID_USER, Role.ADMIN],
       );
     });
 
@@ -395,7 +395,7 @@ describe('UsersService', () => {
         'email@test.com',
         'name',
         { id: 1, name: 's' },
-        [Role.PAID_USER],
+        [Role.USER, Role.PAID_USER],
       );
     });
 
