@@ -395,7 +395,7 @@ describe('UsersService', () => {
         'email@test.com',
         'name',
         { id: 1, name: 's' },
-        [Role.USER, Role.PAID_USER],
+        [Role.USER, Role.PAID_USER, Role.ROAD_IQ_PAID_USER],
       );
     });
 
