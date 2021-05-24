@@ -123,10 +123,10 @@ export enum Role {
 }
 
 export const auth0RolesMap: { [key in Role]: Role[] } = {
-  [Role.ADMIN]: [Role.ADMIN, Role.PAID_USER],
-  [Role.PAID_USER]: [Role.PAID_USER],
-  [Role.SUPER_ADMIN]: [Role.SUPER_ADMIN, Role.PAID_USER],
   [Role.USER]: [Role.USER],
-  [Role.API_USER]: [Role.API_USER, Role.USER],
-  [Role.ROAD_IQ_PAID_USER]: [Role.ROAD_IQ_PAID_USER, Role.USER],
+  [Role.API_USER]: [Role.API_USER],
+  [Role.PAID_USER]: [Role.USER, Role.PAID_USER, Role.ROAD_IQ_PAID_USER],
+  [Role.ROAD_IQ_PAID_USER]: [Role.USER, Role.ROAD_IQ_PAID_USER],
+  [Role.ADMIN]: [Role.USER, Role.PAID_USER, Role.ADMIN],
+  [Role.SUPER_ADMIN]: [Role.USER, Role.PAID_USER, Role.SUPER_ADMIN],
 };
