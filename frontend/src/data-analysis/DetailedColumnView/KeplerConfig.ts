@@ -6,20 +6,24 @@ export const getKeplerConfig = (columnName: string): unknown => ({
       filters: [],
       layers: [
         {
-          id: 'n93mxvf',
-          type: 'geojson',
+          id: columnName,
+          type: 'point',
           config: {
             dataId: `${columnName} analysis_data`,
             label: columnName,
             color: [30, 150, 190],
             columns: {
-              geojson: 'source_geom',
+              lat: 'latitude',
+              lng: 'longitude',
+              altitude: null,
             },
             isVisible: true,
             visConfig: {
+              radius: 10,
+              fixedRadius: false,
               opacity: 0.8,
-              strokeOpacity: 0.8,
-              thickness: 0.5,
+              outline: false,
+              thickness: 2,
               strokeColor: null,
               colorRange: {
                 name: 'Global Warming',
@@ -47,15 +51,8 @@ export const getKeplerConfig = (columnName: string): unknown => ({
                   '#FFC300',
                 ],
               },
-              radius: 10,
-              sizeRange: [0, 10],
               radiusRange: [0, 50],
-              heightRange: [0, 500],
-              elevationScale: 5,
-              stroked: false,
               filled: true,
-              enable3d: false,
-              wireframe: false,
             },
             hidden: false,
             textLabel: [
@@ -72,17 +69,12 @@ export const getKeplerConfig = (columnName: string): unknown => ({
           visualChannels: {
             colorField: {
               name: columnName,
-              type: 'real',
             },
             colorScale: 'quantile',
             strokeColorField: null,
             strokeColorScale: 'quantile',
             sizeField: null,
             sizeScale: 'linear',
-            heightField: null,
-            heightScale: 'linear',
-            radiusField: null,
-            radiusScale: 'linear',
           },
         },
       ],
@@ -121,8 +113,10 @@ export const getKeplerConfig = (columnName: string): unknown => ({
     mapState: {
       bearing: 0,
       dragRotate: false,
+      latitude: 39.633448,
+      longitude: -111.93026900000001,
       pitch: 0,
-      zoom: 9,
+      zoom: 3,
       isSplit: false,
     },
     mapStyle: {
