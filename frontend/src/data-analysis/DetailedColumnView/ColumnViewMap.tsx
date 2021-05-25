@@ -5,7 +5,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { UserContext } from 'src/auth/UserProvider';
 import { KEPLER_DATA_QUERY } from '../queries';
 import KeplerWrapper from './KeplerWrapper';
-import { KeplerDataQueryResponse, KeplerDataset } from '../types';
+import { ColumnType, KeplerDataQueryResponse, KeplerDataset } from '../types';
 
 interface ColumnViewMapProps {
   columnName: string;
@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const getData = (
+export const getData = (
   data: KeplerDataQueryResponse,
   columnName: string,
 ): KeplerDataset => {
@@ -40,13 +40,17 @@ const getData = (
     },
     data: {
       fields: keplerData.headers,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      rows: keplerData.rows.map(
-        ([lat, long, value]: [string, string, unknown]) => [+lat, +long, value],
+      rows: keplerData.rows.map((values: string[]) =>
+        values.map((value: string, index: number) => {
+          return parseDataFromString(value, keplerData.headers[index].type);
+        }),
       ),
     },
   };
 };
+
+const parseDataFromString = (data: string, type: ColumnType) =>
+  [ColumnType.FLOAT, ColumnType.INTEGER].includes(type) ? +data : data;
 
 const ColumnViewMap: FC<ColumnViewMapProps> = ({
   columnName,
