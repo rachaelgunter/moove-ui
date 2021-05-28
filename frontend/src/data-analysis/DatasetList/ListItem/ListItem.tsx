@@ -71,7 +71,9 @@ const ListItem: React.FC<ListItemProps> = ({
       selected={selected}
       onClick={onClick}
     >
-      <ListItemIcon className={classes.listItemIcon}>
+      <ListItemIcon
+        className={`${classes.listItemIcon} dataset-status-${status}`}
+      >
         <Icon />
       </ListItemIcon>
       <ListItemText
