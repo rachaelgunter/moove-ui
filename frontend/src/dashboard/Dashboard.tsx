@@ -4,6 +4,7 @@ import { Grid, Typography } from '@material-ui/core';
 
 import MapOutlinedIcon from '@material-ui/icons/MapOutlined';
 import TimelineIcon from '@material-ui/icons/Timeline';
+import ExploreIcon from '@material-ui/icons/Explore';
 import PageTemplate from 'src/shared/PageTemplate';
 import routes from 'src/shared/routes';
 import { Role } from 'src/shared/types';
@@ -24,6 +25,12 @@ const Dashboard: React.FC = () => {
       Icon: TimelineIcon,
       onClick: () => history.push(routes.dataAnalysis.path),
       allowedRoles: [Role.PAID_USER, Role.ADMIN, Role.SUPER_ADMIN],
+    },
+    {
+      label: 'Reports',
+      Icon: ExploreIcon,
+      onClick: () => history.push(''),
+      allowedRoles: [Role.SUPER_ADMIN],
     },
   ];
 
