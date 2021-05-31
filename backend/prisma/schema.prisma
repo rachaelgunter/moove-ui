@@ -30,3 +30,13 @@ model Organization {
   GCPProjectName String
   User           User[]
 }
+
+model BusinessVertical {
+  id             Int    @id @default(autoincrement())
+  name           String @unique
+}
+
+model JobFunction {
+  id             Int    @id @default(autoincrement())
+  name           String @unique
+}

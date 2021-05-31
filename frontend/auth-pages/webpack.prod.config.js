@@ -6,6 +6,7 @@ const InlineChunkHtmlPlugin = require('inline-chunk-html-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   mode: 'production',
@@ -69,5 +70,8 @@ module.exports = {
     }),
     new CleanWebpackPlugin(),
     new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/\.(js|css)$/]),
+    new Dotenv({
+      path: `./.env.${process.env.ENV_FILE}`,
+    }),
   ],
 };
