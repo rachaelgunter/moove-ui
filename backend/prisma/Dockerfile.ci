@@ -2,8 +2,10 @@ FROM node:14.15.5-alpine
 
 WORKDIR /app
 
-# Install prisma for the migration
-RUN npm install -g prisma --unsafe-perm
+# Install prerequisites for migration and seeds
+RUN npm install -g prisma ts-node typescript && npm install -D @types/node @prisma/client
 
 # Copy schema and migration folder
 COPY ./prisma ./prisma
+
+RUN npx prisma generate

@@ -6,6 +6,7 @@ interface SignUpFormContextState {
   password: string;
   repeatedPassword: string;
   businessVertical: string;
+  jobFunction: string;
   termsAccepted: boolean;
 }
 
@@ -25,6 +26,7 @@ const initialState = {
     password: '',
     repeatedPassword: '',
     businessVertical: '',
+    jobFunction: '',
     termsAccepted: false,
   },
   dispatch: () => {},

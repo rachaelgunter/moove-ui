@@ -1,6 +1,6 @@
 import React, { FC, useContext } from 'react';
 import { useQuery } from '@apollo/client';
-import { CircularProgress, makeStyles } from '@material-ui/core';
+import { CircularProgress, makeStyles, Typography } from '@material-ui/core';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { UserContext } from 'src/auth/UserProvider';
 import { KEPLER_DATA_QUERY } from '../queries';
@@ -24,6 +24,9 @@ const useStyles = makeStyles(() => ({
   },
   keplerInstanceContainer: {
     flex: '1 1 auto',
+  },
+  errorMessage: {
+    marginTop: '10px',
   },
 }));
 
@@ -50,7 +53,9 @@ export const getData = (
 };
 
 const parseDataFromString = (data: string, type: ColumnType) =>
-  [ColumnType.FLOAT, ColumnType.INTEGER].includes(type) ? +data : data;
+  [ColumnType.FLOAT, ColumnType.INTEGER, ColumnType.TIMESTAMP].includes(type)
+    ? +data
+    : data;
 
 const ColumnViewMap: FC<ColumnViewMapProps> = ({
   columnName,
@@ -62,9 +67,9 @@ const ColumnViewMap: FC<ColumnViewMapProps> = ({
   const datasetId = `${analysisName}_galileo_analysis`;
   const tableId = `${analysisName}_contextualized_sample`;
 
-  const selectedFields = ['latitude', 'longitude', columnName];
+  const selectedFields = ['source_geom', 'source_timestamp', columnName];
 
-  const { data, loading: dataLoading } = useQuery(KEPLER_DATA_QUERY, {
+  const { data, loading: dataLoading, error } = useQuery(KEPLER_DATA_QUERY, {
     variables: {
       datasetId,
       projectId,
@@ -82,6 +87,16 @@ const ColumnViewMap: FC<ColumnViewMapProps> = ({
         <div className={classes.spinnerContainer}>
           <CircularProgress />
         </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={classes.keplerInstanceContainer}>
+        <Typography variant="body2" className={classes.errorMessage}>
+          Unable to show the map. Could not fetch coordinates for this dataset.
+        </Typography>
       </div>
     );
   }

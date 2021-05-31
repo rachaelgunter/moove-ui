@@ -7,22 +7,18 @@ export const getKeplerConfig = (columnName: string): unknown => ({
       layers: [
         {
           id: columnName,
-          type: 'point',
+          type: 'geojson',
           config: {
             dataId: `${columnName} analysis_data`,
             label: columnName,
             color: [30, 150, 190],
             columns: {
-              lat: 'latitude',
-              lng: 'longitude',
-              altitude: null,
+              geojson: 'source_geom',
             },
             isVisible: true,
             visConfig: {
-              radius: 10,
-              fixedRadius: false,
               opacity: 0.8,
-              outline: false,
+              strokeOpacity: 0.8,
               thickness: 2,
               strokeColor: null,
               colorRange: {
@@ -51,8 +47,15 @@ export const getKeplerConfig = (columnName: string): unknown => ({
                   '#FFC300',
                 ],
               },
+              radius: 10,
+              sizeRange: [0, 10],
               radiusRange: [0, 50],
+              heightRange: [0, 500],
+              elevationScale: 5,
+              stroked: false,
               filled: true,
+              enable3d: false,
+              wireframe: false,
             },
             hidden: false,
             textLabel: [
@@ -75,6 +78,10 @@ export const getKeplerConfig = (columnName: string): unknown => ({
             strokeColorScale: 'quantile',
             sizeField: null,
             sizeScale: 'linear',
+            heightField: null,
+            heightScale: 'linear',
+            radiusField: null,
+            radiusScale: 'linear',
           },
         },
       ],
