@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Grid, Typography } from '@material-ui/core';
 
@@ -8,10 +8,17 @@ import ExploreIcon from '@material-ui/icons/Explore';
 import PageTemplate from 'src/shared/PageTemplate';
 import routes from 'src/shared/routes';
 import { Role } from 'src/shared/types';
+import { UserContext } from 'src/auth/UserProvider';
+import { getLinkToReportTool } from 'src/shared/utils';
 import Shortcut from './Shortcut';
 
 const Dashboard: React.FC = () => {
   const history = useHistory();
+  const { organization } = useContext(UserContext);
+  const reportsLink = getLinkToReportTool(
+    organization,
+    process.env.REACT_APP_MRT_ENV,
+  );
 
   const shortcuts = [
     {
@@ -29,7 +36,7 @@ const Dashboard: React.FC = () => {
     {
       label: 'Reports',
       Icon: ExploreIcon,
-      onClick: () => history.push(''),
+      onClick: () => window.location.assign(reportsLink),
       allowedRoles: [Role.SUPER_ADMIN],
     },
   ];
