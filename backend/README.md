@@ -74,13 +74,6 @@ $ npm run docker:migrate:create
 $ npm run docker:migrate
 ```
 
-### Execute DB seeds in Docker container
-
-```bash
-# execute (apply this on first local run)
-$ npm run docker:seed
-```
-
 ### Installing packages while developing with Docker
 
 Run this command to make changes in node_modules available in docker container:

@@ -4,8 +4,6 @@ import React, { FC } from 'react';
 import { Switch, Route } from 'react-router';
 import { HashRouter } from 'react-router-dom';
 import { AuthOptions, WebAuth } from 'auth0-js';
-import { ApolloClient, ApolloProvider } from '@apollo/client';
-
 import SignUpStateProvider from '../SignUpForm/SignUpFormContext';
 import EmailVerification from '../EmailVerification';
 import WebAuthProvider from '../WebAuthProvider';
@@ -18,39 +16,36 @@ import ForgotPassword from '../ForgotPassword';
 interface AppProps {
   webAuth: WebAuth;
   options: AuthOptions;
-  apolloClient: ApolloClient<any>;
 }
 
-const App: FC<AppProps> = ({ webAuth, options, apolloClient }: AppProps) => {
+const App: FC<AppProps> = ({ webAuth, options }: AppProps) => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <WebAuthProvider.Provider value={{ webAuth, options }}>
         <SignUpStateProvider>
-          <ApolloProvider client={apolloClient}>
-            <HashRouter>
-              <Switch>
-                <Route exact path="/premium">
-                  <SignIn hasGoogleAuth />
-                </Route>
-                <Route exact path="/">
-                  <SignIn />
-                </Route>
-                <Route path="/sign-up">
-                  <SignUp />
-                </Route>
-                <Route path="/terms">
-                  <Terms />
-                </Route>
-                <Route path="/verification">
-                  <EmailVerification />
-                </Route>
-                <Route exact path="/forgot-password">
-                  <ForgotPassword />
-                </Route>
-              </Switch>
-            </HashRouter>
-          </ApolloProvider>
+          <HashRouter>
+            <Switch>
+              <Route exact path="/premium">
+                <SignIn hasGoogleAuth />
+              </Route>
+              <Route exact path="/">
+                <SignIn />
+              </Route>
+              <Route path="/sign-up">
+                <SignUp />
+              </Route>
+              <Route path="/terms">
+                <Terms />
+              </Route>
+              <Route path="/verification">
+                <EmailVerification />
+              </Route>
+              <Route exact path="/forgot-password">
+                <ForgotPassword />
+              </Route>
+            </Switch>
+          </HashRouter>
         </SignUpStateProvider>
       </WebAuthProvider.Provider>
     </ThemeProvider>

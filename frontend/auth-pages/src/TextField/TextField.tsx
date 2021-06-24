@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import {
-  TextField as MuiTextField,
-  StandardTextFieldProps as MuiTextFieldProps,
-} from '@material-ui/core';
+import { TextField as MuiTextField } from '@material-ui/core';
 import { makeStyles, Theme, fade } from '@material-ui/core/styles';
 
 import InputAdornment from './InputAdornment';
@@ -42,74 +39,60 @@ export enum TextFieldType {
   PASSWORD = 'password',
 }
 
-export interface TextFieldProps extends Omit<MuiTextFieldProps, 'onChange'> {
+export interface TextFieldProps {
   label: string;
-  value?: string;
+  value: string;
   type?: string;
   error?: boolean;
   errorText?: string;
-  onChange?: (newValue: string) => void;
+  onChange: (newValue: string) => void;
 }
 
-const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
-  (
-    {
-      label,
-      value,
-      error = false,
-      errorText,
-      type = TextFieldType.TEXT,
-      onChange,
-      InputProps,
-      InputLabelProps,
-      ...textFieldProps
-    }: TextFieldProps,
-    ref,
-  ): JSX.Element => {
-    const classes = useStyles();
-    const [showPassword, setShowPassword] = useState(false);
-    const isPassword = type === TextFieldType.PASSWORD;
+const TextField = ({
+  label,
+  value,
+  error = false,
+  errorText,
+  type = TextFieldType.TEXT,
+  ...props
+}: TextFieldProps): JSX.Element => {
+  const classes = useStyles();
+  const [showPassword, setShowPassword] = useState(false);
+  const isPassword = type === TextFieldType.PASSWORD;
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-      onChange && onChange(event.target.value);
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    props.onChange(event.target.value);
 
-    return (
-      <MuiTextField
-        id={`${label}-text-field`}
-        error={error}
-        helperText={error && errorText ? errorText : ''}
-        className={classes.root}
-        InputProps={{
-          ...InputProps,
-          classes: { root: classes.input },
-          endAdornment: isPassword ? (
-            <InputAdornment
-              showPassword={showPassword}
-              setShowPassword={setShowPassword}
-            />
-          ) : (
-            InputProps && InputProps.endAdornment
-          ),
-        }}
-        InputLabelProps={{
-          ...InputLabelProps,
-          classes: { outlined: classes.label },
-        }}
-        label={label}
-        type={
-          isPassword && !showPassword
-            ? TextFieldType.PASSWORD
-            : TextFieldType.TEXT
-        }
-        value={value}
-        onChange={handleChange}
-        inputRef={ref}
-        variant="outlined"
-        fullWidth
-        {...textFieldProps}
-      />
-    );
-  },
-);
+  return (
+    <MuiTextField
+      id={`${label}-text-field`}
+      error={error}
+      helperText={error && errorText ? errorText : ''}
+      className={classes.root}
+      InputProps={{
+        classes: { root: classes.input },
+        endAdornment: isPassword ? (
+          <InputAdornment
+            showPassword={showPassword}
+            setShowPassword={setShowPassword}
+          />
+        ) : undefined,
+      }}
+      InputLabelProps={{
+        classes: { outlined: classes.label },
+      }}
+      label={label}
+      type={
+        isPassword && !showPassword
+          ? TextFieldType.PASSWORD
+          : TextFieldType.TEXT
+      }
+      value={value}
+      onChange={onChange}
+      variant="outlined"
+      fullWidth
+    />
+  );
+};
 
 export default TextField;

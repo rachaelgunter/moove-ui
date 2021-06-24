@@ -37,7 +37,6 @@ export const KEPLER_DATA_QUERY = gql`
     ) {
       headers {
         name
-        type
       }
       rows
     }

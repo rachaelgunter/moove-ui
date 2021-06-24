@@ -1,14 +1,12 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { CircularProgress, Grid, Tooltip } from '@material-ui/core';
-import { useQuery } from '@apollo/client';
-import { makeStyles } from '@material-ui/styles';
-
-import { BusinessVertical, JobFunction } from 'src/SignUpForm/types';
+import { MenuItem, Tooltip } from '@material-ui/core';
+import Selector from '../Selector/Selector';
 import {
   EMAIL_ERROR_TEXT,
   PASSWORD_ERROR_TEXT,
   PASSWORD_CONFIRMATION_ERROR_TEXT,
+  BUSINESS_VERTICALS,
 } from '../constants';
 import TextField, { TextFieldType } from '../TextField';
 import { isValidEmail, isValidPassword } from '../utils';
@@ -18,30 +16,17 @@ import WebAuthProvider from '../WebAuthProvider';
 import ServerSideError from '../ServerSideError/ServerSideError';
 import { SignUpFormContext } from './SignUpFormContext';
 import Link from '../Link';
-import Autocomplete from '../Autocomplete';
-import {
-  BUSINESS_VERTICAL_DICTIONARY,
-  JOB_FUNCTION_DICTIONARY,
-} from '../queries';
 
 export const submitButtonTitle = 'SIGN UP';
 const SIGN_UP_ERROR = 'Unable to sign up. User with this email already exists.';
 
-const useStyles = makeStyles({
-  spinner: {
-    minHeight: 300,
-  },
-});
-
 const SignUpForm: FC = () => {
-  const classes = useStyles();
   const { state, dispatch } = useContext(SignUpFormContext);
   const {
     fullName,
     email,
     password,
     businessVertical,
-    jobFunction,
     repeatedPassword,
     termsAccepted,
   } = state;
@@ -52,13 +37,6 @@ const SignUpForm: FC = () => {
 
   const [disableSubmit, setDisableSubmit] = useState(true);
   const { webAuth } = useContext(WebAuthProvider);
-  const {
-    loading: businessVerticalsLoading,
-    data: businessVerticalsData,
-  } = useQuery(BUSINESS_VERTICAL_DICTIONARY);
-  const { loading: jobFunctionsLoading, data: jobFunctionsData } = useQuery(
-    JOB_FUNCTION_DICTIONARY,
-  );
 
   useEffect(() => {
     const formIsValid =
@@ -67,8 +45,7 @@ const SignUpForm: FC = () => {
       isValidPassword(password) &&
       repeatedPassword === password &&
       termsAccepted &&
-      businessVertical !== '' &&
-      jobFunction !== '';
+      businessVertical !== '';
 
     setDisableSubmit(!formIsValid);
   }, [
@@ -77,7 +54,6 @@ const SignUpForm: FC = () => {
     password,
     repeatedPassword,
     businessVertical,
-    jobFunction,
     termsAccepted,
   ]);
 
@@ -101,10 +77,6 @@ const SignUpForm: FC = () => {
     dispatch({ businessVertical: newValue });
   };
 
-  const onJobFunctionChange = (newValue: string) => {
-    dispatch({ jobFunction: newValue });
-  };
-
   const onSubmit = () => {
     setDisableSubmit(true);
     const formValue = {
@@ -121,7 +93,6 @@ const SignUpForm: FC = () => {
         connection: 'Username-Password-Authentication',
         userMetadata: {
           businessVertical,
-          jobFunction,
         },
       },
       (err) => {
@@ -134,7 +105,6 @@ const SignUpForm: FC = () => {
             password: '',
             repeatedPassword: '',
             businessVertical: '',
-            jobFunction: '',
           });
           history.push('/verification');
         }
@@ -144,27 +114,6 @@ const SignUpForm: FC = () => {
 
     return formValue;
   };
-
-  const businessVerticalOptions =
-    businessVerticalsData?.businessVerticals?.map(
-      ({ name }: BusinessVertical) => name,
-    ) || [];
-  const jobFunctionOptions =
-    jobFunctionsData?.jobFunctions?.map(({ name }: JobFunction) => name) || [];
-
-  if (businessVerticalsLoading || jobFunctionsLoading) {
-    return (
-      <Grid
-        item
-        container
-        justify="center"
-        alignItems="center"
-        className={classes.spinner}
-      >
-        <CircularProgress />
-      </Grid>
-    );
-  }
 
   return (
     <>
@@ -198,20 +147,17 @@ const SignUpForm: FC = () => {
           error={repeatedPassword !== '' && repeatedPassword !== password}
           errorText={PASSWORD_CONFIRMATION_ERROR_TEXT}
         />
-        <Autocomplete
-          data-testid="autocomplete__business-vertical"
+        <Selector
           label="Business vertical"
           value={businessVertical}
-          options={businessVerticalOptions}
-          onChange={onBusinessVerticalChange}
-        />
-        <Autocomplete
-          data-testid="autocomplete__job-function"
-          label="Job function"
-          value={jobFunction}
-          options={jobFunctionOptions}
-          onChange={onJobFunctionChange}
-        />
+          valueChange={onBusinessVerticalChange}
+        >
+          {BUSINESS_VERTICALS.map((vertical) => (
+            <MenuItem key={vertical} value={vertical}>
+              {vertical}
+            </MenuItem>
+          ))}
+        </Selector>
         <Tooltip
           interactive
           title={

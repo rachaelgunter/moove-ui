@@ -68,7 +68,7 @@ export type TableIdentity = {
 
 export type KeplerDataQueryResponse = {
   previewTable: {
-    headers: ColumnData[];
+    headers: { name: string }[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rows: any;
   };
@@ -117,14 +117,13 @@ export type SegmentData = {
 
 export type ColumnData = {
   name: string;
-  type: ColumnType;
+  type: string;
 };
 
 export enum ColumnType {
   TIMESTAMP = 'TIMESTAMP',
   FLOAT = 'FLOAT',
   GEOGRAPHY = 'GEOGRAPHY',
-  INTEGER = 'INTEGER',
 }
 
 export type RemovedDataset = {

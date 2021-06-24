@@ -19,8 +19,6 @@ describe('Form', () => {
     let email: HTMLInputElement;
     let password: HTMLInputElement;
     let repeatedPassword: HTMLInputElement;
-    let businessVertical: HTMLInputElement;
-    let jobFunction: HTMLInputElement;
     let submit: HTMLInputElement;
 
     beforeEach(() => {
@@ -34,10 +32,6 @@ describe('Form', () => {
       submit = wrapper
         .getByText(submitButtonTitle)
         .closest('button') as HTMLInputElement;
-      businessVertical = wrapper.getByLabelText(
-        'Business vertical',
-      ) as HTMLInputElement;
-      jobFunction = wrapper.getByLabelText('Job function') as HTMLInputElement;
     });
 
     describe('should not be disabled', () => {
@@ -46,10 +40,6 @@ describe('Form', () => {
         fireEvent.change(email, { target: { value: 'valid-email@test.com' } });
         fireEvent.change(password, { target: { value: '*T3VRw89' } });
         fireEvent.change(repeatedPassword, { target: { value: '*T3VRw89' } });
-        fireEvent.change(businessVertical, {
-          target: { value: 'Business Vertical' },
-        });
-        fireEvent.change(jobFunction, { target: { value: 'Job Function' } });
 
         expect(submit).not.toBeDisabled();
       });
@@ -61,10 +51,6 @@ describe('Form', () => {
         fireEvent.change(email, { target: { value: 'valid-email@test.com' } });
         fireEvent.change(password, { target: { value: '*T3VRw89' } });
         fireEvent.change(repeatedPassword, { target: { value: '*T3VRw89' } });
-        fireEvent.change(businessVertical, {
-          target: { value: 'Business Vertical' },
-        });
-        fireEvent.change(jobFunction, { target: { value: 'Job Function' } });
       });
 
       it('when full name is empty', () => {
@@ -97,27 +83,11 @@ describe('Form', () => {
         expect(submit).toBeDisabled();
       });
 
-      it('when business vertical is empty', () => {
-        fireEvent.change(businessVertical, { target: { value: '' } });
-
-        expect(submit).toBeDisabled();
-      });
-
-      it('when job function is empty', () => {
-        fireEvent.change(jobFunction, { target: { value: '' } });
-
-        expect(submit).toBeDisabled();
-      });
-
       it('when all inputs have incorrect values', () => {
         fireEvent.change(fullName, { target: { value: '' } });
         fireEvent.change(email, { target: { value: 'invalid-email' } });
         fireEvent.change(password, { target: { value: '' } });
         fireEvent.change(repeatedPassword, { target: { value: '' } });
-        fireEvent.change(businessVertical, {
-          target: { value: '' },
-        });
-        fireEvent.change(jobFunction, { target: { value: '' } });
 
         expect(submit).toBeDisabled();
       });

@@ -1,7 +1,6 @@
 import React from 'react';
 import auth0 from 'auth0-js';
 import ReactDOM from 'react-dom';
-import { ApolloClient, InMemoryCache } from '@apollo/client';
 
 import App from './app/App';
 
@@ -54,12 +53,7 @@ const options =
 
 const webAuth = new auth0.WebAuth(options);
 
-const client = new ApolloClient({
-  uri: process.env.REACT_APP_GRAPHQL_API,
-  cache: new InMemoryCache(),
-});
-
 ReactDOM.render(
-  <App webAuth={webAuth} options={options} apolloClient={client} />,
+  <App webAuth={webAuth} options={options} />,
   document.getElementById('root'),
 );

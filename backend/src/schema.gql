@@ -157,16 +157,6 @@ type RemovedDataset {
   analysisProject: String!
 }
 
-type BusinessVertical {
-  id: Int!
-  name: String!
-}
-
-type JobFunction {
-  id: Int!
-  name: String!
-}
-
 type Query {
   getCurrentUser: User!
   users(offset: Int = 0, limit: Int = 5): PaginatedUsers!
@@ -183,8 +173,6 @@ type Query {
   datasetFileSignedUploadUrl(fileName: String!, organizationName: String!, analysisName: String!): String!
   datasourceValidatedColumns(fileName: String!, organizationName: String!, analysisName: String!): [BigQueryPreviewHeaders!]!
   organizations: [Organization!]!
-  businessVerticals: [BusinessVertical!]!
-  jobFunctions: [JobFunction!]!
 }
 
 input BigQueryTablesParams {
