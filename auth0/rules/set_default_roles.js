@@ -10,7 +10,7 @@ function setRolesToUser(user, context, callback) {
   if (user.app_metadata.roles) {
     setRolesToTokens();
   } else {
-    const roles = ['USER'];
+    const roles = ['USER','ROAD_IQ_PAID_USER'];
     user.app_metadata.roles = roles;
     auth0.users
       .updateAppMetadata(user.user_id, user.app_metadata)
