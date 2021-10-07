@@ -73,7 +73,7 @@ steps:
         git config --global user.name moove-devopsbot && \
         cd /workspace/infrastructure
         git add deploy/kubernetes/unified-ui/frontend/environments/$_ENVIRONMENT/deployment-patch.yml
-        git commit -m "CI: ${COMMIT_SHA} Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
+        git commit -m "Deploy: galileo-frontend Author: $(git log --format='%an' -n 1 HEAD) CI: ${COMMIT_SHA}" && \
         git push
     volumes:
       - name: ssh
