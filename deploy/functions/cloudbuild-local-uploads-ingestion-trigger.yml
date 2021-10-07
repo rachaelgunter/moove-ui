@@ -1,7 +1,4 @@
-substitutions:
-  _REGION: ""
-  _ENVIRONMENT: ""
-
+logsBucket: "moove-${_ENVIRONMENT}-build-logs"
 steps:
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   args:

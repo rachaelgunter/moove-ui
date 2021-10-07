@@ -1,7 +1,6 @@
+logsBucket: "moove-${_ENVIRONMENT}-build-logs"
 substitutions:
   _NODE_VERSION: "14.15"
-
-
 steps:
   - name: node:$_NODE_VERSION
     entrypoint: 'bash'

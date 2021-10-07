@@ -1,3 +1,4 @@
+logsBucket: "moove-${_ENVIRONMENT}-build-logs"
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build container (no cache)'
